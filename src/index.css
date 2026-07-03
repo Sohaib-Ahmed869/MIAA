@@ -262,3 +262,8 @@ img {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
+
+/* Safe area padding for iOS bottom bar */
+.safe-area-pb {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
