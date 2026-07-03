@@ -21,6 +21,7 @@
     "react-dom": "^19.2.6",
     "react-google-recaptcha": "^3.1.0",
     "react-router-dom": "^7.15.1",
+    "recharts": "^3.9.1",
     "swiper": "^12.1.4",
     "tailwindcss": "^4.3.0"
   },

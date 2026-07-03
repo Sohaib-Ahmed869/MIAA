@@ -17,6 +17,7 @@ import {
   UserCheck,
   ScrollText,
   Settings,
+  BarChart3,
 } from "lucide-react"
 import { clearSession, getAdminUser } from "../auth"
 import { ToastProvider } from "./Toast"
@@ -33,6 +34,7 @@ const NAV = [
   { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { to: "/admin/event-lists", label: "Event Lists", icon: Ticket },
   { separator: true, label: "Donations" },
+  { to: "/admin/donations-dashboard", label: "Dashboard", icon: BarChart3 },
   { to: "/admin/donation-products", label: "Products", icon: Heart },
   { to: "/admin/donations", label: "Donations", icon: Target },
   { to: "/admin/campaigns", label: "Campaigns", icon: Target },
