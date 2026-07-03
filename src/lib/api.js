@@ -82,4 +82,7 @@ export const api = {
     request(`/api/donations/capture/paypal`, { method: "POST", body: payload }),
   upsellProducts: (excludeId) =>
     request(`/api/donations/upsell${excludeId ? `?excludeProduct=${excludeId}` : ""}`),
+
+  // Site settings (public)
+  siteSettings: () => request(`/api/settings`),
 }

@@ -39,6 +39,7 @@ import CampaignsAdmin from "./admin/pages/CampaignsAdmin"
 import DonorsAdmin from "./admin/pages/DonorsAdmin"
 import SubscriptionsAdmin from "./admin/pages/SubscriptionsAdmin"
 import AuditLogAdmin from "./admin/pages/AuditLogAdmin"
+import SettingsAdmin from "./admin/pages/SettingsAdmin"
 
 import DonorProtectedRoute from "./components/donor/DonorProtectedRoute"
 import DonorLayout from "./components/donor/DonorLayout"
@@ -78,6 +79,7 @@ export default function App() {
           <Route path="donors" element={<DonorsAdmin />} />
           <Route path="subscriptions" element={<SubscriptionsAdmin />} />
           <Route path="audit-log" element={<AuditLogAdmin />} />
+          <Route path="settings" element={<SettingsAdmin />} />
         </Route>
 
         {/* Donor portal */}

@@ -166,6 +166,11 @@ export const adminApi = {
   generateTaxStatement: (donorId, year) =>
     request(`/api/tax-statements/generate/${donorId}?year=${year}`),
 
+  // site settings
+  getSiteSettings: () => request("/api/settings"),
+  updateSiteSettings: (payload) =>
+    request("/api/settings", { method: "PATCH", body: payload }),
+
   // uploads
   presign: ({ filename, contentType, folder }) =>
     request("/api/uploads/presign", {

@@ -66,8 +66,8 @@ export default function Navbar() {
               <span className="absolute inset-0 bg-primary/80 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
             </MotionLink>
           )}
-          <CTAButton to="/support-us" className="pointer-events-auto !hidden lg:!inline-flex !px-4 !py-3 3xl:!px-4 3xl:!py-2.5 !text-[0.6875rem] 3xl:!text-[0.6875rem]">
-            Support Us
+          <CTAButton to="/donate" className="pointer-events-auto !hidden lg:!inline-flex !px-4 !py-3 3xl:!px-4 3xl:!py-2.5 !text-[0.6875rem] 3xl:!text-[0.6875rem]">
+            Donate
           </CTAButton>
           {/* Reserve the hamburger slot here so the CTAs sit left of it at the top of the page */}
           <span className="w-[80px] h-[48px] 3xl:w-28 3xl:h-16" aria-hidden="true" />
@@ -129,8 +129,8 @@ export default function Navbar() {
                 </Link>
 
                 <div className="flex items-center gap-3">
-                  <CTAButton to="/support-us" onClick={() => setMenuOpen(false)} className="!hidden lg:!inline-flex !px-4 !py-3 3xl:!px-4 3xl:!py-2.5 !text-[0.6875rem] 3xl:!text-[0.6875rem]">
-                    Support Us
+                  <CTAButton to="/donate" onClick={() => setMenuOpen(false)} className="!hidden lg:!inline-flex !px-4 !py-3 3xl:!px-4 3xl:!py-2.5 !text-[0.6875rem] 3xl:!text-[0.6875rem]">
+                    Donate
                   </CTAButton>
                   <button
                     onClick={() => setMenuOpen(false)}
@@ -241,6 +241,26 @@ export default function Navbar() {
                     )
                   })}
                 </nav>
+
+                {/* Donor portal link — below main nav */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.3, delay: 0.05 * NAV_LINKS.length + 0.15 }}
+                  className="mt-6 pt-6 border-t border-white/10"
+                >
+                  <Link
+                    to="/donor/login"
+                    onClick={() => setMenuOpen(false)}
+                    className="inline-flex items-center gap-2 text-sm md:text-base text-white/60 hover:text-accent-wheat transition-colors"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="3xl:w-5 3xl:h-5">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Donor Portal
+                  </Link>
+                </motion.div>
 
                 {/* Social links — text only, right aligned */}
                 <motion.div

@@ -16,6 +16,7 @@ import {
   RefreshCw,
   UserCheck,
   ScrollText,
+  Settings,
 } from "lucide-react"
 import { clearSession, getAdminUser } from "../auth"
 import { ToastProvider } from "./Toast"
@@ -38,6 +39,8 @@ const NAV = [
   { to: "/admin/donors", label: "Donors", icon: UserCheck },
   { to: "/admin/subscriptions", label: "Subscriptions", icon: RefreshCw },
   { to: "/admin/audit-log", label: "Audit Log", icon: ScrollText },
+  { separator: true, label: "Settings" },
+  { to: "/admin/settings", label: "Site Settings", icon: Settings },
 ]
 
 function NavItem({ item }) {
