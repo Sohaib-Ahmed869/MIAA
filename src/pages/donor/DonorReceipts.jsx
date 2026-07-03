@@ -39,8 +39,14 @@ export default function DonorReceipts() {
       <h3 className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/45 mb-3">Individual Receipts</h3>
       {donations.length === 0 ? (
         <div className="text-center py-12">
-          <FileText className="w-10 h-10 text-primary/15 mx-auto mb-4" />
-          <p className="text-sm text-primary/40">No receipts available.</p>
+          <FileText className="w-10 h-10 text-primary/10 mx-auto mb-4" />
+          <p className="text-primary/50 text-sm font-medium mb-1">No receipts yet</p>
+          <p className="text-primary/35 text-[0.8125rem] max-w-xs mx-auto mb-5">
+            Receipts are generated automatically for every successful donation. Make your first gift to see receipts here.
+          </p>
+          <a href="/donate/checkout" className="inline-flex items-center gap-1.5 px-5 py-2 bg-secondary-terra hover:bg-secondary-rust text-white text-[0.6875rem] tracking-[0.15em] uppercase rounded-sm transition-colors">
+            <Download className="w-3 h-3" /> Make a Donation
+          </a>
         </div>
       ) : (
         <div className="bg-white border border-primary/10 rounded-sm overflow-hidden">

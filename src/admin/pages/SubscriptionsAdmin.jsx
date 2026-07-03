@@ -4,6 +4,7 @@ import { adminApi } from "../auth"
 import PageHeader from "../components/PageHeader"
 import EmptyState from "../components/EmptyState"
 import { SkeletonCardGrid } from "../components/Skeleton"
+import DateFilter from "../components/DateFilter"
 
 const STATUS_COLORS = {
   active: "bg-emerald-500/90 text-white",
@@ -16,6 +17,7 @@ const STATUS_COLORS = {
 export default function SubscriptionsAdmin() {
   const [items, setItems] = useState([])
   const [filter, setFilter] = useState("all")
+  const [dateFilter, setDateFilter] = useState({ preset: "all", startDate: "", endDate: "" })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -24,6 +26,8 @@ export default function SubscriptionsAdmin() {
     try {
       const params = {}
       if (filter !== "all") params.status = filter
+      if (dateFilter.startDate) params.startDate = dateFilter.startDate
+      if (dateFilter.endDate) params.endDate = dateFilter.endDate
       const data = await adminApi.listSubscriptions(params)
       setItems(data.items || [])
     } catch (err) {
@@ -34,7 +38,7 @@ export default function SubscriptionsAdmin() {
   }
   useEffect(() => {
     load()
-  }, [filter])
+  }, [filter, dateFilter])
 
   return (
     <div>
@@ -43,6 +47,11 @@ export default function SubscriptionsAdmin() {
         title="Subscriptions"
         subtitle="Manage recurring donation subscriptions."
       />
+
+      {/* Date filter */}
+      <div className="mb-4">
+        <DateFilter value={dateFilter} onChange={setDateFilter} />
+      </div>
 
       {/* Status filter */}
       <div className="flex items-center gap-2 mb-6 flex-wrap">

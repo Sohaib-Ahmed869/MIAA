@@ -85,6 +85,10 @@ export const donorApi = {
   resumeSubscription: (id) =>
     request(`/api/subscriptions/${id}/resume`, { method: "PATCH" }),
 
+  // campaign request
+  requestCampaign: (payload) =>
+    request("/api/campaigns/request", { method: "POST", body: payload }),
+
   // receipts & tax statements
   downloadReceipt: (donationId) =>
     `${BASE}/api/tax-statements/receipt/${donationId}`,

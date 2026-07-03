@@ -4,6 +4,7 @@ import { adminApi } from "../auth"
 import PageHeader from "../components/PageHeader"
 import EmptyState from "../components/EmptyState"
 import { SkeletonCardGrid } from "../components/Skeleton"
+import DateFilter from "../components/DateFilter"
 
 const ACTION_COLORS = {
   "donation.succeeded": "text-emerald-600",
@@ -19,6 +20,7 @@ export default function AuditLogAdmin() {
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
   const [filter, setFilter] = useState("all")
+  const [dateFilter, setDateFilter] = useState({ preset: "all", startDate: "", endDate: "" })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
@@ -27,6 +29,8 @@ export default function AuditLogAdmin() {
     try {
       const params = { page, limit: 50 }
       if (filter !== "all") params.action = filter
+      if (dateFilter.startDate) params.startDate = dateFilter.startDate
+      if (dateFilter.endDate) params.endDate = dateFilter.endDate
       const data = await adminApi.listAuditLog(params)
       setItems(data.items || [])
       setTotal(data.total || 0)
@@ -38,7 +42,7 @@ export default function AuditLogAdmin() {
   }
   useEffect(() => {
     load()
-  }, [page, filter])
+  }, [page, filter, dateFilter])
 
   const totalPages = Math.ceil(total / 50)
 
@@ -49,6 +53,11 @@ export default function AuditLogAdmin() {
         title="Audit Log"
         subtitle="Immutable record of all donation-related transactions and events."
       />
+
+      {/* Date filter */}
+      <div className="mb-4">
+        <DateFilter value={dateFilter} onChange={(v) => { setDateFilter(v); setPage(1) }} />
+      </div>
 
       {/* Action filter */}
       <div className="flex items-center gap-2 mb-6 flex-wrap">

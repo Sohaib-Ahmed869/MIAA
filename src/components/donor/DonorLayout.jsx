@@ -12,6 +12,7 @@ import {
   Gift,
   Menu,
   X,
+  Megaphone,
 } from "lucide-react"
 import { clearDonorSession, getDonorUser } from "../../lib/donorAuth"
 import smallLogo from "../../assets/images/Homepage/smalllogo.png"
@@ -21,6 +22,7 @@ const NAV = [
   { to: "/donor/donations", label: "My Donations", mobileLabel: "Donations", icon: Heart },
   { to: "/donor/subscriptions", label: "Subscriptions", mobileLabel: "Recurring", icon: RefreshCw },
   { to: "/donor/receipts", label: "Receipts & Statements", mobileLabel: "Receipts", icon: FileText },
+  { to: "/donor/campaign-request", label: "Request Campaign", mobileLabel: "Campaign", icon: Megaphone },
   { to: "/donor/profile", label: "Profile", mobileLabel: "Profile", icon: User },
 ]
 

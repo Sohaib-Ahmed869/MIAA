@@ -8,6 +8,7 @@ import Button from "../components/Button"
 import EmptyState from "../components/EmptyState"
 import { useToast } from "../components/Toast"
 import { SkeletonCardGrid } from "../components/Skeleton"
+import DateFilter from "../components/DateFilter"
 
 const STATUS_COLORS = {
   succeeded: "bg-emerald-500/90 text-white",
@@ -20,6 +21,7 @@ export default function DonationsAdmin() {
   const [donations, setDonations] = useState([])
   const [stats, setStats] = useState(null)
   const [filter, setFilter] = useState("all")
+  const [dateFilter, setDateFilter] = useState({ preset: "all", startDate: "", endDate: "" })
   const [viewing, setViewing] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
@@ -30,6 +32,8 @@ export default function DonationsAdmin() {
     try {
       const params = {}
       if (filter !== "all") params.status = filter
+      if (dateFilter.startDate) params.startDate = dateFilter.startDate
+      if (dateFilter.endDate) params.endDate = dateFilter.endDate
       const [donationData, statsData] = await Promise.all([
         adminApi.listDonations(params),
         adminApi.getDonationStats(),
@@ -44,7 +48,7 @@ export default function DonationsAdmin() {
   }
   useEffect(() => {
     load()
-  }, [filter])
+  }, [filter, dateFilter])
 
   const statCards = stats
     ? [
@@ -90,6 +94,11 @@ export default function DonationsAdmin() {
           ))}
         </div>
       )}
+
+      {/* Date filter */}
+      <div className="mb-4">
+        <DateFilter value={dateFilter} onChange={setDateFilter} />
+      </div>
 
       {/* Status filter */}
       <div className="flex items-center gap-2 mb-6 flex-wrap">

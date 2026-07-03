@@ -21,8 +21,14 @@ export default function DonorDonations() {
   if (donations.length === 0) {
     return (
       <div className="text-center py-16">
-        <Heart className="w-10 h-10 text-primary/15 mx-auto mb-4" />
-        <p className="text-primary/40 text-sm">No donations yet.</p>
+        <Heart className="w-10 h-10 text-primary/10 mx-auto mb-4" />
+        <p className="text-primary/50 text-sm font-medium mb-1">No donations yet</p>
+        <p className="text-primary/35 text-[0.8125rem] max-w-xs mx-auto mb-5">
+          Your donation history will appear here. Every contribution makes a difference.
+        </p>
+        <a href="/donate/checkout" className="inline-flex items-center gap-1.5 px-5 py-2 bg-secondary-terra hover:bg-secondary-rust text-white text-[0.6875rem] tracking-[0.15em] uppercase rounded-sm transition-colors">
+          <Heart className="w-3 h-3" /> Make Your First Donation
+        </a>
       </div>
     )
   }

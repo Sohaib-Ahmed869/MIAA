@@ -52,6 +52,7 @@ import DonorDonations from "./pages/donor/DonorDonations"
 import DonorSubscriptions from "./pages/donor/DonorSubscriptions"
 import DonorReceipts from "./pages/donor/DonorReceipts"
 import DonorProfile from "./pages/donor/DonorProfile"
+import DonorCampaignRequest from "./pages/donor/DonorCampaignRequest"
 
 export default function App() {
   return (
@@ -101,6 +102,7 @@ export default function App() {
           <Route path="donations" element={<DonorDonations />} />
           <Route path="subscriptions" element={<DonorSubscriptions />} />
           <Route path="receipts" element={<DonorReceipts />} />
+          <Route path="campaign-request" element={<DonorCampaignRequest />} />
           <Route path="profile" element={<DonorProfile />} />
         </Route>
 
