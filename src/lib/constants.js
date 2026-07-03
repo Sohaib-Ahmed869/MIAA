@@ -8,6 +8,7 @@ export const NAV_LINKS = [
   { label: "Education & Community Engagement", path: "/community-engagement" },
   { label: "Timeline & Construction", path: "/timeline" },
   // { label: "Updates & Blogs", path: "/blog" },
+  { label: "Donate", path: "/donate" },
   { label: "Contact Us", path: "/contact" },
 ]
 

@@ -11,6 +11,11 @@ import {
   ExternalLink,
   FileText,
   Ticket,
+  Heart,
+  Target,
+  RefreshCw,
+  UserCheck,
+  ScrollText,
 } from "lucide-react"
 import { clearSession, getAdminUser } from "../auth"
 import { ToastProvider } from "./Toast"
@@ -26,6 +31,13 @@ const NAV = [
   { to: "/admin/contact", label: "Contact Submissions", icon: Inbox },
   { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { to: "/admin/event-lists", label: "Event Lists", icon: Ticket },
+  { separator: true, label: "Donations" },
+  { to: "/admin/donation-products", label: "Products", icon: Heart },
+  { to: "/admin/donations", label: "Donations", icon: Target },
+  { to: "/admin/campaigns", label: "Campaigns", icon: Target },
+  { to: "/admin/donors", label: "Donors", icon: UserCheck },
+  { to: "/admin/subscriptions", label: "Subscriptions", icon: RefreshCw },
+  { to: "/admin/audit-log", label: "Audit Log", icon: ScrollText },
 ]
 
 function NavItem({ item }) {
@@ -97,10 +109,18 @@ export default function AdminLayout() {
               />
             </div>
 
-            <nav className="flex-1 py-5 px-3 flex flex-col gap-0.5">
-              {NAV.map((item) => (
-                <NavItem key={item.to} item={item} />
-              ))}
+            <nav className="flex-1 py-5 px-3 flex flex-col gap-0.5 overflow-y-auto">
+              {NAV.map((item, i) =>
+                item.separator ? (
+                  <div key={item.label} className="pt-4 pb-1.5 px-4">
+                    <p className="text-[0.5625rem] tracking-[0.25em] uppercase text-accent-wheat/50">
+                      {item.label}
+                    </p>
+                  </div>
+                ) : (
+                  <NavItem key={item.to} item={item} />
+                )
+              )}
             </nav>
 
             <div className="px-5 pb-6">

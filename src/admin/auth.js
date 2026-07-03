@@ -116,6 +116,56 @@ export const adminApi = {
   updateBlog: (id, payload) => request(`/api/blog/${id}`, { method: "PATCH", body: payload }),
   deleteBlog: (id) => request(`/api/blog/${id}`, { method: "DELETE" }),
 
+  // donation products
+  listDonationProducts: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/donation-products/admin/all${qs ? `?${qs}` : ""}`)
+  },
+  createDonationProduct: (payload) =>
+    request("/api/donation-products", { method: "POST", body: payload }),
+  updateDonationProduct: (id, payload) =>
+    request(`/api/donation-products/${id}`, { method: "PATCH", body: payload }),
+  deleteDonationProduct: (id) =>
+    request(`/api/donation-products/${id}`, { method: "DELETE" }),
+
+  // donations
+  listDonations: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/donations/admin/all${qs ? `?${qs}` : ""}`)
+  },
+  getDonation: (id) => request(`/api/donations/${id}`),
+  getDonationStats: () => request("/api/donations/stats"),
+
+  // campaigns
+  listCampaigns: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/campaigns/admin/all${qs ? `?${qs}` : ""}`)
+  },
+  createCampaign: (payload) => request("/api/campaigns", { method: "POST", body: payload }),
+  updateCampaign: (id, payload) =>
+    request(`/api/campaigns/${id}`, { method: "PATCH", body: payload }),
+  deleteCampaign: (id) => request(`/api/campaigns/${id}`, { method: "DELETE" }),
+
+  // subscriptions
+  listSubscriptions: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/subscriptions/admin/all${qs ? `?${qs}` : ""}`)
+  },
+
+  // donors
+  listDonors: () => request("/api/donor/admin/all"),
+  getDonor: (id) => request(`/api/donor/admin/${id}`),
+
+  // audit log
+  listAuditLog: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/audit-log${qs ? `?${qs}` : ""}`)
+  },
+
+  // tax statements
+  generateTaxStatement: (donorId, year) =>
+    request(`/api/tax-statements/generate/${donorId}?year=${year}`),
+
   // uploads
   presign: ({ filename, contentType, folder }) =>
     request("/api/uploads/presign", {
