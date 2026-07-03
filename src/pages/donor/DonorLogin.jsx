@@ -223,6 +223,16 @@ export default function DonorLogin() {
             </div>
           </div>
 
+          {/* Forgot password link */}
+          <div className="flex justify-end mb-6 -mt-4">
+            <Link
+              to="/donor/forgot-password"
+              className="text-[0.6875rem] text-secondary-terra hover:text-secondary-rust font-medium transition-colors"
+            >
+              Forgot password?
+            </Link>
+          </div>
+
           {error && (
             <motion.p
               initial={{ opacity: 0, y: -4 }}

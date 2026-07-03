@@ -46,6 +46,7 @@ import DonorProtectedRoute from "./components/donor/DonorProtectedRoute"
 import DonorLayout from "./components/donor/DonorLayout"
 import DonorLogin from "./pages/donor/DonorLogin"
 import DonorRegister from "./pages/donor/DonorRegister"
+import DonorForgotPassword from "./pages/donor/DonorForgotPassword"
 import DonorDashboard from "./pages/donor/DonorDashboard"
 import DonorDonations from "./pages/donor/DonorDonations"
 import DonorSubscriptions from "./pages/donor/DonorSubscriptions"
@@ -87,6 +88,7 @@ export default function App() {
         {/* Donor portal */}
         <Route path="/donor/login" element={<DonorLogin />} />
         <Route path="/donor/register" element={<DonorRegister />} />
+        <Route path="/donor/forgot-password" element={<DonorForgotPassword />} />
         <Route
           path="/donor"
           element={

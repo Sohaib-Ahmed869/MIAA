@@ -60,6 +60,14 @@ export const donorApi = {
     request("/api/donor/register", { method: "POST", body: payload, auth: false }),
   login: (email, password) =>
     request("/api/donor/login", { method: "POST", body: { email, password }, auth: false }),
+  forgotPassword: (email) =>
+    request("/api/donor/forgot-password", { method: "POST", body: { email }, auth: false }),
+  resetPassword: (email, code, newPassword) =>
+    request("/api/donor/reset-password", {
+      method: "POST",
+      body: { email, code, newPassword },
+      auth: false,
+    }),
   getProfile: () => request("/api/donor/profile"),
   updateProfile: (payload) =>
     request("/api/donor/profile", { method: "PATCH", body: payload }),
