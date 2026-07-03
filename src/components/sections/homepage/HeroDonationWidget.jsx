@@ -34,7 +34,7 @@ export default function HeroDonationWidget() {
       initial={{ opacity: 0, y: 20, scale: 0.97 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.7, delay: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
-      className="w-full sm:w-[340px] lg:w-[360px] 3xl:w-[420px] bg-black/30 backdrop-blur-md border border-white/15 rounded-sm overflow-hidden"
+      className="w-full sm:w-[340px] lg:w-[360px] 3xl:w-[420px] bg-black/30 backdrop-blur-md border border-white/15 rounded-2xl overflow-hidden"
     >
       {/* Header */}
       <div className="px-5 pt-5 pb-3">
@@ -56,7 +56,7 @@ export default function HeroDonationWidget() {
             <button
               key={amt}
               onClick={() => setSelectedAmount(amt)}
-              className={`py-2 rounded-sm text-[0.75rem] font-medium transition-all duration-200 ${
+              className={`py-2 rounded-lg text-[0.75rem] font-medium transition-all duration-200 ${
                 selectedAmount === amt
                   ? "bg-secondary-terra text-white shadow-md shadow-secondary-terra/30"
                   : "bg-white/10 text-white/75 hover:bg-white/20"
@@ -75,7 +75,7 @@ export default function HeroDonationWidget() {
               ? `${selectedAmount ? "&" : "?"}product=${widget.featuredProductId}`
               : ""
           }`}
-          className="w-full py-3 bg-secondary-terra hover:bg-secondary-rust text-white text-[0.8125rem] font-medium tracking-wide rounded-sm transition-colors flex items-center justify-center gap-2"
+          className="w-full py-3 bg-secondary-terra hover:bg-secondary-rust text-white text-[0.8125rem] font-medium tracking-wide rounded-xl transition-colors flex items-center justify-center gap-2"
         >
           <Heart className="w-3.5 h-3.5" />
           {widget.ctaLabel || "Donate Now"}
