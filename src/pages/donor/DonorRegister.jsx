@@ -73,10 +73,9 @@ export default function DonorRegister() {
     return () => window.removeEventListener("mousemove", onMove)
   }, [mouseX, mouseY])
 
-  if (getDonorToken()) {
-    navigate("/donor", { replace: true })
-    return null
-  }
+  useEffect(() => {
+    if (getDonorToken()) navigate("/donor", { replace: true })
+  }, [navigate])
 
   const set = (key) => (e) => setForm({ ...form, [key]: e.target.value })
 

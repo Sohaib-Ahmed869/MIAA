@@ -69,10 +69,9 @@ export default function DonorLogin() {
     return () => window.removeEventListener("mousemove", onMove)
   }, [mouseX, mouseY])
 
-  if (getDonorToken()) {
-    navigate("/donor", { replace: true })
-    return null
-  }
+  useEffect(() => {
+    if (getDonorToken()) navigate("/donor", { replace: true })
+  }, [navigate])
 
   const onSubmit = async (e) => {
     e.preventDefault()

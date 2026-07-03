@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion"
 import { ArrowUpRight, Mail, Lock, Eye, EyeOff, KeyRound, CheckCircle } from "lucide-react"
-import { donorApi } from "../../lib/donorAuth"
+import { donorApi, getDonorToken } from "../../lib/donorAuth"
 import smallLogo from "../../assets/images/Homepage/smalllogo.png"
 import Quatrefoil from "../../admin/components/Quatrefoil"
 import DottedDivider from "../../admin/components/DottedDivider"
@@ -127,6 +127,10 @@ export default function DonorForgotPassword() {
   const [busy, setBusy] = useState(false)
   const [focusedField, setFocusedField] = useState(null)
   const navigate = useNavigate()
+
+  useEffect(() => {
+    if (getDonorToken()) navigate("/donor", { replace: true })
+  }, [navigate])
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
