@@ -8,7 +8,6 @@ import EducationSection from "../components/sections/homepage/EducationSection"
 import TimelineSection from "../components/sections/homepage/TimelineSection"
 import InsightsSection from "../components/sections/homepage/InsightsSection"
 import ContactSection from "../components/sections/homepage/ContactSection"
-import DonationWidgetSection from "../components/sections/homepage/DonationWidgetSection"
 import SectionDivider from "../components/ui/SectionDivider"
 
 export default function Home() {
@@ -40,9 +39,6 @@ export default function Home() {
 
       <SectionDivider label="Blogs" bg="bg-accent-cream" variant="light" />
       <InsightsSection />
-
-      <SectionDivider label="Support MIAA" bg="bg-primary" variant="dark" />
-      <DonationWidgetSection />
 
       <SectionDivider label="Contact Us" bg="bg-bg-deep" variant="dark" />
       <ContactSection />
