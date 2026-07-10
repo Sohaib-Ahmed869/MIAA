@@ -9,6 +9,7 @@ import EmptyState from "../components/EmptyState"
 import ImageUpload from "../components/ImageUpload"
 import { Field, TextInput, TextArea, NumberInput, Checkbox } from "../components/Field"
 import { useToast } from "../components/Toast"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonPortraitGrid } from "../components/Skeleton"
 
 const EMPTY = { name: "", role: "", description: "", photoKey: "", order: 0, surface: "about", published: true }
@@ -21,6 +22,7 @@ export default function TeamAdmin() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const { notify } = useToast()
+  const confirm = useConfirm()
 
   const load = async () => {
     setLoading(true)
@@ -72,7 +74,7 @@ export default function TeamAdmin() {
     }
   }
   const remove = async (id) => {
-    if (!confirm("Delete this member?")) return
+    if (!(await confirm({ title: "Delete this member?", confirmLabel: "Delete", danger: true }))) return
     await adminApi.deleteTeam(id)
     notify("Deleted")
     load()
@@ -101,7 +103,7 @@ export default function TeamAdmin() {
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 3xl:grid-cols-5 gap-5"
         >
           {items.map((p) => (
             <motion.div

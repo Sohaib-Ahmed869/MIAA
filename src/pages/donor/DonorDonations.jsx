@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
 import { Download, Heart } from "lucide-react"
 import { donorApi, getDonorToken } from "../../lib/donorAuth"
+import DonorEmptyState from "../../components/donor/DonorEmptyState"
 
 export default function DonorDonations() {
   const [donations, setDonations] = useState([])
@@ -20,16 +21,12 @@ export default function DonorDonations() {
 
   if (donations.length === 0) {
     return (
-      <div className="text-center py-16">
-        <Heart className="w-10 h-10 text-primary/10 mx-auto mb-4" />
-        <p className="text-primary/50 text-sm font-medium mb-1">No donations yet</p>
-        <p className="text-primary/35 text-[0.8125rem] max-w-xs mx-auto mb-5">
-          Your donation history will appear here. Every contribution makes a difference.
-        </p>
-        <a href="/donate/checkout" className="inline-flex items-center gap-1.5 px-5 py-2 bg-secondary-terra hover:bg-secondary-rust text-white text-[0.6875rem] tracking-[0.15em] uppercase rounded-sm transition-colors">
-          <Heart className="w-3 h-3" /> Make Your First Donation
-        </a>
-      </div>
+      <DonorEmptyState
+        art="donation"
+        title="No donations yet"
+        description="Your giving history will appear here. Every contribution makes a lasting difference to MIAA."
+        action={{ label: "Make Your First Donation", href: "/donate/checkout", icon: Heart }}
+      />
     )
   }
 
@@ -49,8 +46,8 @@ export default function DonorDonations() {
               {/* Desktop row */}
               <div className="hidden md:grid grid-cols-[1fr_auto_auto_auto_auto] gap-4 items-center px-6 py-3.5 hover:bg-accent-cream/60 transition-colors">
                 <div>
-                  <p className="text-sm font-medium text-primary">{d.product?.name || "General Fund"}</p>
-                  <p className="text-[0.6875rem] text-primary/45">{d.receiptNumber} · {d.type}</p>
+                  <p className="text-sm font-medium text-primary">{d.product?.name || d.event?.title || d.campaign?.title || "General Fund"}</p>
+                  <p className="text-[0.6875rem] text-primary/45">{d.event?.title ? "Event · " : ""}{d.receiptNumber} · {d.type}</p>
                 </div>
                 <p className="text-sm font-medium text-primary min-w-[5rem] text-right">${(d.amount / 100).toFixed(2)}</p>
                 <span className={`text-[0.5625rem] tracking-[0.18em] uppercase px-2 py-1 rounded-sm min-w-[5rem] text-center ${d.paymentStatus === "succeeded" ? "bg-emerald-500/15 text-emerald-600" : d.paymentStatus === "refunded" ? "bg-amber-500/15 text-amber-600" : "bg-primary/10 text-primary/50"}`}>{d.paymentStatus}</span>
@@ -63,7 +60,7 @@ export default function DonorDonations() {
               <div className="md:hidden px-4 py-3.5">
                 <div className="flex items-start justify-between mb-2">
                   <div>
-                    <p className="text-sm font-medium text-primary">{d.product?.name || "General Fund"}</p>
+                    <p className="text-sm font-medium text-primary">{d.product?.name || d.event?.title || d.campaign?.title || "General Fund"}</p>
                     <p className="text-[0.625rem] text-primary/40 mt-0.5">{d.receiptNumber}</p>
                   </div>
                   <p className="text-base font-medium text-primary">${(d.amount / 100).toFixed(2)}</p>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate, Navigate } from "react-router-dom"
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion"
 import { ArrowUpRight, Mail, Lock, Eye, EyeOff } from "lucide-react"
 import { adminApi, setSession, getToken } from "../auth"
@@ -71,9 +71,9 @@ export default function Login() {
     return () => window.removeEventListener("mousemove", onMove)
   }, [mouseX, mouseY])
 
+  // Already authenticated → skip the login page and go to the CMS
   if (getToken()) {
-    navigate(from, { replace: true })
-    return null
+    return <Navigate to={from} replace />
   }
 
   const onSubmit = async (e) => {

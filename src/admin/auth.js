@@ -125,6 +125,14 @@ export const adminApi = {
     request("/api/donation-products", { method: "POST", body: payload }),
   updateDonationProduct: (id, payload) =>
     request(`/api/donation-products/${id}`, { method: "PATCH", body: payload }),
+  // Soft delete: archiving also unpublishes/deactivates so it leaves the public site.
+  archiveDonationProduct: (id) =>
+    request(`/api/donation-products/${id}`, {
+      method: "PATCH",
+      body: { archived: true, isActive: false, published: false },
+    }),
+  unarchiveDonationProduct: (id) =>
+    request(`/api/donation-products/${id}`, { method: "PATCH", body: { archived: false } }),
   deleteDonationProduct: (id) =>
     request(`/api/donation-products/${id}`, { method: "DELETE" }),
 
@@ -134,7 +142,10 @@ export const adminApi = {
     return request(`/api/donations/admin/all${qs ? `?${qs}` : ""}`)
   },
   getDonation: (id) => request(`/api/donations/${id}`),
-  getDonationStats: () => request("/api/donations/stats"),
+  getDonationStats: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/donations/stats${qs ? `?${qs}` : ""}`)
+  },
 
   // campaigns
   listCampaigns: (params = {}) => {
@@ -144,7 +155,21 @@ export const adminApi = {
   createCampaign: (payload) => request("/api/campaigns", { method: "POST", body: payload }),
   updateCampaign: (id, payload) =>
     request(`/api/campaigns/${id}`, { method: "PATCH", body: payload }),
+  // Soft delete: archiving also unpublishes so it leaves the public site.
+  archiveCampaign: (id) =>
+    request(`/api/campaigns/${id}`, {
+      method: "PATCH",
+      body: { archived: true, published: false },
+    }),
+  unarchiveCampaign: (id) =>
+    request(`/api/campaigns/${id}`, { method: "PATCH", body: { archived: false } }),
   deleteCampaign: (id) => request(`/api/campaigns/${id}`, { method: "DELETE" }),
+
+  // campaign requests (donor-submitted)
+  listCampaignRequests: () => request("/api/campaigns/admin/requests"),
+  campaignRequestsCount: () => request("/api/campaigns/admin/requests/count"),
+  updateCampaignStatus: (id, payload) =>
+    request(`/api/campaigns/${id}/status`, { method: "PATCH", body: payload }),
 
   // subscriptions
   listSubscriptions: (params = {}) => {

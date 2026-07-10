@@ -18,7 +18,7 @@ export default function Donations() {
 
       {campaigns.length > 0 && (
         <>
-          <SectionDivider label="Campaigns" bg="bg-primary" variant="dark" />
+          <SectionDivider label="Campaigns" bg="bg-bg" variant="light" />
           <CampaignsSection campaigns={campaigns} />
         </>
       )}

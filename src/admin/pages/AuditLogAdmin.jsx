@@ -5,6 +5,7 @@ import PageHeader from "../components/PageHeader"
 import EmptyState from "../components/EmptyState"
 import { SkeletonCardGrid } from "../components/Skeleton"
 import DateFilter from "../components/DateFilter"
+import FilterTabs from "../components/FilterTabs"
 
 const ACTION_COLORS = {
   "donation.succeeded": "text-emerald-600",
@@ -24,24 +25,30 @@ export default function AuditLogAdmin() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
 
-  const load = async () => {
-    setLoading(true)
-    try {
-      const params = { page, limit: 50 }
-      if (filter !== "all") params.action = filter
-      if (dateFilter.startDate) params.startDate = dateFilter.startDate
-      if (dateFilter.endDate) params.endDate = dateFilter.endDate
-      const data = await adminApi.listAuditLog(params)
-      setItems(data.items || [])
-      setTotal(data.total || 0)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
   useEffect(() => {
-    load()
+    let active = true
+    const params = { page, limit: 50 }
+    if (filter !== "all") params.action = filter
+    if (dateFilter.startDate) params.startDate = dateFilter.startDate
+    if (dateFilter.endDate) params.endDate = dateFilter.endDate
+    adminApi
+      .listAuditLog(params)
+      .then((data) => {
+        if (active) {
+          setItems(data.items || [])
+          setTotal(data.total || 0)
+          setError("")
+        }
+      })
+      .catch((err) => {
+        if (active) setError(err.message)
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => {
+      active = false
+    }
   }, [page, filter, dateFilter])
 
   const totalPages = Math.ceil(total / 50)
@@ -59,31 +66,29 @@ export default function AuditLogAdmin() {
         <DateFilter value={dateFilter} onChange={(v) => { setDateFilter(v); setPage(1) }} />
       </div>
 
+      {error && (
+        <p className="text-sm text-rose-600 bg-rose-500/8 ring-1 ring-inset ring-rose-500/20 rounded-lg px-4 py-2.5 mb-4">
+          {error}
+        </p>
+      )}
+
       {/* Action filter */}
-      <div className="flex items-center gap-2 mb-6 flex-wrap">
-        {[
-          { value: "all", label: "All" },
-          { value: "donation.succeeded", label: "Donations" },
-          { value: "subscription.created", label: "Subscriptions" },
-          { value: "webhook.received", label: "Webhooks" },
-          { value: "donation.refunded", label: "Refunds" },
-        ].map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => {
-              setFilter(opt.value)
-              setPage(1)
-            }}
-            className={`px-4 py-1.5 text-[0.625rem] tracking-[0.2em] uppercase rounded-sm border transition-colors ${
-              filter === opt.value
-                ? "bg-primary text-white border-primary"
-                : "bg-white text-primary/70 border-primary/15 hover:border-primary/40"
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-        <span className="text-[0.625rem] text-primary/40 ml-2">{total} entries</span>
+      <div className="flex items-center gap-3 mb-6 flex-wrap">
+        <FilterTabs
+          value={filter}
+          onChange={(v) => {
+            setFilter(v)
+            setPage(1)
+          }}
+          options={[
+            { value: "all", label: "All" },
+            { value: "donation.succeeded", label: "Donations" },
+            { value: "subscription.created", label: "Subscriptions" },
+            { value: "webhook.received", label: "Webhooks" },
+            { value: "donation.refunded", label: "Refunds" },
+          ]}
+        />
+        <span className="text-[0.625rem] text-primary/40">{total} entries</span>
       </div>
 
       {loading ? (

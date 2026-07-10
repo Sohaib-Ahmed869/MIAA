@@ -73,16 +73,18 @@ export default function DateFilter({ value, onChange }) {
 
   return (
     <div className="flex flex-col gap-3">
-      <div className="flex items-center gap-2 flex-wrap">
-        <CalendarDays className="w-3.5 h-3.5 text-primary/35" strokeWidth={1.75} />
+      <div className="inline-flex self-start items-center gap-0.5 flex-wrap bg-white border border-primary/10 rounded-full p-1 shadow-sm shadow-primary/5">
+        <span className="grid place-items-center w-7 h-7 rounded-full text-primary/40">
+          <CalendarDays className="w-3.5 h-3.5" strokeWidth={1.75} />
+        </span>
         {PRESETS.map((p) => (
           <button
             key={p.value}
             onClick={() => handlePreset(p.value)}
-            className={`px-3 py-1.5 text-[0.5625rem] tracking-[0.18em] uppercase rounded-sm border transition-colors ${
+            className={`px-3.5 py-1.5 text-[0.5625rem] tracking-[0.18em] uppercase rounded-full transition-all duration-200 ${
               value.preset === p.value
-                ? "bg-primary text-white border-primary"
-                : "bg-white text-primary/60 border-primary/12 hover:border-primary/30"
+                ? "bg-primary text-white shadow-sm shadow-primary/20"
+                : "text-primary/55 hover:bg-primary/[0.06] hover:text-primary"
             }`}
           >
             {p.label}
@@ -91,7 +93,7 @@ export default function DateFilter({ value, onChange }) {
       </div>
 
       {showCustom && (
-        <div className="flex items-end gap-3 pl-6">
+        <div className="flex items-end gap-3 pl-2">
           <div>
             <label className="block text-[0.5rem] tracking-[0.2em] uppercase text-primary/40 mb-1">
               From

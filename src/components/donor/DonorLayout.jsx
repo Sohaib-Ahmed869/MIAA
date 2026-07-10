@@ -13,8 +13,11 @@ import {
   Menu,
   X,
   Megaphone,
+  Flag,
+  ChevronRight,
 } from "lucide-react"
 import { clearDonorSession, getDonorUser } from "../../lib/donorAuth"
+import { ConfirmProvider } from "../ui/ConfirmDialog"
 import smallLogo from "../../assets/images/Homepage/smalllogo.png"
 
 const NAV = [
@@ -22,55 +25,155 @@ const NAV = [
   { to: "/donor/donations", label: "My Donations", mobileLabel: "Donations", icon: Heart },
   { to: "/donor/subscriptions", label: "Subscriptions", mobileLabel: "Recurring", icon: RefreshCw },
   { to: "/donor/receipts", label: "Receipts & Statements", mobileLabel: "Receipts", icon: FileText },
-  { to: "/donor/campaign-request", label: "Request Campaign", mobileLabel: "Campaign", icon: Megaphone },
+  { to: "/donor/campaigns", label: "My Campaigns", mobileLabel: "Campaigns", icon: Flag },
+  { to: "/donor/campaign-request", label: "Request Campaign", mobileLabel: "Request", icon: Megaphone },
   { to: "/donor/profile", label: "Profile", mobileLabel: "Profile", icon: User },
 ]
 
-function Quatrefoil({ className = "" }) {
+// Per-page header copy, keyed by exact pathname
+const PAGE_META = {
+  "/donor": {
+    eyebrow: "Overview",
+    title: "Dashboard",
+    subtitle: "A snapshot of your giving and impact with MIAA.",
+  },
+  "/donor/donations": {
+    eyebrow: "History",
+    title: "My Donations",
+    subtitle: "Every contribution you've made, all in one place.",
+  },
+  "/donor/subscriptions": {
+    eyebrow: "Recurring",
+    title: "Subscriptions",
+    subtitle: "Manage your recurring gifts and payment schedules.",
+  },
+  "/donor/receipts": {
+    eyebrow: "Documents",
+    title: "Receipts & Statements",
+    subtitle: "Download receipts and annual tax statements.",
+  },
+  "/donor/campaigns": {
+    eyebrow: "Fundraising",
+    title: "My Campaigns",
+    subtitle: "Track the campaigns you've proposed and their status.",
+  },
+  "/donor/campaign-request": {
+    eyebrow: "Fundraising",
+    title: "Request a Campaign",
+    subtitle: "Propose a cause for MIAA to champion on your behalf.",
+  },
+  "/donor/profile": {
+    eyebrow: "Account",
+    title: "Profile",
+    subtitle: "Update your personal details and preferences.",
+  },
+}
+
+function greeting() {
+  const h = new Date().getHours()
+  if (h < 12) return "Good morning"
+  if (h < 18) return "Good afternoon"
+  return "Good evening"
+}
+
+function initialsOf(donor) {
+  const a = (donor?.firstName || "").trim()
+  const b = (donor?.lastName || "").trim()
+  const chars = `${a.charAt(0)}${b.charAt(0)}`.trim()
+  return (chars || donor?.email?.charAt(0) || "D").toUpperCase()
+}
+
+function DonorHeader({ meta, donor }) {
+  const isDashboard = meta.title === "Dashboard"
   return (
-    <svg
-      width={10}
-      height={10}
-      viewBox="0 0 100 100"
-      fill="#C15C45"
-      className={`flex-shrink-0 ${className}`}
-    >
-      <circle cx="50" cy="22" r="25" />
-      <circle cx="50" cy="78" r="25" />
-      <circle cx="22" cy="50" r="25" />
-      <circle cx="78" cy="50" r="25" />
-      <rect x="22" y="22" width="56" height="56" rx="4" />
-    </svg>
+    <header className="sticky top-14 md:top-0 z-20 border-b border-primary/10 bg-accent-cream/85 backdrop-blur-xl">
+      <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 py-4 md:py-5">
+        <div className="flex items-center justify-between gap-4">
+          <div className="min-w-0">
+            {/* Breadcrumb */}
+            <div className="flex items-center gap-1.5 text-[0.5625rem] tracking-[0.22em] uppercase text-primary/40 mb-1.5">
+              <span>Donor Portal</span>
+              <ChevronRight className="w-3 h-3 flex-shrink-0" strokeWidth={2} />
+              <span className="text-secondary-terra truncate">{meta.eyebrow}</span>
+            </div>
+
+            <h1
+              className="text-2xl md:text-[1.75rem] leading-none text-primary tracking-tight truncate"
+              style={{ fontFamily: "var(--font-display)" }}
+            >
+              {isDashboard ? `${greeting()}, ${donor?.firstName || "there"}` : meta.title}
+            </h1>
+            <p className="mt-1.5 text-xs md:text-[0.8125rem] text-primary/50 truncate">
+              {meta.subtitle}
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 flex-shrink-0">
+            <Link
+              to="/donate/checkout"
+              className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-md bg-secondary-terra hover:bg-secondary-rust text-white text-[0.625rem] tracking-[0.18em] uppercase font-semibold shadow-sm shadow-secondary-terra/30 transition-colors"
+            >
+              <Heart className="w-3.5 h-3.5" strokeWidth={2.25} />
+              <span className="hidden md:inline">Donate</span>
+            </Link>
+
+            <div className="grid place-items-center w-10 h-10 rounded-full bg-bg-deep text-accent-cream text-xs font-semibold tracking-wide ring-2 ring-secondary-terra/30">
+              {initialsOf(donor)}
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
   )
 }
 
 function NavItem({ item }) {
   return (
-    <NavLink to={item.to} end={item.end} className="block">
+    <NavLink to={item.to} end={item.end} className="block group">
       {({ isActive }) => (
         <div
-          className={`relative flex items-center gap-3 px-4 py-2.5 rounded-sm text-[0.8125rem] transition-colors duration-200 ${
+          className={`relative flex items-center gap-3 pl-4 pr-3 py-2.5 rounded-md text-[0.8125rem] transition-colors duration-200 ${
             isActive
-              ? "text-secondary-terra"
-              : "text-accent-cream/70 hover:text-accent-cream"
+              ? "text-accent-cream"
+              : "text-accent-cream/60 hover:text-accent-cream"
           }`}
         >
-          <AnimatePresence>
-            {isActive && (
-              <motion.span
-                layoutId="donor-nav-marker"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.5 }}
-                transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-                className="absolute -left-1"
-              >
-                <Quatrefoil className="w-2.5 h-2.5" />
-              </motion.span>
-            )}
-          </AnimatePresence>
-          <item.icon strokeWidth={1.75} className="w-4 h-4" />
-          <span className="tracking-wide">{item.label}</span>
+          {/* Active pill background */}
+          {isActive && (
+            <motion.span
+              layoutId="donor-nav-pill"
+              className="absolute inset-0 rounded-md bg-gradient-to-r from-secondary-terra/25 to-secondary-terra/5 ring-1 ring-inset ring-secondary-terra/25"
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            />
+          )}
+
+          {/* Active accent bar */}
+          {isActive && (
+            <motion.span
+              layoutId="donor-nav-bar"
+              className="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-[0.1875rem] rounded-full bg-secondary-terra"
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            />
+          )}
+
+          {/* Icon chip */}
+          <span
+            className={`relative z-10 grid place-items-center w-7 h-7 rounded-md transition-all duration-200 ${
+              isActive
+                ? "bg-secondary-terra text-white shadow-sm shadow-secondary-terra/40"
+                : "bg-white/[0.04] text-accent-cream/70 group-hover:bg-white/[0.08] group-hover:text-accent-cream"
+            }`}
+          >
+            <item.icon strokeWidth={1.9} className="w-[0.9375rem] h-[0.9375rem]" />
+          </span>
+
+          <span
+            className={`relative z-10 tracking-wide transition-[font-weight] ${
+              isActive ? "font-semibold" : "font-normal"
+            }`}
+          >
+            {item.label}
+          </span>
         </div>
       )}
     </NavLink>
@@ -101,6 +204,12 @@ export default function DonorLayout() {
     navigate("/donor/login", { replace: true })
   }
 
+  const meta = PAGE_META[location.pathname] || {
+    eyebrow: "Donor Portal",
+    title: "My Account",
+    subtitle: "Manage your giving with MIAA.",
+  }
+
   const sidebar = (
     <>
       <div className="px-6 pt-7 pb-6">
@@ -128,15 +237,15 @@ export default function DonorLayout() {
           </div>
         ))}
 
-        {/* Quick donate link */}
+        {/* Quick donate CTA */}
         <div className="pt-4 px-4">
           <Link
             to="/donate/checkout"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 text-[0.8125rem] text-accent-cream/50 hover:text-secondary-terra transition-colors"
+            className="group/donate flex items-center justify-center gap-2 py-2.5 rounded-md text-[0.8125rem] font-semibold tracking-wide text-white bg-secondary-terra/90 hover:bg-secondary-terra shadow-sm shadow-secondary-terra/30 transition-colors"
           >
-            <Gift className="w-4 h-4" strokeWidth={1.75} />
-            <span className="tracking-wide">Make a Donation</span>
+            <Gift className="w-4 h-4 transition-transform group-hover/donate:-rotate-12" strokeWidth={2} />
+            <span>Make a Donation</span>
           </Link>
         </div>
       </nav>
@@ -174,6 +283,7 @@ export default function DonorLayout() {
   )
 
   return (
+    <ConfirmProvider>
     <div className="min-h-screen bg-accent-cream text-primary">
       <div className="flex">
         {/* ── Desktop sidebar ──────────────────────────────── */}
@@ -233,7 +343,8 @@ export default function DonorLayout() {
 
         {/* ── Content area ─────────────────────────────────── */}
         <main className="md:ml-64 flex-1 min-h-screen pt-14 md:pt-0">
-          <div className="max-w-[75rem] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-6 md:py-10">
+          <DonorHeader meta={meta} donor={donor} />
+          <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 py-6 md:py-10 pb-24 md:pb-10">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
@@ -269,12 +380,22 @@ export default function DonorLayout() {
                     {isActive && (
                       <motion.span
                         layoutId="donor-mobile-tab"
-                        className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-secondary-terra rounded-full"
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-9 h-[0.1875rem] bg-secondary-terra rounded-full"
                         transition={{ type: "spring", stiffness: 400, damping: 30 }}
                       />
                     )}
-                    <item.icon className="w-5 h-5" strokeWidth={isActive ? 2 : 1.5} />
-                    <span className="text-[0.5rem] tracking-[0.1em] uppercase leading-none">
+                    <span
+                      className={`grid place-items-center w-8 h-8 rounded-lg transition-colors ${
+                        isActive ? "bg-secondary-terra/15 text-secondary-terra" : ""
+                      }`}
+                    >
+                      <item.icon className="w-5 h-5" strokeWidth={isActive ? 2.1 : 1.5} />
+                    </span>
+                    <span
+                      className={`text-[0.5rem] tracking-[0.1em] uppercase leading-none ${
+                        isActive ? "font-semibold" : ""
+                      }`}
+                    >
                       {item.mobileLabel}
                     </span>
                   </>
@@ -285,5 +406,6 @@ export default function DonorLayout() {
         </nav>
       </div>
     </div>
+    </ConfirmProvider>
   )
 }

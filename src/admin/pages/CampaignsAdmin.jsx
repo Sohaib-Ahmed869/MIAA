@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Plus, Pencil, Trash2 } from "lucide-react"
-import { adminApi } from "../auth"
+import { Plus, Pencil, Trash2, Archive, RotateCcw } from "lucide-react"
+import { adminApi, uploadFileToS3 } from "../auth"
+import ContentBuilder from "../../components/campaign/ContentBuilder"
+import { withBlockIds } from "../../components/campaign/blocks"
 import PageHeader from "../components/PageHeader"
 import Button from "../components/Button"
 import Drawer from "../components/Drawer"
@@ -10,12 +12,16 @@ import ImageUpload from "../components/ImageUpload"
 import { Field, TextInput, NumberInput, TextArea, Select, Checkbox } from "../components/Field"
 import { useToast } from "../components/Toast"
 import { SkeletonCardGrid } from "../components/Skeleton"
+import FilterTabs, { PillToggle } from "../components/FilterTabs"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
 
 const STATUSES = [
   { value: "draft", label: "Draft" },
   { value: "active", label: "Active" },
+  { value: "paused", label: "Paused" },
   { value: "completed", label: "Completed" },
   { value: "cancelled", label: "Cancelled" },
+  { value: "rejected", label: "Rejected" },
 ]
 
 const EMPTY = {
@@ -23,6 +29,7 @@ const EMPTY = {
   slug: "",
   description: "",
   longDescription: "",
+  contentBlocks: [],
   imageKey: "",
   goalAmount: 0,
   startDate: "",
@@ -44,18 +51,24 @@ function slugify(s = "") {
 export default function CampaignsAdmin() {
   const [items, setItems] = useState([])
   const [filter, setFilter] = useState("all")
+  const [showArchived, setShowArchived] = useState(false)
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [busy, setBusy] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const { notify } = useToast()
+  const confirm = useConfirm()
 
-  const filtered =
-    filter === "all" ? items : items.filter((it) => it.status === filter)
+  const filtered = items.filter(
+    (it) =>
+      (filter === "all" || it.status === filter) &&
+      (showArchived || !it.archived),
+  )
+  const archivedCount = items.filter((it) => it.archived).length
 
+  // Reusable reload for event handlers.
   const load = async () => {
-    setLoading(true)
     try {
       const data = await adminApi.listCampaigns()
       setItems(data)
@@ -65,8 +78,24 @@ export default function CampaignsAdmin() {
       setLoading(false)
     }
   }
+
+  // Initial fetch — inlined (not a call to load) to satisfy the effect linter.
   useEffect(() => {
-    load()
+    let alive = true
+    adminApi
+      .listCampaigns()
+      .then((data) => {
+        if (alive) setItems(data)
+      })
+      .catch((err) => {
+        if (alive) setError(err.message)
+      })
+      .finally(() => {
+        if (alive) setLoading(false)
+      })
+    return () => {
+      alive = false
+    }
   }, [])
 
   const open = (item) => {
@@ -75,6 +104,7 @@ export default function CampaignsAdmin() {
       setForm({
         ...EMPTY,
         ...item,
+        contentBlocks: withBlockIds(item.contentBlocks),
         startDate: item.startDate ? item.startDate.slice(0, 10) : "",
         endDate: item.endDate ? item.endDate.slice(0, 10) : "",
       })
@@ -117,11 +147,49 @@ export default function CampaignsAdmin() {
     }
   }
 
+  const archive = async (id) => {
+    const ok = await confirm({
+      title: "Archive this campaign?",
+      message:
+        "It will be removed from the public site, but all existing donation records are kept. You can restore it anytime.",
+      confirmLabel: "Archive",
+    })
+    if (!ok) return
+    try {
+      await adminApi.archiveCampaign(id)
+      notify("Campaign archived")
+      load()
+    } catch (err) {
+      notify(err.message || "Archive failed", "error")
+    }
+  }
+
+  const restore = async (id) => {
+    try {
+      await adminApi.unarchiveCampaign(id)
+      notify("Campaign restored — republish it to show on the site")
+      load()
+    } catch (err) {
+      notify(err.message || "Restore failed", "error")
+    }
+  }
+
   const remove = async (id) => {
-    if (!confirm("Delete this campaign?")) return
-    await adminApi.deleteCampaign(id)
-    notify("Campaign deleted")
-    load()
+    const ok = await confirm({
+      title: "Delete this campaign?",
+      message:
+        "This permanently deletes the campaign and can't be undone. Campaigns with donations can't be deleted — archive them instead.",
+      confirmLabel: "Delete",
+      danger: true,
+    })
+    if (!ok) return
+    try {
+      await adminApi.deleteCampaign(id)
+      notify("Campaign deleted")
+      load()
+    } catch (err) {
+      notify(err.message || "Delete failed", "error")
+    }
   }
 
   return (
@@ -139,21 +207,22 @@ export default function CampaignsAdmin() {
       />
 
       {/* Status filter */}
-      <div className="flex items-center gap-2 mb-6 flex-wrap">
-        {[{ value: "all", label: "All" }, ...STATUSES].map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => setFilter(opt.value)}
-            className={`px-4 py-1.5 text-[0.625rem] tracking-[0.2em] uppercase rounded-sm border transition-colors ${
-              filter === opt.value
-                ? "bg-primary text-white border-primary"
-                : "bg-white text-primary/70 border-primary/15 hover:border-primary/40"
-            }`}
+      <div className="flex items-center gap-3 mb-6 flex-wrap">
+        <FilterTabs
+          value={filter}
+          onChange={setFilter}
+          options={[{ value: "all", label: "All" }, ...STATUSES]}
+        />
+        {archivedCount > 0 && (
+          <PillToggle
+            active={showArchived}
+            onClick={() => setShowArchived((s) => !s)}
+            activeClass="bg-slate-600 text-white"
           >
-            {opt.label}
-          </button>
-        ))}
-        <span className="text-[0.625rem] text-primary/40 ml-2">
+            {showArchived ? "Hide" : "Show"} Archived ({archivedCount})
+          </PillToggle>
+        )}
+        <span className="text-[0.625rem] text-primary/40">
           {filtered.length} of {items.length} campaigns
         </span>
       </div>
@@ -170,13 +239,17 @@ export default function CampaignsAdmin() {
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4"
         >
           {filtered.map((it) => (
             <motion.div
               key={it._id}
               variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-              className="group bg-white border border-primary/10 rounded-sm overflow-hidden hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
+              className={`group bg-white border rounded-sm overflow-hidden hover:shadow-md transition-all duration-300 ${
+                it.archived
+                  ? "border-primary/10 opacity-60"
+                  : "border-primary/10 hover:border-secondary-terra/60"
+              }`}
             >
               <div className="aspect-[16/10] bg-accent-cream relative overflow-hidden">
                 {it.imageUrl ? (
@@ -192,14 +265,16 @@ export default function CampaignsAdmin() {
                 )}
                 <span
                   className={`absolute top-3 left-3 text-[0.5625rem] tracking-[0.2em] uppercase px-2 py-1 rounded-sm ${
-                    it.status === "active"
-                      ? "bg-emerald-500/90 text-white"
-                      : it.status === "completed"
-                      ? "bg-primary/80 text-white"
-                      : "bg-white/85 text-primary/70"
+                    it.archived
+                      ? "bg-slate-600/90 text-white"
+                      : it.status === "active"
+                        ? "bg-emerald-500/90 text-white"
+                        : it.status === "completed"
+                          ? "bg-primary/80 text-white"
+                          : "bg-white/85 text-primary/70"
                   }`}
                 >
-                  {it.status}
+                  {it.archived ? "Archived" : it.status}
                 </span>
               </div>
               <div className="p-4">
@@ -234,12 +309,29 @@ export default function CampaignsAdmin() {
                   >
                     <Pencil className="w-3 h-3" /> Edit
                   </button>
-                  <button
-                    onClick={() => remove(it._id)}
-                    className="ml-auto inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
-                  >
-                    <Trash2 className="w-3 h-3" /> Delete
-                  </button>
+                  {it.archived ? (
+                    <>
+                      <button
+                        onClick={() => restore(it._id)}
+                        className="ml-auto inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/60 hover:text-emerald-600 transition-colors"
+                      >
+                        <RotateCcw className="w-3 h-3" /> Restore
+                      </button>
+                      <button
+                        onClick={() => remove(it._id)}
+                        className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
+                      >
+                        <Trash2 className="w-3 h-3" /> Delete
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => archive(it._id)}
+                      className="ml-auto inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-amber-600 transition-colors"
+                    >
+                      <Archive className="w-3 h-3" /> Archive
+                    </button>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -338,9 +430,22 @@ export default function CampaignsAdmin() {
           </Field>
           <ImageUpload
             folder="campaigns"
+            label="Campaign Image"
+            hint="Recommended: landscape 16:9, at least 1600×900px (ideally 1920×1080). JPG or PNG."
             currentKey={form.imageKey}
             onUploaded={(key) => setForm({ ...form, imageKey: key })}
           />
+
+          <Field
+            label="Campaign Content"
+            hint="Build the campaign page with headings, text, images and quotes."
+          >
+            <ContentBuilder
+              value={form.contentBlocks}
+              onChange={(blocks) => setForm({ ...form, contentBlocks: blocks })}
+              uploadImage={(file) => uploadFileToS3(file, "campaigns")}
+            />
+          </Field>
           <div className="flex gap-6 pt-2">
             <Checkbox
               label="Published"

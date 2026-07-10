@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { RefreshCw, Heart } from "lucide-react"
+import { Heart } from "lucide-react"
 import { donorApi } from "../../lib/donorAuth"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
+import DonorEmptyState from "../../components/donor/DonorEmptyState"
 
 const STATUS_COLORS = {
   active: "bg-emerald-500/15 text-emerald-600",
@@ -14,15 +16,39 @@ export default function DonorSubscriptions() {
   const [subs, setSubs] = useState([])
   const [loading, setLoading] = useState(true)
   const [busy, setBusy] = useState("")
+  const confirm = useConfirm()
 
   const load = () => {
-    setLoading(true)
     donorApi.mySubscriptions().then(setSubs).catch(() => {}).finally(() => setLoading(false))
   }
-  useEffect(() => { load() }, [])
+  useEffect(() => {
+    let alive = true
+    donorApi
+      .mySubscriptions()
+      .then((data) => {
+        if (alive) setSubs(data)
+      })
+      .catch(() => {})
+      .finally(() => {
+        if (alive) setLoading(false)
+      })
+    return () => {
+      alive = false
+    }
+  }, [])
 
   const handleAction = async (id, action) => {
-    if (action === "cancel" && !confirm("Cancel this subscription?")) return
+    if (
+      action === "cancel" &&
+      !(await confirm({
+        title: "Cancel this subscription?",
+        message: "Your recurring donation will stop. You can start a new one anytime.",
+        confirmLabel: "Cancel Subscription",
+        cancelLabel: "Keep It",
+        danger: true,
+      }))
+    )
+      return
     setBusy(id)
     try {
       if (action === "cancel") await donorApi.cancelSubscription(id)
@@ -36,16 +62,12 @@ export default function DonorSubscriptions() {
 
   if (subs.length === 0) {
     return (
-      <div className="text-center py-16">
-        <RefreshCw className="w-10 h-10 text-primary/10 mx-auto mb-4" />
-        <p className="text-primary/50 text-sm font-medium mb-1">No recurring donations</p>
-        <p className="text-primary/35 text-[0.8125rem] max-w-xs mx-auto mb-5">
-          Set up a recurring gift to make a lasting impact. Choose a monthly, weekly, or custom frequency.
-        </p>
-        <a href="/donate/checkout" className="inline-flex items-center gap-1.5 px-5 py-2 bg-secondary-terra hover:bg-secondary-rust text-white text-[0.6875rem] tracking-[0.15em] uppercase rounded-sm transition-colors">
-          <Heart className="w-3 h-3" /> Start a Recurring Donation
-        </a>
-      </div>
+      <DonorEmptyState
+        art="recurring"
+        title="No recurring donations"
+        description="Set up a recurring gift to make a lasting impact — choose a weekly, monthly, or custom frequency."
+        action={{ label: "Start a Recurring Donation", href: "/donate/checkout", icon: Heart }}
+      />
     )
   }
 

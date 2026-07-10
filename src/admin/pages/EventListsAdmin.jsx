@@ -6,6 +6,7 @@ import PageHeader from "../components/PageHeader"
 import Button from "../components/Button"
 import EmptyState from "../components/EmptyState"
 import { useToast } from "../components/Toast"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonList } from "../components/Skeleton"
 
 const EMPTY = { ttEventId: "", eventName: "", brevoListId: "", isDefault: false }
@@ -24,6 +25,7 @@ export default function EventListsAdmin() {
   const [editingId, setEditingId] = useState(null)
   const [saving, setSaving] = useState(false)
   const { notify } = useToast()
+  const confirm = useConfirm()
 
   const load = async () => {
     setLoading(true)
@@ -106,7 +108,13 @@ export default function EventListsAdmin() {
   }
 
   const remove = async (item) => {
-    if (!confirm(`Delete the mapping for "${item.eventName || item.ttEventId}"?`)) return
+    const ok = await confirm({
+      title: "Delete this mapping?",
+      message: `Remove the mapping for "${item.eventName || item.ttEventId}"?`,
+      confirmLabel: "Delete",
+      danger: true,
+    })
+    if (!ok) return
     try {
       await adminApi.deleteEventList(item._id)
       notify("Mapping deleted")

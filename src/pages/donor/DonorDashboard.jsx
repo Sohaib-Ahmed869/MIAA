@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import { Heart, RefreshCw, Calendar, ArrowUpRight } from "lucide-react"
 import { donorApi } from "../../lib/donorAuth"
+import DonorEmptyState from "../../components/donor/DonorEmptyState"
 
 export default function DonorDashboard() {
   const [profile, setProfile] = useState(null)
@@ -107,7 +108,13 @@ export default function DonorDashboard() {
           )}
         </div>
         {recentDonations.length === 0 ? (
-          <p className="px-6 py-10 text-center text-sm text-primary/40">No donations yet.</p>
+          <DonorEmptyState
+            compact
+            art="donation"
+            title="No donations yet"
+            description="Make your first gift and it'll show up here, along with your receipts and impact."
+            action={{ label: "Make a Donation", href: "/donate/checkout", icon: Heart }}
+          />
         ) : (
           <ul className="divide-y divide-primary/8">
             {recentDonations.map((d) => (

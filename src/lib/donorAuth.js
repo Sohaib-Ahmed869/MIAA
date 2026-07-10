@@ -88,10 +88,28 @@ export const donorApi = {
   // campaign request
   requestCampaign: (payload) =>
     request("/api/campaigns/request", { method: "POST", body: payload }),
+  myCampaignRequests: () => request("/api/campaigns/request/mine"),
+  presignCampaignImage: (payload) =>
+    request("/api/uploads/presign/donor", { method: "POST", body: payload }),
 
   // receipts & tax statements
   downloadReceipt: (donationId) =>
     `${BASE}/api/tax-statements/receipt/${donationId}`,
   downloadTaxStatement: (year) =>
     `${BASE}/api/tax-statements/donor/${year}`,
+}
+
+/** Upload a campaign-request image to S3 via a donor presigned PUT. Returns the key. */
+export async function uploadDonorImage(file) {
+  const { uploadUrl, key } = await donorApi.presignCampaignImage({
+    filename: file.name,
+    contentType: file.type || "application/octet-stream",
+  })
+  const res = await fetch(uploadUrl, {
+    method: "PUT",
+    headers: { "Content-Type": file.type || "application/octet-stream" },
+    body: file,
+  })
+  if (!res.ok) throw new Error(`Image upload failed (${res.status})`)
+  return key
 }

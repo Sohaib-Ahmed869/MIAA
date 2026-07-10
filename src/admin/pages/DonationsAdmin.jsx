@@ -4,11 +4,10 @@ import { DollarSign, TrendingUp, Users, BarChart3 } from "lucide-react"
 import { adminApi } from "../auth"
 import PageHeader from "../components/PageHeader"
 import Drawer from "../components/Drawer"
-import Button from "../components/Button"
 import EmptyState from "../components/EmptyState"
-import { useToast } from "../components/Toast"
 import { SkeletonCardGrid } from "../components/Skeleton"
 import DateFilter from "../components/DateFilter"
+import FilterTabs from "../components/FilterTabs"
 
 const STATUS_COLORS = {
   succeeded: "bg-emerald-500/90 text-white",
@@ -19,36 +18,43 @@ const STATUS_COLORS = {
 
 export default function DonationsAdmin() {
   const [donations, setDonations] = useState([])
+  const [total, setTotal] = useState(0)
+  const [page, setPage] = useState(1)
   const [stats, setStats] = useState(null)
   const [filter, setFilter] = useState("all")
   const [dateFilter, setDateFilter] = useState({ preset: "all", startDate: "", endDate: "" })
   const [viewing, setViewing] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
-  const { notify } = useToast()
 
-  const load = async () => {
-    setLoading(true)
-    try {
-      const params = {}
-      if (filter !== "all") params.status = filter
-      if (dateFilter.startDate) params.startDate = dateFilter.startDate
-      if (dateFilter.endDate) params.endDate = dateFilter.endDate
-      const [donationData, statsData] = await Promise.all([
-        adminApi.listDonations(params),
-        adminApi.getDonationStats(),
-      ])
-      setDonations(donationData.items || [])
-      setStats(statsData)
-    } catch (err) {
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
-  }
+  const PER_PAGE = 50
+  const totalPages = Math.ceil(total / PER_PAGE)
+
   useEffect(() => {
-    load()
-  }, [filter, dateFilter])
+    let active = true
+    const params = { page, limit: PER_PAGE }
+    if (filter !== "all") params.status = filter
+    if (dateFilter.startDate) params.startDate = dateFilter.startDate
+    if (dateFilter.endDate) params.endDate = dateFilter.endDate
+    Promise.all([adminApi.listDonations(params), adminApi.getDonationStats()])
+      .then(([donationData, statsData]) => {
+        if (active) {
+          setDonations(donationData.items || [])
+          setTotal(donationData.total || 0)
+          setStats(statsData)
+          setError("")
+        }
+      })
+      .catch((err) => {
+        if (active) setError(err.message)
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => {
+      active = false
+    }
+  }, [page, filter, dateFilter])
 
   const statCards = stats
     ? [
@@ -97,30 +103,28 @@ export default function DonationsAdmin() {
 
       {/* Date filter */}
       <div className="mb-4">
-        <DateFilter value={dateFilter} onChange={setDateFilter} />
+        <DateFilter value={dateFilter} onChange={(v) => { setDateFilter(v); setPage(1) }} />
       </div>
 
+      {error && (
+        <p className="text-sm text-rose-600 bg-rose-500/8 ring-1 ring-inset ring-rose-500/20 rounded-lg px-4 py-2.5 mb-4">
+          {error}
+        </p>
+      )}
+
       {/* Status filter */}
-      <div className="flex items-center gap-2 mb-6 flex-wrap">
-        {[
-          { value: "all", label: "All" },
-          { value: "succeeded", label: "Succeeded" },
-          { value: "pending", label: "Pending" },
-          { value: "failed", label: "Failed" },
-          { value: "refunded", label: "Refunded" },
-        ].map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => setFilter(opt.value)}
-            className={`px-4 py-1.5 text-[0.625rem] tracking-[0.2em] uppercase rounded-sm border transition-colors ${
-              filter === opt.value
-                ? "bg-primary text-white border-primary"
-                : "bg-white text-primary/70 border-primary/15 hover:border-primary/40"
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
+      <div className="mb-6">
+        <FilterTabs
+          value={filter}
+          onChange={(v) => { setFilter(v); setPage(1) }}
+          options={[
+            { value: "all", label: "All" },
+            { value: "succeeded", label: "Succeeded", dot: "bg-emerald-500" },
+            { value: "pending", label: "Pending", dot: "bg-amber-500" },
+            { value: "failed", label: "Failed", dot: "bg-rose-500" },
+            { value: "refunded", label: "Refunded", dot: "bg-slate-400" },
+          ]}
+        />
       </div>
 
       {loading ? (
@@ -131,6 +135,7 @@ export default function DonationsAdmin() {
           hint="Donations will appear here once donors start contributing."
         />
       ) : (
+        <>
         <motion.div
           initial="hidden"
           animate="visible"
@@ -140,7 +145,7 @@ export default function DonationsAdmin() {
           {/* Table header */}
           <div className="grid grid-cols-[1fr_1fr_auto_auto_auto_auto] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
             <span>Donor</span>
-            <span>Product / Campaign</span>
+            <span>Product / Cause</span>
             <span>Amount</span>
             <span>Method</span>
             <span>Status</span>
@@ -163,11 +168,16 @@ export default function DonationsAdmin() {
               </div>
               <div>
                 <p className="text-sm text-primary truncate">
-                  {d.product?.name || "—"}
+                  {d.product?.name || d.event?.title || "—"}
                 </p>
                 {d.campaign?.title && (
                   <p className="text-[0.6875rem] text-primary/50 truncate">
                     {d.campaign.title}
+                  </p>
+                )}
+                {d.event?.title && d.product?.name && (
+                  <p className="text-[0.6875rem] text-primary/50 truncate">
+                    Event · {d.event.title}
                   </p>
                 )}
               </div>
@@ -190,6 +200,30 @@ export default function DonationsAdmin() {
             </motion.div>
           ))}
         </motion.div>
+
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mt-6">
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page <= 1}
+              className="px-3 py-1.5 text-[0.625rem] tracking-[0.2em] uppercase rounded-sm border border-primary/15 hover:border-primary/40 disabled:opacity-30 transition-colors"
+            >
+              Previous
+            </button>
+            <span className="text-[0.625rem] text-primary/50">
+              {page} / {totalPages}
+            </span>
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page >= totalPages}
+              className="px-3 py-1.5 text-[0.625rem] tracking-[0.2em] uppercase rounded-sm border border-primary/15 hover:border-primary/40 disabled:opacity-30 transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        )}
+        </>
       )}
 
       {/* Detail drawer */}
@@ -211,6 +245,7 @@ export default function DonationsAdmin() {
               ["Status", viewing.paymentStatus],
               ["Product", viewing.product?.name || "—"],
               ["Campaign", viewing.campaign?.title || "—"],
+              ["Event", viewing.event?.title || "—"],
               ["Message", viewing.message || "—"],
               ["Date", new Date(viewing.createdAt).toLocaleString("en-AU")],
               ["Stripe Session", viewing.stripeSessionId || "—"],

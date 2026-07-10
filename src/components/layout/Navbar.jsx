@@ -66,6 +66,9 @@ export default function Navbar() {
               <span className="absolute inset-0 bg-primary/80 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
             </MotionLink>
           )}
+          <CTAButton to="/support-us" className="pointer-events-auto !hidden lg:!inline-flex !px-4 !py-3 3xl:!px-4 3xl:!py-2.5 !text-[0.6875rem] 3xl:!text-[0.6875rem]">
+            Support Us
+          </CTAButton>
           <CTAButton to="/donate" className="pointer-events-auto !hidden lg:!inline-flex !px-4 !py-3 3xl:!px-4 3xl:!py-2.5 !text-[0.6875rem] 3xl:!text-[0.6875rem]">
             Donate
           </CTAButton>
@@ -129,6 +132,9 @@ export default function Navbar() {
                 </Link>
 
                 <div className="flex items-center gap-3">
+                  <CTAButton to="/support-us" onClick={() => setMenuOpen(false)} className="!hidden lg:!inline-flex !px-4 !py-3 3xl:!px-4 3xl:!py-2.5 !text-[0.6875rem] 3xl:!text-[0.6875rem]">
+                    Support Us
+                  </CTAButton>
                   <CTAButton to="/donate" onClick={() => setMenuOpen(false)} className="!hidden lg:!inline-flex !px-4 !py-3 3xl:!px-4 3xl:!py-2.5 !text-[0.6875rem] 3xl:!text-[0.6875rem]">
                     Donate
                   </CTAButton>
@@ -182,7 +188,8 @@ export default function Navbar() {
             {/* Body — nav links left, socials right */}
             <div className="relative z-10 w-full px-4 sm:px-6 md:px-10 lg:px-16 3xl:px-24 pt-10 md:pt-14 3xl:pt-16">
               <div className="grid grid-cols-1 md:grid-cols-[1fr_auto] gap-10">
-                {/* Nav links */}
+                {/* Left column — nav links + donor portal */}
+                <div className="flex flex-col">
                 <nav className="flex flex-col">
                   {NAV_LINKS.map((link, i) => {
                     const isActive = location.pathname === link.path
@@ -242,25 +249,52 @@ export default function Navbar() {
                   })}
                 </nav>
 
-                {/* Donor portal link — below main nav */}
+                {/* Donor portal link — styled identically to the main nav items */}
                 <motion.div
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.3, delay: 0.05 * NAV_LINKS.length + 0.15 }}
-                  className="mt-6 pt-6 border-t border-white/10"
                 >
-                  <Link
-                    to="/donor/login"
-                    onClick={() => setMenuOpen(false)}
-                    className="inline-flex items-center gap-2 text-sm md:text-base text-white/60 hover:text-accent-wheat transition-colors"
+                  <motion.div
+                    whileHover={{ x: 12 }}
+                    transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="3xl:w-5 3xl:h-5">
-                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                      <circle cx="12" cy="7" r="4" />
-                    </svg>
-                    Donor Portal
-                  </Link>
+                    <Link
+                      to="/donor/login"
+                      onClick={() => setMenuOpen(false)}
+                      className={`nav-link group relative flex items-center gap-3 py-1.5 md:py-2.5 text-xl sm:text-2xl md:text-3xl lg:text-[2.125rem] 3xl:text-[2.625rem] font-normal tracking-tight transition-colors duration-200 ${
+                        location.pathname === "/donor/login"
+                          ? "text-secondary-terra"
+                          : "text-white/85 hover:text-secondary-terra"
+                      }`}
+                    >
+                      {/* Quatrefoil marker — visible on hover or when active */}
+                      <span
+                        className={`flex-shrink-0 transition-opacity duration-200 ${
+                          location.pathname === "/donor/login"
+                            ? "opacity-100"
+                            : "opacity-0 group-hover:opacity-100"
+                        }`}
+                      >
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 100 100"
+                          fill="#C15C45"
+                          className="3xl:w-5 3xl:h-5"
+                        >
+                          <circle cx="50" cy="22" r="25" />
+                          <circle cx="50" cy="78" r="25" />
+                          <circle cx="22" cy="50" r="25" />
+                          <circle cx="78" cy="50" r="25" />
+                          <rect x="22" y="22" width="56" height="56" rx="4" />
+                        </svg>
+                      </span>
+                      Donor Portal
+                    </Link>
+                  </motion.div>
                 </motion.div>
+                </div>
 
                 {/* Social links — text only, right aligned */}
                 <motion.div

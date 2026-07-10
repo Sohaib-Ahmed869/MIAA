@@ -73,9 +73,15 @@ export const api = {
   campaigns: () => request(`/api/campaigns`),
   campaign: (idOrSlug) =>
     request(`/api/campaigns/${encodeURIComponent(idOrSlug)}`),
+  campaignDonations: (idOrSlug) =>
+    request(`/api/campaigns/${encodeURIComponent(idOrSlug)}/donations`),
   donationConfig: () => request(`/api/donations/config`),
   createStripeCheckout: (payload) =>
     request(`/api/donations/checkout/stripe`, { method: "POST", body: payload }),
+  createPaymentIntent: (payload) =>
+    request(`/api/donations/payment-intent`, { method: "POST", body: payload }),
+  confirmStripeDonation: (payload) =>
+    request(`/api/donations/confirm/stripe`, { method: "POST", body: payload }),
   createPaypalOrder: (payload) =>
     request(`/api/donations/checkout/paypal`, { method: "POST", body: payload }),
   capturePaypalOrder: (payload) =>

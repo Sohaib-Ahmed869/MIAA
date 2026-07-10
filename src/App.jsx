@@ -21,7 +21,6 @@ import DonationCheckout from "./pages/DonationCheckout"
 import DonationSuccess from "./pages/DonationSuccess"
 import DonationCancelled from "./pages/DonationCancelled"
 import CampaignDetail from "./pages/CampaignDetail"
-
 import AdminLayout from "./admin/components/AdminLayout"
 import ProtectedRoute from "./admin/components/ProtectedRoute"
 import Login from "./admin/pages/Login"
@@ -36,6 +35,7 @@ import EventListsAdmin from "./admin/pages/EventListsAdmin"
 import DonationProductsAdmin from "./admin/pages/DonationProductsAdmin"
 import DonationsAdmin from "./admin/pages/DonationsAdmin"
 import CampaignsAdmin from "./admin/pages/CampaignsAdmin"
+import CampaignRequestsAdmin from "./admin/pages/CampaignRequestsAdmin"
 import DonorsAdmin from "./admin/pages/DonorsAdmin"
 import SubscriptionsAdmin from "./admin/pages/SubscriptionsAdmin"
 import AuditLogAdmin from "./admin/pages/AuditLogAdmin"
@@ -53,6 +53,7 @@ import DonorSubscriptions from "./pages/donor/DonorSubscriptions"
 import DonorReceipts from "./pages/donor/DonorReceipts"
 import DonorProfile from "./pages/donor/DonorProfile"
 import DonorCampaignRequest from "./pages/donor/DonorCampaignRequest"
+import DonorCampaigns from "./pages/donor/DonorCampaigns"
 
 export default function App() {
   return (
@@ -80,6 +81,7 @@ export default function App() {
           <Route path="donation-products" element={<DonationProductsAdmin />} />
           <Route path="donations" element={<DonationsAdmin />} />
           <Route path="campaigns" element={<CampaignsAdmin />} />
+          <Route path="campaign-requests" element={<CampaignRequestsAdmin />} />
           <Route path="donors" element={<DonorsAdmin />} />
           <Route path="subscriptions" element={<SubscriptionsAdmin />} />
           <Route path="audit-log" element={<AuditLogAdmin />} />
@@ -102,6 +104,7 @@ export default function App() {
           <Route path="donations" element={<DonorDonations />} />
           <Route path="subscriptions" element={<DonorSubscriptions />} />
           <Route path="receipts" element={<DonorReceipts />} />
+          <Route path="campaigns" element={<DonorCampaigns />} />
           <Route path="campaign-request" element={<DonorCampaignRequest />} />
           <Route path="profile" element={<DonorProfile />} />
         </Route>

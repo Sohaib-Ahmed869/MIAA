@@ -203,6 +203,41 @@ img {
   border-color: #475569;
 }
 
+/* Donation upsell carousel — equal-height slides + themed pagination */
+.cause-swiper .swiper-slide {
+  height: auto;
+}
+.cause-swiper .swiper-pagination {
+  bottom: 0;
+}
+.cause-swiper .swiper-pagination-bullet {
+  background: #d7b893;
+  opacity: 0.4;
+  transition: opacity 0.2s, background 0.2s;
+}
+.cause-swiper .swiper-pagination-bullet-active {
+  background: #c15c45;
+  opacity: 1;
+}
+
+/* Campaign card carousel on the donate page (dots sit below on cream) */
+.campaign-swiper .swiper-pagination {
+  bottom: 0;
+}
+.campaign-swiper .swiper-pagination-bullet {
+  width: 0.5rem;
+  height: 0.5rem;
+  background: #214952;
+  opacity: 0.25;
+  transition: opacity 0.2s, width 0.2s, background 0.2s;
+}
+.campaign-swiper .swiper-pagination-bullet-active {
+  background: #c15c45;
+  opacity: 1;
+  width: 1.5rem;
+  border-radius: 0.25rem;
+}
+
 /* Reusable hidden-scrollbar utility */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

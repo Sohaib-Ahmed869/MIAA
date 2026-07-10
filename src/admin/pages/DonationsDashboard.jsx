@@ -8,7 +8,6 @@ import {
   BarChart3,
   RefreshCw,
   ArrowUpRight,
-  CreditCard,
   Heart,
 } from "lucide-react"
 import {
@@ -24,11 +23,11 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
-  Legend,
 } from "recharts"
 import { adminApi } from "../auth"
 import PageHeader from "../components/PageHeader"
 import { SkeletonStatCards } from "../components/Skeleton"
+import DateFilter from "../components/DateFilter"
 
 const TERRA = "#C15C45"
 const TEAL = "#214952"
@@ -155,18 +154,100 @@ const customTooltipStyle = {
   padding: "8px 12px",
 }
 
+// Modern donut with a total in the middle
+function DonutChart({ data, colors, height = 190, centerLabel = "Total", money = true }) {
+  const total = data.reduce((s, d) => s + (d.value || 0), 0)
+  const fmt = (n) =>
+    money ? `$${Number(n).toLocaleString()}` : Number(n).toLocaleString()
+  return (
+    <div className="relative">
+      <ResponsiveContainer width="100%" height={height}>
+        <PieChart>
+          <Pie
+            data={data}
+            cx="50%"
+            cy="50%"
+            innerRadius="64%"
+            outerRadius="90%"
+            paddingAngle={data.length > 1 ? 2 : 0}
+            dataKey="value"
+            strokeWidth={0}
+            startAngle={90}
+            endAngle={-270}
+            cornerRadius={4}
+          >
+            {data.map((_, i) => (
+              <Cell key={i} fill={colors[i % colors.length]} />
+            ))}
+          </Pie>
+          <Tooltip
+            contentStyle={customTooltipStyle}
+            formatter={(v, n) => [fmt(v), n]}
+          />
+        </PieChart>
+      </ResponsiveContainer>
+      <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <span className="text-[0.5rem] tracking-[0.2em] uppercase text-primary/40">
+          {centerLabel}
+        </span>
+        <span
+          className="text-xl font-medium text-primary leading-none mt-1"
+          style={{ fontFamily: "var(--font-display)" }}
+        >
+          {fmt(total)}
+        </span>
+      </div>
+    </div>
+  )
+}
+
+// Legend rows with value + share — so amounts are always visible
+function DonutLegend({ data, colors, money = true }) {
+  const total = data.reduce((s, d) => s + (d.value || 0), 0) || 1
+  const fmt = (n) =>
+    money ? `$${Number(n).toLocaleString()}` : Number(n).toLocaleString()
+  return (
+    <ul className="mt-4 space-y-2">
+      {data.map((d, i) => {
+        const pct = Math.round((d.value / total) * 100)
+        return (
+          <li key={d.name} className="flex items-center gap-2.5 text-xs">
+            <span
+              className="w-2.5 h-2.5 rounded-sm flex-shrink-0"
+              style={{ backgroundColor: colors[i % colors.length] }}
+            />
+            <span className="text-primary/70 flex-1 truncate">{d.name}</span>
+            <span className="text-primary font-semibold tabular-nums whitespace-nowrap">
+              {fmt(d.value)}
+            </span>
+            <span className="text-primary/40 tabular-nums w-9 text-right">
+              {pct}%
+            </span>
+          </li>
+        )
+      })}
+    </ul>
+  )
+}
+
 export default function DonationsDashboard() {
   const [stats, setStats] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
+  const [dateFilter, setDateFilter] = useState({ preset: "all", startDate: "", endDate: "" })
 
   useEffect(() => {
     let mounted = true
-    setLoading(true)
+    const params = {}
+    if (dateFilter.startDate) params.startDate = dateFilter.startDate
+    if (dateFilter.endDate) params.endDate = dateFilter.endDate
     adminApi
-      .getDonationStats()
+      .getDonationStats(params)
       .then((data) => {
-        if (mounted) setStats(data)
+        if (mounted) {
+          setStats(data)
+          setError("")
+        }
       })
       .catch((err) => {
         if (mounted) setError(err.message)
@@ -177,7 +258,7 @@ export default function DonationsDashboard() {
     return () => {
       mounted = false
     }
-  }, [])
+  }, [dateFilter])
 
   // Transform monthly data for chart (reverse for chronological order)
   const monthlyData = (stats?.monthly || [])
@@ -198,6 +279,13 @@ export default function DonationsDashboard() {
     name: p.product?.name || "Unallocated",
     value: p.total / 100,
     count: p.count,
+  }))
+
+  // Event breakdown for pie chart
+  const eventData = (stats?.byEvent || []).map((e) => ({
+    name: e.event?.title || "Untitled event",
+    value: e.total / 100,
+    count: e.count,
   }))
 
   // Payment method breakdown
@@ -221,6 +309,14 @@ export default function DonationsDashboard() {
         title="Donations Dashboard"
         subtitle="Key metrics, trends, and insights for your donation platform."
       />
+
+      {/* Date range filter */}
+      <div className="mb-6">
+        <DateFilter value={dateFilter} onChange={setDateFilter} />
+        <p className="text-[0.625rem] text-primary/35 mt-2 pl-1">
+          Filters totals &amp; breakdowns by date. The 12-month trend and donor/subscription counts are lifetime.
+        </p>
+      </div>
 
       {error && <p className="text-rose-600 text-sm mb-4">{error}</p>}
 
@@ -334,36 +430,23 @@ export default function DonationsDashboard() {
                   No data yet
                 </p>
               ) : (
-                <ResponsiveContainer width="100%" height={280}>
-                  <PieChart>
-                    <Pie
-                      data={productData}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={55}
-                      outerRadius={90}
-                      paddingAngle={3}
-                      dataKey="value"
-                      strokeWidth={0}
-                    >
-                      {productData.map((_, i) => (
-                        <Cell key={i} fill={COLORS[i % COLORS.length]} />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      contentStyle={customTooltipStyle}
-                      formatter={(v) => [`$${Number(v).toLocaleString()}`, "Raised"]}
-                    />
-                    <Legend
-                      iconType="circle"
-                      iconSize={8}
-                      wrapperStyle={{ fontSize: "0.6875rem", color: "#21495280" }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
+                <>
+                  <DonutChart data={productData} colors={COLORS} height={200} centerLabel="Raised" />
+                  <DonutLegend data={productData} colors={COLORS} />
+                </>
               )}
             </ChartCard>
           </div>
+
+          {/* ── Event breakdown (only when events have received donations) ── */}
+          {eventData.length > 0 && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              <ChartCard title="By Event" delay={0.4}>
+                <DonutChart data={eventData} colors={COLORS} height={200} centerLabel="Raised" />
+                <DonutLegend data={eventData} colors={COLORS} />
+              </ChartCard>
+            </div>
+          )}
 
           {/* ── Row 2: Donation count trend + Method + Type ── */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
@@ -409,42 +492,8 @@ export default function DonationsDashboard() {
                 </p>
               ) : (
                 <>
-                  <ResponsiveContainer width="100%" height={160}>
-                    <PieChart>
-                      <Pie
-                        data={methodData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={60}
-                        dataKey="value"
-                        strokeWidth={0}
-                      >
-                        {methodData.map((_, i) => (
-                          <Cell
-                            key={i}
-                            fill={i === 0 ? TERRA : TEAL}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={customTooltipStyle}
-                        formatter={(v) => [`$${Number(v).toLocaleString()}`, ""]}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="flex justify-center gap-6 mt-2">
-                    {methodData.map((m, i) => (
-                      <div key={m.name} className="flex items-center gap-2">
-                        <span
-                          className="w-2.5 h-2.5 rounded-full"
-                          style={{ backgroundColor: i === 0 ? TERRA : TEAL }}
-                        />
-                        <span className="text-[0.6875rem] text-primary/60">
-                          {m.name} ({m.count})
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                  <DonutChart data={methodData} colors={COLORS} height={190} centerLabel="Total" />
+                  <DonutLegend data={methodData} colors={COLORS} />
                 </>
               )}
             </ChartCard>
@@ -456,42 +505,8 @@ export default function DonationsDashboard() {
                 </p>
               ) : (
                 <>
-                  <ResponsiveContainer width="100%" height={160}>
-                    <PieChart>
-                      <Pie
-                        data={typeData}
-                        cx="50%"
-                        cy="50%"
-                        outerRadius={60}
-                        dataKey="value"
-                        strokeWidth={0}
-                      >
-                        {typeData.map((_, i) => (
-                          <Cell
-                            key={i}
-                            fill={COLORS[i % COLORS.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={customTooltipStyle}
-                        formatter={(v) => [`$${Number(v).toLocaleString()}`, ""]}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
-                  <div className="flex justify-center gap-6 mt-2">
-                    {typeData.map((t, i) => (
-                      <div key={t.name} className="flex items-center gap-2">
-                        <span
-                          className="w-2.5 h-2.5 rounded-full"
-                          style={{ backgroundColor: COLORS[i % COLORS.length] }}
-                        />
-                        <span className="text-[0.6875rem] text-primary/60">
-                          {t.name} (${t.value.toLocaleString()})
-                        </span>
-                      </div>
-                    ))}
-                  </div>
+                  <DonutChart data={typeData} colors={COLORS} height={190} centerLabel="Total" />
+                  <DonutLegend data={typeData} colors={COLORS} />
                 </>
               )}
             </ChartCard>

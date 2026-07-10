@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
-import { Download, FileText } from "lucide-react"
+import { Download, Eye, Heart } from "lucide-react"
 import { donorApi, getDonorToken } from "../../lib/donorAuth"
+import DonorEmptyState from "../../components/donor/DonorEmptyState"
 
 export default function DonorReceipts() {
   const [donations, setDonations] = useState([])
@@ -38,16 +39,12 @@ export default function DonorReceipts() {
 
       <h3 className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/45 mb-3">Individual Receipts</h3>
       {donations.length === 0 ? (
-        <div className="text-center py-12">
-          <FileText className="w-10 h-10 text-primary/10 mx-auto mb-4" />
-          <p className="text-primary/50 text-sm font-medium mb-1">No receipts yet</p>
-          <p className="text-primary/35 text-[0.8125rem] max-w-xs mx-auto mb-5">
-            Receipts are generated automatically for every successful donation. Make your first gift to see receipts here.
-          </p>
-          <a href="/donate/checkout" className="inline-flex items-center gap-1.5 px-5 py-2 bg-secondary-terra hover:bg-secondary-rust text-white text-[0.6875rem] tracking-[0.15em] uppercase rounded-sm transition-colors">
-            <Download className="w-3 h-3" /> Make a Donation
-          </a>
-        </div>
+        <DonorEmptyState
+          art="receipt"
+          title="No receipts yet"
+          description="Receipts are generated automatically for every successful donation. Make your first gift and it'll appear here."
+          action={{ label: "Make a Donation", href: "/donate/checkout", icon: Heart }}
+        />
       ) : (
         <div className="bg-white border border-primary/10 rounded-sm overflow-hidden">
           <ul className="divide-y divide-primary/6">
@@ -57,9 +54,14 @@ export default function DonorReceipts() {
                   <p className="text-sm font-medium text-primary">{d.receiptNumber}</p>
                   <p className="text-[0.6875rem] text-primary/45">${(d.amount / 100).toFixed(2)} — {new Date(d.createdAt).toLocaleDateString("en-AU")}</p>
                 </div>
-                <a href={`${donorApi.downloadReceipt(d._id)}?token=${getDonorToken()}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[0.625rem] tracking-[0.18em] uppercase text-secondary-terra hover:text-secondary-rust transition-colors">
-                  <Download className="w-3 h-3" /> Download
-                </a>
+                <div className="flex items-center gap-5">
+                  <a href={`${donorApi.downloadReceipt(d._id)}?token=${getDonorToken()}&disposition=inline`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[0.625rem] tracking-[0.18em] uppercase text-primary/60 hover:text-secondary-terra transition-colors">
+                    <Eye className="w-3 h-3" /> View
+                  </a>
+                  <a href={`${donorApi.downloadReceipt(d._id)}?token=${getDonorToken()}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[0.625rem] tracking-[0.18em] uppercase text-secondary-terra hover:text-secondary-rust transition-colors">
+                    <Download className="w-3 h-3" /> Download
+                  </a>
+                </div>
               </li>
             ))}
           </ul>

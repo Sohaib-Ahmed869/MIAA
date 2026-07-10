@@ -6,6 +6,7 @@ import PageHeader from "../components/PageHeader"
 import EmptyState from "../components/EmptyState"
 import { Select } from "../components/Field"
 import { useToast } from "../components/Toast"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonList } from "../components/Skeleton"
 
 const STATUSES = ["new", "in_progress", "resolved", "archived"]
@@ -23,6 +24,7 @@ export default function ContactAdmin() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const { notify } = useToast()
+  const confirm = useConfirm()
 
   const load = async () => {
     setLoading(true)
@@ -46,7 +48,7 @@ export default function ContactAdmin() {
     load()
   }
   const remove = async (id) => {
-    if (!confirm("Delete this submission?")) return
+    if (!(await confirm({ title: "Delete this submission?", confirmLabel: "Delete", danger: true }))) return
     await adminApi.deleteContact(id)
     notify("Deleted")
     load()
