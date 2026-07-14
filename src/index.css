@@ -255,7 +255,7 @@ img {
 
 /* Gala sponsors — full-width glassmorphic infinite slider */
 .sponsor-marquee {
-  animation: smwf-banner-slide 50s linear infinite;
+  animation: smwf-banner-slide 70s linear infinite;
 }
 .sponsor-marquee:hover {
   animation-play-state: paused;
