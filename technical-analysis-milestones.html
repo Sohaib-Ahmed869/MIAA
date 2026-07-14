@@ -1,0 +1,2170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technical Analysis &amp; Milestone Deliverables | MIAA Donation Platform</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── COVER PAGE ── */
+    .cover {
+      background: #0d3b2e;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 60px 40px;
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -60px;
+      width: 700px; height: 700px;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,0.02) 18px,
+        rgba(255,255,255,0.02) 20px
+      );
+      pointer-events: none;
+    }
+
+    .cover::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 400px; height: 400px;
+      background: radial-gradient(ellipse at bottom left, rgba(201,165,90,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .cover-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-logo-img {
+      height: 56px;
+      width: auto;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.92;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: rgba(255,255,255,0.7);
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 2px;
+    }
+
+    .cover-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-category {
+      color: #c9a55a;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .cover-title {
+      color: #fff;
+      font-size: 52px;
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -1.5px;
+    }
+
+    .cover-title span {
+      color: #c9a55a;
+      display: block;
+    }
+
+    .cover-subtitle {
+      color: rgba(255,255,255,0.6);
+      font-size: 15px;
+      margin-top: 20px;
+      max-width: 520px;
+      line-height: 1.65;
+    }
+
+    .cover-footer {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      border-top: 1px solid rgba(255,255,255,0.14);
+      padding-top: 28px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .cover-footer-label {
+      color: rgba(255,255,255,0.4);
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .cover-footer-value {
+      color: #fff;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .cover-footer-value small {
+      display: block;
+      color: rgba(255,255,255,0.45);
+      font-size: 11.5px;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* ── CONTENT PAGES ── */
+    .page {
+      padding: 52px 60px;
+      page-break-after: always;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    .page:last-child { page-break-after: avoid; }
+
+    h2 {
+      font-size: 30px;
+      font-weight: 700;
+      color: #0d1f1a;
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0d1f1a;
+      margin-bottom: 10px;
+    }
+
+    .section-rule {
+      display: block;
+      width: 36px;
+      height: 3px;
+      background: #c9a55a;
+      margin-bottom: 22px;
+      border: none;
+    }
+
+    p { color: #3a3a3a; margin-bottom: 12px; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .page-header-logo {
+      height: 30px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.7;
+    }
+
+    .page-header-meta {
+      font-size: 11px;
+      color: #aaa;
+      text-align: right;
+    }
+
+    .page-header-meta strong {
+      display: block;
+      color: #555;
+      font-size: 12px;
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #c9a55a;
+      margin-bottom: 6px;
+    }
+
+    /* ── ARCH DIAGRAM ── */
+    .arch-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1px;
+      background: #e4e4e4;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .arch-cell {
+      background: #fff;
+      padding: 20px 22px;
+    }
+
+    .arch-cell.dark {
+      background: #0d3b2e;
+    }
+
+    .arch-cell.accent {
+      background: #fffcf0;
+    }
+
+    .arch-cell-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #aaa;
+      margin-bottom: 10px;
+    }
+
+    .arch-cell.dark .arch-cell-label {
+      color: rgba(255,255,255,0.4);
+    }
+
+    .arch-cell-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0d1f1a;
+      margin-bottom: 8px;
+    }
+
+    .arch-cell.dark .arch-cell-title {
+      color: #fff;
+    }
+
+    .arch-cell ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .arch-cell ul li {
+      font-size: 12px;
+      color: #555;
+      padding: 2px 0 2px 12px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .arch-cell.dark ul li { color: rgba(255,255,255,0.65); }
+
+    .arch-cell ul li::before {
+      content: '–';
+      position: absolute;
+      left: 0;
+      color: #c9a55a;
+    }
+
+    .arch-connector {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f8f8f6;
+      font-size: 18px;
+      color: #c9a55a;
+      min-height: 80px;
+    }
+
+    /* ── DATA MODEL TABLE ── */
+    .model-block {
+      border: 1px solid #e4e4e4;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .model-header {
+      background: #0d3b2e;
+      padding: 10px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .model-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 500;
+      color: #c9a55a;
+    }
+
+    .model-desc {
+      font-size: 11px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .model-fields {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .model-fields th {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      text-align: left;
+      padding: 8px 14px;
+      background: #f8f8f6;
+      border-bottom: 1px solid #e4e4e4;
+    }
+
+    .model-fields td {
+      padding: 7px 14px;
+      font-size: 12px;
+      border-bottom: 1px solid #f3f3f3;
+      vertical-align: top;
+    }
+
+    .model-fields tr:last-child td { border-bottom: none; }
+
+    .model-fields .field-name {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: #0d3b2e;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    .model-fields .field-type {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: #888;
+    }
+
+    .field-pk {
+      display: inline-block;
+      background: #c9a55a;
+      color: #fff;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border-radius: 2px;
+      margin-left: 4px;
+    }
+
+    .field-fk {
+      display: inline-block;
+      background: #dde8f8;
+      color: #2a5fb0;
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 1px 5px;
+      border-radius: 2px;
+      margin-left: 4px;
+    }
+
+    /* ── API ENDPOINTS TABLE ── */
+    .api-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 12.5px;
+    }
+
+    .api-table th {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      text-align: left;
+      padding: 8px 14px;
+      background: #f8f8f6;
+      border-bottom: 2px solid #e4e4e4;
+    }
+
+    .api-table td {
+      padding: 9px 14px;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+      color: #3a3a3a;
+    }
+
+    .api-table tr:last-child td { border-bottom: none; }
+
+    .method {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 3px;
+      letter-spacing: 0.05em;
+      vertical-align: middle;
+    }
+
+    .method-get  { background: #e8f5e9; color: #1b5e20; }
+    .method-post { background: #e3f2fd; color: #0d47a1; }
+    .method-put  { background: #fff8e1; color: #e65100; }
+    .method-del  { background: #fde8e8; color: #b71c1c; }
+
+    .endpoint-path {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: #0d3b2e;
+    }
+
+    /* ── INTEGRATION CARDS ── */
+    .integration-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .integration-card {
+      border: 1px solid #e4e4e4;
+      border-radius: 8px;
+      padding: 20px 22px;
+    }
+
+    .integration-card.highlight {
+      border-color: #c9a55a;
+      background: #fffdf5;
+    }
+
+    .integration-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .integration-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: #0d1f1a;
+    }
+
+    .integration-tag {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    .tag-payment { background: #e8f5e9; color: #1b5e20; }
+    .tag-crm     { background: #ede7f6; color: #4527a0; }
+    .tag-ticket  { background: #e3f2fd; color: #0d47a1; }
+    .tag-email   { background: #fce4ec; color: #880e4f; }
+    .tag-infra   { background: #f3f3f3; color: #555; }
+
+    .integration-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .integration-card ul li {
+      font-size: 12.5px;
+      color: #3a3a3a;
+      padding: 3px 0 3px 14px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .integration-card ul li::before {
+      content: '•';
+      color: #c9a55a;
+      position: absolute;
+      left: 0;
+    }
+
+    /* ── MILESTONE / WEEK BLOCKS ── */
+    .milestone-block {
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 32px;
+      border: 1px solid #e4e4e4;
+    }
+
+    .milestone-header {
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .milestone-header.w1 { background: #0d3b2e; }
+    .milestone-header.w2 { background: #0f4a38; }
+    .milestone-header.w3 { background: #114e3e; }
+    .milestone-header.w4 { background: #c9a55a; }
+    .milestone-header.gala { background: #1a1a1a; }
+
+    .milestone-week {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .milestone-header.w4 .milestone-week { color: rgba(255,255,255,0.7); }
+
+    .milestone-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-top: 2px;
+    }
+
+    .milestone-dates {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.6);
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .milestone-header.w4 .milestone-dates { color: rgba(255,255,255,0.7); }
+
+    .milestone-body {
+      background: #fff;
+      padding: 0;
+    }
+
+    .milestone-section {
+      padding: 20px 24px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .milestone-section:last-child { border-bottom: none; }
+
+    .milestone-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 12px;
+    }
+
+    .task-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .task-col h4 {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: #0d1f1a;
+      margin-bottom: 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .task-col ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .task-col ul li {
+      font-size: 12.5px;
+      color: #3a3a3a;
+      padding: 3px 0 3px 16px;
+      position: relative;
+      line-height: 1.45;
+    }
+
+    .task-col ul li::before {
+      content: '✓';
+      color: #c9a55a;
+      position: absolute;
+      left: 0;
+      font-size: 10px;
+      top: 4px;
+    }
+
+    .task-col ul li.blocker::before { content: '⚠'; color: #d97706; font-size: 10px; }
+
+    .acceptance-list {
+      list-style: none;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 20px;
+    }
+
+    .acceptance-list li {
+      font-size: 12.5px;
+      color: #3a3a3a;
+      padding: 4px 0 4px 18px;
+      position: relative;
+      line-height: 1.45;
+    }
+
+    .acceptance-list li::before {
+      content: '□';
+      position: absolute;
+      left: 0;
+      color: #0d3b2e;
+      font-size: 13px;
+      top: 3px;
+    }
+
+    .deliverable-pill {
+      display: inline-block;
+      background: #f0f7f3;
+      border: 1px solid #b8d9c7;
+      color: #0d3b2e;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      margin: 3px 4px 3px 0;
+    }
+
+    .deliverable-pill.gold {
+      background: #fdf6e3;
+      border-color: #c9a55a;
+      color: #8a6820;
+    }
+
+    /* ── GALA MILESTONE ── */
+    .gala-block {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0d3b2e 100%);
+      border-radius: 10px;
+      padding: 32px 32px;
+      margin: 24px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gala-block::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(201,165,90,0.15) 0%, transparent 70%);
+    }
+
+    .gala-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: #c9a55a;
+      margin-bottom: 8px;
+    }
+
+    .gala-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      letter-spacing: -0.5px;
+    }
+
+    .gala-date {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      margin-bottom: 20px;
+    }
+
+    .gala-checklist {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .gala-check {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.8);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .gala-check-icon {
+      color: #c9a55a;
+      font-size: 14px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── RISK TABLE ── */
+    .risk-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .risk-table th {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      text-align: left;
+      padding: 8px 14px;
+      background: #f8f8f6;
+      border-bottom: 2px solid #e4e4e4;
+    }
+
+    .risk-table td {
+      padding: 10px 14px;
+      font-size: 12.5px;
+      color: #3a3a3a;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+    }
+
+    .risk-table tr:last-child td { border-bottom: none; }
+
+    .risk-high   { color: #b52a2a; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .risk-medium { color: #d97706; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+    .risk-low    { color: #1a7a46; font-weight: 700; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── DEPENDENCY MAP ── */
+    .dep-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .dep-card {
+      border: 1px solid #e4e4e4;
+      border-radius: 8px;
+      padding: 16px 18px;
+    }
+
+    .dep-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0d1f1a;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dep-owner-badge {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+
+    .owner-ts   { background: #0d3b2e; color: #c9a55a; }
+    .owner-miaa { background: #e8f5e9; color: #1b5e20; }
+    .owner-ext  { background: #ede7f6; color: #4527a0; }
+
+    .dep-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .dep-card ul li {
+      font-size: 12.5px;
+      color: #3a3a3a;
+      padding: 3px 0 3px 14px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .dep-card ul li::before {
+      content: '→';
+      color: #c9a55a;
+      position: absolute;
+      left: 0;
+      font-size: 10px;
+    }
+
+    /* ── ENV STACK TABLE ── */
+    .env-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .env-card {
+      border: 1px solid #e4e4e4;
+      border-radius: 8px;
+      padding: 18px 20px;
+    }
+
+    .env-card.prod {
+      border-color: #0d3b2e;
+      background: #f0f7f3;
+    }
+
+    .env-label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    .env-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0d1f1a;
+      margin-bottom: 10px;
+    }
+
+    .env-card.prod .env-name { color: #0d3b2e; }
+
+    .env-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .env-card ul li {
+      font-size: 12px;
+      color: #555;
+      padding: 2px 0 2px 12px;
+      position: relative;
+      line-height: 1.5;
+    }
+
+    .env-card ul li::before {
+      content: '•';
+      color: #c9a55a;
+      position: absolute;
+      left: 0;
+    }
+
+    /* ── SUMMARY FOOTER ── */
+    .summary-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+
+    .summary-table th {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      text-align: left;
+      padding: 8px 14px;
+      background: #f8f8f6;
+      border-bottom: 2px solid #e4e4e4;
+    }
+
+    .summary-table td {
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #3a3a3a;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+    }
+
+    .summary-table tr:last-child td { border-bottom: none; }
+
+    .check-yes {
+      display: inline-block;
+      background: #e6f4ee;
+      color: #1a7a46;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+
+    /* ── DOC FOOTER ── */
+    .doc-footer {
+      background: #f8f8f6;
+      padding: 24px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #e4e4e4;
+    }
+
+    .doc-footer-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .doc-footer-logo-img {
+      height: 24px;
+      width: auto;
+      object-fit: contain;
+      opacity: 0.55;
+    }
+
+    .doc-footer-text {
+      font-size: 11px;
+      color: #888;
+    }
+
+    .doc-footer-text strong { color: #444; }
+
+    .doc-footer-right {
+      text-align: right;
+      font-size: 11px;
+      color: #999;
+    }
+
+    .doc-footer-right strong { color: #444; display: block; margin-bottom: 2px; }
+
+    .footnote {
+      font-size: 11.5px;
+      color: #888;
+      margin-top: 24px;
+      padding-top: 14px;
+      border-top: 1px solid #ebebeb;
+      line-height: 1.6;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      border-left: 3px solid #c9a55a;
+      background: #fffdf5;
+      padding: 14px 18px;
+      border-radius: 0 6px 6px 0;
+      margin: 20px 0;
+      font-size: 13px;
+      color: #3a3a3a;
+    }
+
+    .callout strong { color: #0d1f1a; }
+
+    /* ── PRINT ── */
+    @media print {
+      .cover { min-height: 100vh; }
+      .page  { page-break-after: always; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     COVER PAGE
+════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-top">
+    <img
+      src="src/assets/images/Homepage/smalllogo.png"
+      alt="Museum of Islamic Art Australia"
+      class="cover-logo-img"
+      onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+    />
+    <div style="display:none; color:#fff; font-size:18px; font-weight:700; letter-spacing:-0.5px;">MIAA</div>
+    <span class="cover-badge">Technical Document · V1.0</span>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-category">Donation Platform — Museum of Islamic Art Australia</div>
+    <h1 class="cover-title">
+      Technical Analysis
+      <span>&amp; Milestone Deliverables</span>
+    </h1>
+    <p class="cover-subtitle">
+      A full technical breakdown of the custom donation platform — architecture, data models,
+      API integrations, environment setup, and week-by-week deliverables targeting the
+      Gala Dinner on 25 July 2026.
+    </p>
+  </div>
+
+  <div class="cover-footer">
+    <div>
+      <div class="cover-footer-label">Prepared For</div>
+      <div class="cover-footer-value">
+        Museum of Islamic Art Australia
+        <small>An initiative of ISRA</small>
+      </div>
+    </div>
+    <div>
+      <div class="cover-footer-label">Delivery Team</div>
+      <div class="cover-footer-value">
+        Think Studio
+        <small>Development &amp; Engineering</small>
+      </div>
+    </div>
+    <div>
+      <div class="cover-footer-label">Date Issued</div>
+      <div class="cover-footer-value">
+        30 June 2026
+        <small>Based on discovery meeting 27 June 2026</small>
+      </div>
+    </div>
+    <div>
+      <div class="cover-footer-label">Go-Live Target</div>
+      <div class="cover-footer-value">
+        25 July 2026
+        <small>Gala Dinner — hard deadline</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 1 — TECHNICAL ARCHITECTURE
+════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <img
+      src="src/assets/images/Homepage/smalllogo.png"
+      alt="MIAA"
+      class="page-header-logo"
+      onerror="this.style.display='none';"
+    />
+    <div class="page-header-meta">
+      <strong>Technical Analysis &amp; Milestone Deliverables</strong>
+      Think Studio · 30 June 2026
+    </div>
+  </div>
+
+  <h2>System Architecture</h2>
+  <hr class="section-rule">
+
+  <p>
+    The donation platform is built as an extension of the existing MIAA website — not a
+    separate system. All new modules share the same React front end, the same backend
+    API, the same hosting infrastructure, and the same admin CMS the MIAA team already
+    uses. The additions are scoped to five new server-side modules, three new API
+    integration layers, and a set of new front-end pages and components.
+  </p>
+
+  <div class="section-label" style="margin-top:28px;">Layer Breakdown</div>
+  <div class="arch-grid">
+
+    <div class="arch-cell dark">
+      <div class="arch-cell-label">Client Layer</div>
+      <div class="arch-cell-title">React Front End</div>
+      <ul>
+        <li>Donation widget (embeddable, CMS-controlled)</li>
+        <li>Homepage hero integration</li>
+        <li>Campaign &amp; event pages</li>
+        <li>Checkout flow (ticket + optional donation upsell)</li>
+        <li>Donor account portal (login, history, manage subscriptions)</li>
+        <li>Admin CMS — new donation, campaign, and event sections</li>
+        <li>Fully mobile-responsive (all breakpoints)</li>
+      </ul>
+    </div>
+
+    <div class="arch-cell">
+      <div class="arch-cell-label">Application Layer</div>
+      <div class="arch-cell-title">Backend API (Node.js)</div>
+      <ul>
+        <li>Donation Processing Module</li>
+        <li>Event Registration Module</li>
+        <li>Campaign &amp; Appeal Module</li>
+        <li>Donor Account &amp; Auth Module</li>
+        <li>Admin &amp; Reporting Module</li>
+        <li>Webhook Handler (Stripe, PayPal)</li>
+        <li>Audit Logging Service</li>
+      </ul>
+    </div>
+
+    <div class="arch-cell">
+      <div class="arch-cell-label">Data Layer</div>
+      <div class="arch-cell-title">Database (existing infra)</div>
+      <ul>
+        <li>Donors, Donations, Subscriptions</li>
+        <li>Campaigns, CampaignProducts</li>
+        <li>Events, EventRegistrations</li>
+        <li>InstallmentPlans, Payments</li>
+        <li>AuditLogs</li>
+        <li>PeerFundraisingPages</li>
+        <li>AdminUsers</li>
+      </ul>
+    </div>
+
+    <div class="arch-cell accent">
+      <div class="arch-cell-label">Payment Layer</div>
+      <div class="arch-cell-title">Stripe + PayPal</div>
+      <ul>
+        <li>One-time charges</li>
+        <li>Subscription billing (recurring)</li>
+        <li>Saved payment methods</li>
+        <li>Apple Pay / Google Pay (Stripe)</li>
+        <li>Refunds and cancellations</li>
+        <li>Webhook event delivery to backend</li>
+        <li>PCI-compliant — card data never touches MIAA servers</li>
+      </ul>
+    </div>
+
+    <div class="arch-cell accent">
+      <div class="arch-cell-label">Integration Layer</div>
+      <div class="arch-cell-title">External Services</div>
+      <ul>
+        <li>Brevo — donor &amp; subscriber sync</li>
+        <li>Ticket Tailor — optional push for large events</li>
+        <li>Email (SMTP / Brevo transactional) — receipts and confirmations</li>
+        <li>MIAA CMS — content management for all donation widgets</li>
+      </ul>
+    </div>
+
+    <div class="arch-cell dark">
+      <div class="arch-cell-label">Infrastructure</div>
+      <div class="arch-cell-title">Hosting &amp; Scaling</div>
+      <ul>
+        <li>Existing MIAA hosting infrastructure</li>
+        <li>Auto-scaling — capacity adapts to concurrent users</li>
+        <li>HTTPS / TLS throughout</li>
+        <li>Staging environment mirrors production</li>
+        <li>Environment-based API key management</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="callout">
+    <strong>Single-system principle:</strong> No new hosting account, no new dashboard, no new
+    platform to learn. Every feature described in this document is administered from the same
+    MIAA CMS the team already operates. A dedicated donations-only portal is provided for team
+    members whose role is exclusively donor management.
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 2 — DATA MODELS
+════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <img src="src/assets/images/Homepage/smalllogo.png" alt="MIAA" class="page-header-logo" onerror="this.style.display='none';" />
+    <div class="page-header-meta"><strong>Technical Analysis &amp; Milestone Deliverables</strong>Think Studio · 30 June 2026</div>
+  </div>
+
+  <h2>Data Models</h2>
+  <hr class="section-rule">
+  <p>Core entities added to the MIAA database schema. All tables extend the existing infrastructure; no migration of existing records is required.</p>
+
+  <!-- Donor -->
+  <div class="model-block">
+    <div class="model-header">
+      <span class="model-name">donors</span>
+      <span class="model-desc">Registered donor accounts</span>
+    </div>
+    <table class="model-fields">
+      <thead>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="field-name">id <span class="field-pk">PK</span></td><td class="field-type">uuid</td><td>Unique donor identifier</td></tr>
+        <tr><td class="field-name">email</td><td class="field-type">varchar(255)</td><td>Login email — unique, used for Brevo dedup</td></tr>
+        <tr><td class="field-name">first_name, last_name</td><td class="field-type">varchar</td><td>Display name and receipt generation</td></tr>
+        <tr><td class="field-name">phone</td><td class="field-type">varchar</td><td>Optional; collected during event registration</td></tr>
+        <tr><td class="field-name">brevo_contact_id</td><td class="field-type">varchar</td><td>Brevo CRM reference for sync deduplication</td></tr>
+        <tr><td class="field-name">stripe_customer_id</td><td class="field-type">varchar</td><td>Stripe customer object — stores saved payment methods</td></tr>
+        <tr><td class="field-name">paypal_payer_id</td><td class="field-type">varchar</td><td>PayPal payer reference for recurring PayPal billing</td></tr>
+        <tr><td class="field-name">created_at, updated_at</td><td class="field-type">timestamp</td><td>Account lifecycle timestamps</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Donation -->
+  <div class="model-block">
+    <div class="model-header">
+      <span class="model-name">donations</span>
+      <span class="model-desc">Every completed or attempted payment</span>
+    </div>
+    <table class="model-fields">
+      <thead>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="field-name">id <span class="field-pk">PK</span></td><td class="field-type">uuid</td><td>Donation record identifier</td></tr>
+        <tr><td class="field-name">donor_id <span class="field-fk">FK</span></td><td class="field-type">uuid</td><td>References <code>donors.id</code>; nullable for anonymous</td></tr>
+        <tr><td class="field-name">campaign_id <span class="field-fk">FK</span></td><td class="field-type">uuid</td><td>Campaign or cause this donation is attributed to</td></tr>
+        <tr><td class="field-name">event_registration_id <span class="field-fk">FK</span></td><td class="field-type">uuid</td><td>Set when donation was made via event checkout upsell</td></tr>
+        <tr><td class="field-name">amount_aud</td><td class="field-type">integer</td><td>Amount in cents (AUD) to avoid float precision errors</td></tr>
+        <tr><td class="field-name">frequency</td><td class="field-type">enum</td><td>one_time · weekly · fortnightly · monthly · annual</td></tr>
+        <tr><td class="field-name">status</td><td class="field-type">enum</td><td>pending · succeeded · failed · refunded · cancelled</td></tr>
+        <tr><td class="field-name">payment_gateway</td><td class="field-type">enum</td><td>stripe · paypal</td></tr>
+        <tr><td class="field-name">gateway_payment_id</td><td class="field-type">varchar</td><td>Stripe charge ID or PayPal order ID for reconciliation</td></tr>
+        <tr><td class="field-name">is_anonymous</td><td class="field-type">boolean</td><td>Hides donor name from public campaign display</td></tr>
+        <tr><td class="field-name">receipt_sent_at</td><td class="field-type">timestamp</td><td>When automated receipt email was dispatched</td></tr>
+        <tr><td class="field-name">created_at</td><td class="field-type">timestamp</td><td>Payment timestamp (UTC)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Subscription -->
+  <div class="model-block">
+    <div class="model-header">
+      <span class="model-name">subscriptions</span>
+      <span class="model-desc">Recurring donation schedules</span>
+    </div>
+    <table class="model-fields">
+      <thead>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="field-name">id <span class="field-pk">PK</span></td><td class="field-type">uuid</td><td></td></tr>
+        <tr><td class="field-name">donor_id <span class="field-fk">FK</span></td><td class="field-type">uuid</td><td></td></tr>
+        <tr><td class="field-name">campaign_id <span class="field-fk">FK</span></td><td class="field-type">uuid</td><td></td></tr>
+        <tr><td class="field-name">gateway_subscription_id</td><td class="field-type">varchar</td><td>Stripe subscription or PayPal billing agreement ID</td></tr>
+        <tr><td class="field-name">frequency</td><td class="field-type">enum</td><td>weekly · fortnightly · monthly · annual</td></tr>
+        <tr><td class="field-name">amount_aud</td><td class="field-type">integer</td><td>Fixed recurring amount in cents</td></tr>
+        <tr><td class="field-name">billing_day</td><td class="field-type">integer</td><td>Day of month for monthly/annual (1–28)</td></tr>
+        <tr><td class="field-name">status</td><td class="field-type">enum</td><td>active · paused · cancellation_requested · cancelled</td></tr>
+        <tr><td class="field-name">cancellation_approved_by</td><td class="field-type">uuid</td><td>Admin user who approved cancellation (installments)</td></tr>
+        <tr><td class="field-name">next_billing_at</td><td class="field-type">timestamp</td><td>Next scheduled charge</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Campaign -->
+  <div class="model-block">
+    <div class="model-header">
+      <span class="model-name">campaigns</span>
+      <span class="model-desc">Fundraising campaigns (Gala Dinner, museum causes, etc.)</span>
+    </div>
+    <table class="model-fields">
+      <thead>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="field-name">id <span class="field-pk">PK</span></td><td class="field-type">uuid</td><td></td></tr>
+        <tr><td class="field-name">slug</td><td class="field-type">varchar</td><td>URL-safe identifier (e.g. <code>gala-dinner-2026</code>)</td></tr>
+        <tr><td class="field-name">title, description</td><td class="field-type">text</td><td>CMS-editable content</td></tr>
+        <tr><td class="field-name">goal_aud</td><td class="field-type">integer</td><td>Fundraising target in cents; null = no public goal</td></tr>
+        <tr><td class="field-name">event_id <span class="field-fk">FK</span></td><td class="field-type">uuid</td><td>Links campaign to an event; enables upsell at checkout</td></tr>
+        <tr><td class="field-name">hero_image_url</td><td class="field-type">varchar</td><td>CMS-uploaded campaign banner</td></tr>
+        <tr><td class="field-name">show_on_homepage</td><td class="field-type">boolean</td><td>Surfaces widget in homepage hero slide</td></tr>
+        <tr><td class="field-name">show_on_gala_page</td><td class="field-type">boolean</td><td>Surfaces donation section on Gala Dinner page</td></tr>
+        <tr><td class="field-name">status</td><td class="field-type">enum</td><td>draft · active · closed</td></tr>
+        <tr><td class="field-name">starts_at, ends_at</td><td class="field-type">timestamp</td><td>Campaign date window</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Events -->
+  <div class="model-block">
+    <div class="model-header">
+      <span class="model-name">events</span>
+      <span class="model-desc">Event registrations (Gala Dinner and future events)</span>
+    </div>
+    <table class="model-fields">
+      <thead>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="field-name">id <span class="field-pk">PK</span></td><td class="field-type">uuid</td><td></td></tr>
+        <tr><td class="field-name">title, description</td><td class="field-type">text</td><td>CMS-editable</td></tr>
+        <tr><td class="field-name">event_date, venue</td><td class="field-type">varchar</td><td>Display fields</td></tr>
+        <tr><td class="field-name">ticket_price_aud</td><td class="field-type">integer</td><td>0 for free events</td></tr>
+        <tr><td class="field-name">capacity</td><td class="field-type">integer</td><td>Max registrations; null = unlimited</td></tr>
+        <tr><td class="field-name">coupon_codes</td><td class="field-type">jsonb</td><td>Array of <code>{"{"}code, discount_pct{"}"}</code> objects</td></tr>
+        <tr><td class="field-name">registration_questions</td><td class="field-type">jsonb</td><td>Dynamic form schema (text, dropdown, file)</td></tr>
+        <tr><td class="field-name">ticket_tailor_event_id</td><td class="field-type">varchar</td><td>Optional: push registrations to Ticket Tailor if set</td></tr>
+        <tr><td class="field-name">status</td><td class="field-type">enum</td><td>draft · published · sold_out · closed</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 3 — API ENDPOINTS & INTEGRATIONS
+════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <img src="src/assets/images/Homepage/smalllogo.png" alt="MIAA" class="page-header-logo" onerror="this.style.display='none';" />
+    <div class="page-header-meta"><strong>Technical Analysis &amp; Milestone Deliverables</strong>Think Studio · 30 June 2026</div>
+  </div>
+
+  <h2>API Endpoints</h2>
+  <hr class="section-rule">
+  <p>All endpoints are RESTful JSON APIs served under the existing MIAA backend. Auth uses session tokens for the donor portal and admin-scoped JWT for the CMS.</p>
+
+  <div class="section-label">Donations &amp; Subscriptions</div>
+  <table class="api-table">
+    <thead>
+      <tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="method method-post">POST</span></td>
+        <td class="endpoint-path">/api/donations/checkout</td>
+        <td>Initiate a one-time or recurring donation. Returns a Stripe Payment Intent or PayPal Order.</td>
+        <td>Optional (guest or donor)</td>
+      </tr>
+      <tr>
+        <td><span class="method method-post">POST</span></td>
+        <td class="endpoint-path">/api/donations/webhooks/stripe</td>
+        <td>Receive Stripe webhook events (payment_intent.succeeded, invoice.paid, subscription.deleted, etc.)</td>
+        <td>Stripe signature</td>
+      </tr>
+      <tr>
+        <td><span class="method method-post">POST</span></td>
+        <td class="endpoint-path">/api/donations/webhooks/paypal</td>
+        <td>Receive PayPal IPN/webhook events. Confirms payment and updates donation status.</td>
+        <td>PayPal signature</td>
+      </tr>
+      <tr>
+        <td><span class="method method-get">GET</span></td>
+        <td class="endpoint-path">/api/donations/my</td>
+        <td>Donor's donation history, receipts, and active subscriptions.</td>
+        <td>Donor session</td>
+      </tr>
+      <tr>
+        <td><span class="method method-put">PUT</span></td>
+        <td class="endpoint-path">/api/subscriptions/:id/cancel-request</td>
+        <td>Donor requests cancellation. For committed installments, creates an admin approval task.</td>
+        <td>Donor session</td>
+      </tr>
+      <tr>
+        <td><span class="method method-put">PUT</span></td>
+        <td class="endpoint-path">/api/admin/subscriptions/:id/approve-cancel</td>
+        <td>Admin approves or rejects a donor cancellation request.</td>
+        <td>Admin JWT</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-label" style="margin-top:24px;">Campaigns &amp; Events</div>
+  <table class="api-table">
+    <thead>
+      <tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="method method-get">GET</span></td>
+        <td class="endpoint-path">/api/campaigns</td>
+        <td>List active campaigns (public). Includes total raised, goal, and linked event.</td>
+        <td>Public</td>
+      </tr>
+      <tr>
+        <td><span class="method method-post">POST</span></td>
+        <td class="endpoint-path">/api/admin/campaigns</td>
+        <td>Create a new campaign. CMS action.</td>
+        <td>Admin JWT</td>
+      </tr>
+      <tr>
+        <td><span class="method method-get">GET</span></td>
+        <td class="endpoint-path">/api/events/:slug</td>
+        <td>Fetch public event details including ticket price, capacity remaining, and registration form schema.</td>
+        <td>Public</td>
+      </tr>
+      <tr>
+        <td><span class="method method-post">POST</span></td>
+        <td class="endpoint-path">/api/events/:slug/register</td>
+        <td>Register for an event. Processes ticket payment and optional donation upsell in a single transaction.</td>
+        <td>Optional</td>
+      </tr>
+      <tr>
+        <td><span class="method method-get">GET</span></td>
+        <td class="endpoint-path">/api/admin/events/:id/registrations</td>
+        <td>Admin view of all registrations for an event including payment status.</td>
+        <td>Admin JWT</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="section-label" style="margin-top:24px;">Admin &amp; Reporting</div>
+  <table class="api-table">
+    <thead>
+      <tr><th>Method</th><th>Path</th><th>Description</th><th>Auth</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="method method-get">GET</span></td>
+        <td class="endpoint-path">/api/admin/donations</td>
+        <td>Paginated donation list with filters (date range, status, campaign, payment method).</td>
+        <td>Admin JWT</td>
+      </tr>
+      <tr>
+        <td><span class="method method-get">GET</span></td>
+        <td class="endpoint-path">/api/admin/donors/:id/tax-statement</td>
+        <td>Generate a downloadable PDF annual tax statement for a specific donor.</td>
+        <td>Admin JWT</td>
+      </tr>
+      <tr>
+        <td><span class="method method-get">GET</span></td>
+        <td class="endpoint-path">/api/admin/audit-log</td>
+        <td>Full audit log — paginated, filterable by user, action type, and date.</td>
+        <td>Admin JWT</td>
+      </tr>
+      <tr>
+        <td><span class="method method-get">GET</span></td>
+        <td class="endpoint-path">/api/admin/export/donations.csv</td>
+        <td>Export donations to CSV for reconciliation or external reporting.</td>
+        <td>Admin JWT</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2 style="margin-top:36px;">Third-Party Integrations</h2>
+  <hr class="section-rule">
+
+  <div class="integration-grid">
+
+    <div class="integration-card highlight">
+      <div class="integration-header">
+        <div class="integration-name">Stripe</div>
+        <span class="integration-tag tag-payment">Payment</span>
+      </div>
+      <ul>
+        <li>Payment Intents API for one-time charges</li>
+        <li>Subscriptions API for recurring (weekly / monthly / annual)</li>
+        <li>Customer API — saved payment methods per donor</li>
+        <li>Stripe Elements embedded in checkout (PCI scope minimised)</li>
+        <li>Apple Pay &amp; Google Pay via Payment Request Button</li>
+        <li>Webhook endpoint receives: <code>payment_intent.succeeded</code>, <code>invoice.paid</code>, <code>customer.subscription.deleted</code></li>
+        <li>Test mode during development; live keys switched at go-live</li>
+      </ul>
+    </div>
+
+    <div class="integration-card highlight">
+      <div class="integration-header">
+        <div class="integration-name">PayPal</div>
+        <span class="integration-tag tag-payment">Payment</span>
+      </div>
+      <ul>
+        <li>PayPal Orders API for one-time payments</li>
+        <li>Billing Agreements for recurring PayPal giving</li>
+        <li>PayPal JS SDK embedded in checkout alongside Stripe</li>
+        <li>Webhook receives: <code>PAYMENT.CAPTURE.COMPLETED</code>, <code>BILLING.SUBSCRIPTION.CANCELLED</code></li>
+        <li>Sandbox environment during development and UAT</li>
+        <li>Live credentials activated 72 hours before go-live</li>
+      </ul>
+    </div>
+
+    <div class="integration-card">
+      <div class="integration-header">
+        <div class="integration-name">Brevo (CRM)</div>
+        <span class="integration-tag tag-crm">CRM</span>
+      </div>
+      <ul>
+        <li>Contacts API — upsert donor on first donation (dedup by email)</li>
+        <li>Transactional email API — donation receipts &amp; event confirmations</li>
+        <li>Custom attribute tagging — donation frequency, campaign name, event name</li>
+        <li>Newsletter opt-in synced at registration</li>
+        <li>All API calls use MIAA's existing Brevo account and API key</li>
+      </ul>
+    </div>
+
+    <div class="integration-card">
+      <div class="integration-header">
+        <div class="integration-name">Ticket Tailor</div>
+        <span class="integration-tag tag-ticket">Ticketing</span>
+      </div>
+      <ul>
+        <li>Optional push: registrations made on the MIAA website can be mirrored to Ticket Tailor</li>
+        <li>Uses Ticket Tailor API — creates an attendee record per registration</li>
+        <li>Triggered only when <code>ticket_tailor_event_id</code> is set on the event record</li>
+        <li>MIAA retains flexibility to use either platform for any given event</li>
+        <li>QR code scanning remains a Ticket Tailor function (not in scope)</li>
+      </ul>
+    </div>
+
+    <div class="integration-card">
+      <div class="integration-header">
+        <div class="integration-name">Email (Transactional)</div>
+        <span class="integration-tag tag-email">Email</span>
+      </div>
+      <ul>
+        <li>Brevo transactional API used for all automated emails</li>
+        <li>Templates: donation receipt, event confirmation, cancellation request, admin alert</li>
+        <li>Admin notification on every completed donation</li>
+        <li>Annual tax statement delivered as PDF email attachment</li>
+        <li>All emails from MIAA-branded sender domain</li>
+      </ul>
+    </div>
+
+    <div class="integration-card">
+      <div class="integration-header">
+        <div class="integration-name">MIAA CMS</div>
+        <span class="integration-tag tag-infra">Infra</span>
+      </div>
+      <ul>
+        <li>All donation campaigns manageable without developer involvement</li>
+        <li>Hero slides — each slide's donation widget is independently controllable</li>
+        <li>Event pages — create, edit, and publish from the CMS</li>
+        <li>Donation product presets — admin sets amounts, causes, and homepage visibility</li>
+        <li>Dedicated donations-only portal for finance/donor-management team members</li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 4 — ENVIRONMENTS & DEV WORKFLOW
+════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <img src="src/assets/images/Homepage/smalllogo.png" alt="MIAA" class="page-header-logo" onerror="this.style.display='none';" />
+    <div class="page-header-meta"><strong>Technical Analysis &amp; Milestone Deliverables</strong>Think Studio · 30 June 2026</div>
+  </div>
+
+  <h2>Environments &amp; Development Workflow</h2>
+  <hr class="section-rule">
+
+  <p>Three environments run in parallel throughout the build. All payment gateways use test/sandbox credentials until production go-live on 25 July 2026.</p>
+
+  <div class="env-grid">
+    <div class="env-card">
+      <div class="env-label">Environment 01</div>
+      <div class="env-name">Development</div>
+      <ul>
+        <li>Local developer environments</li>
+        <li>Stripe test mode keys</li>
+        <li>PayPal sandbox credentials</li>
+        <li>Brevo test account</li>
+        <li>Feature branches per module</li>
+        <li>Unit tests run on every commit</li>
+      </ul>
+    </div>
+    <div class="env-card">
+      <div class="env-label">Environment 02</div>
+      <div class="env-name">Staging (UAT)</div>
+      <ul>
+        <li>Hosted — mirrors production infrastructure</li>
+        <li>Stripe test mode (MIAA can do test payments)</li>
+        <li>PayPal sandbox (MIAA can test PayPal flow)</li>
+        <li>Full email sending enabled to MIAA test addresses</li>
+        <li>Accessible to MIAA team from Week 3 onward</li>
+        <li>All UAT feedback captured and tracked against this environment</li>
+      </ul>
+    </div>
+    <div class="env-card prod">
+      <div class="env-label">Environment 03</div>
+      <div class="env-name">Production</div>
+      <ul>
+        <li>Live MIAA website</li>
+        <li>Stripe live mode keys (switched 24h before go-live)</li>
+        <li>PayPal live credentials</li>
+        <li>Brevo live account and sender domain</li>
+        <li>Go-live: 25 July 2026</li>
+        <li>Post-launch monitoring for 48 hours</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="margin-top:32px;">Development Workflow</h3>
+  <div class="task-grid" style="margin-top:12px;">
+    <div class="task-col">
+      <h4>Branching Strategy</h4>
+      <ul>
+        <li>One feature branch per module (donation-core, event-registration, campaign, admin-portal, integrations)</li>
+        <li>Pull request review before merging to <code>main</code></li>
+        <li>Staging auto-deploys from <code>main</code></li>
+        <li>Production deploy is a manual tagged release</li>
+      </ul>
+    </div>
+    <div class="task-col">
+      <h4>Testing Approach</h4>
+      <ul>
+        <li>Unit tests for all payment calculation logic</li>
+        <li>Integration tests for Stripe and PayPal webhook handlers</li>
+        <li>End-to-end test: complete donation checkout (Stripe test card)</li>
+        <li>End-to-end test: event registration + donation upsell</li>
+        <li>Mobile responsiveness verified across iPhone, Android, tablet</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 style="margin-top:36px;">Dependencies &amp; Blockers</h2>
+  <hr class="section-rule">
+  <p>The following inputs are required from MIAA or third parties. Items marked with ⚠ block specific features if not received by the indicated week.</p>
+
+  <div class="dep-grid">
+    <div class="dep-card">
+      <div class="dep-card-title">
+        Required from MIAA
+        <span class="dep-owner-badge owner-miaa">MIAA Action</span>
+      </div>
+      <ul>
+        <li>Stripe live API keys (needed by Week 4 — production go-live)</li>
+        <li>PayPal live credentials (needed by Week 4)</li>
+        <li>Brevo API key and sender domain confirmation (needed by Week 2)</li>
+        <li>DGR details (ABN, charity name, receipt wording) for tax statement template</li>
+        <li>Ticket Tailor API key if event push integration is required</li>
+        <li>Named donation product list (gallery causes, amounts)</li>
+        <li>Admin email address(es) for donation notifications</li>
+      </ul>
+    </div>
+    <div class="dep-card">
+      <div class="dep-card-title">
+        Managed by Think Studio
+        <span class="dep-owner-badge owner-ts">Think Studio</span>
+      </div>
+      <ul>
+        <li>Stripe and PayPal test account configuration (Day 1)</li>
+        <li>Staging environment provisioning (end of Week 1)</li>
+        <li>Brevo transactional email template configuration (Week 2)</li>
+        <li>Gala Dinner 2026 campaign creation and configuration (Week 2–3)</li>
+        <li>Production credentials switch and smoke test (Week 4)</li>
+        <li>Post-launch monitoring and hotfix support (48h post go-live)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:8px;">
+    <strong>Critical path:</strong> The Gala Dinner campaign, event registration, and donation upsell flow are the three features with the hardest dependency on the 25 July deadline.
+    All other features (peer-to-peer fundraising, advanced reporting) have a soft deadline and will follow in Phase 2 during August 2026.
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 5 — WEEK 1 MILESTONE
+════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <img src="src/assets/images/Homepage/smalllogo.png" alt="MIAA" class="page-header-logo" onerror="this.style.display='none';" />
+    <div class="page-header-meta"><strong>Technical Analysis &amp; Milestone Deliverables</strong>Think Studio · 30 June 2026</div>
+  </div>
+
+  <h2>4-Week Delivery Plan</h2>
+  <hr class="section-rule">
+  <p>
+    All core features must be live and client-tested by <strong>25 July 2026</strong> (Gala Dinner).
+    The 4-week plan skips a design phase — the existing MIAA design system, brand tokens, and CMS
+    component library are applied directly to all new screens. No design sign-off gate is required.
+  </p>
+
+  <!-- WEEK 1 -->
+  <div class="milestone-block" style="margin-top:28px;">
+    <div class="milestone-header w1">
+      <div>
+        <div class="milestone-week">Week 1 — Foundation</div>
+        <div class="milestone-title">Infrastructure, Database &amp; Core Donation Engine</div>
+      </div>
+      <div class="milestone-dates">30 June – 6 July 2026</div>
+    </div>
+    <div class="milestone-body">
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Development Tasks</div>
+        <div class="task-grid">
+          <div class="task-col">
+            <h4>Backend</h4>
+            <ul>
+              <li>Database schema creation — all new tables (donors, donations, subscriptions, campaigns, events, installment_plans, audit_logs)</li>
+              <li>Stripe account configuration — test mode, webhook endpoint registration</li>
+              <li>PayPal sandbox account setup and webhook registration</li>
+              <li>Donation Processing Module — one-time payments (Stripe + PayPal)</li>
+              <li>Subscription billing logic — recurring donation scheduling, frequency handling</li>
+              <li>Installment plan engine — split payments, committed amount tracking</li>
+              <li>Audit logging service — middleware capturing all authenticated actions</li>
+              <li>Staging environment provisioned and accessible</li>
+            </ul>
+          </div>
+          <div class="task-col">
+            <h4>Front End</h4>
+            <ul>
+              <li>Donation widget component — preset amounts + custom entry, anonymous toggle</li>
+              <li>Frequency selector UI — one-time, weekly, fortnightly, monthly, annual</li>
+              <li>Stripe Elements embedded in checkout (card, Apple Pay, Google Pay)</li>
+              <li>PayPal JS SDK button integration</li>
+              <li>Donor account registration &amp; login screens</li>
+              <li>Basic donor dashboard shell (history placeholder)</li>
+              <li>CMS wiring: new Donations section scaffolded in admin portal</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Deliverables at End of Week 1</div>
+        <div>
+          <span class="deliverable-pill">Database schema live on staging</span>
+          <span class="deliverable-pill">One-time donation (Stripe) functional</span>
+          <span class="deliverable-pill">One-time donation (PayPal) functional</span>
+          <span class="deliverable-pill">Recurring donation creation working</span>
+          <span class="deliverable-pill">Staging URL shared with MIAA</span>
+          <span class="deliverable-pill">Audit log capturing all test actions</span>
+        </div>
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Acceptance Criteria</div>
+        <ul class="acceptance-list">
+          <li>Stripe test payment of $50 one-time completes successfully end-to-end</li>
+          <li>PayPal sandbox payment of $50 completes successfully</li>
+          <li>Monthly recurring donation is created and scheduled correctly in Stripe</li>
+          <li>Donor receives automated receipt email within 60 seconds of payment</li>
+          <li>Admin receives notification email on completed donation</li>
+          <li>Audit log records the payment event with timestamp, status, and gateway ID</li>
+          <li>Anonymous donation suppresses donor name from all display fields</li>
+          <li>Staging environment loads without errors on desktop and mobile</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WEEK 2 -->
+  <div class="milestone-block">
+    <div class="milestone-header w2">
+      <div>
+        <div class="milestone-week">Week 2 — Core Features</div>
+        <div class="milestone-title">Campaigns, Events, Upsell &amp; CMS Integration</div>
+      </div>
+      <div class="milestone-dates">7 – 13 July 2026</div>
+    </div>
+    <div class="milestone-body">
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Development Tasks</div>
+        <div class="task-grid">
+          <div class="task-col">
+            <h4>Backend</h4>
+            <ul>
+              <li>Campaign Module — create, manage, and track campaigns; goal &amp; progress calculation</li>
+              <li>Event Registration Module — paid and free events, coupon code validation, capacity enforcement</li>
+              <li>Donation upsell transaction — atomic: ticket payment + optional donation in one API call</li>
+              <li>Ticket Tailor push — mirror registrations to Ticket Tailor when event ID is configured</li>
+              <li>Brevo integration — upsert donor contact on first donation, tag with campaign and frequency</li>
+              <li>Donation product management API — presets, categories, homepage featured flag</li>
+              <li>Gala Dinner 2026 campaign record created and configured</li>
+            </ul>
+          </div>
+          <div class="task-col">
+            <h4>Front End</h4>
+            <ul>
+              <li>Campaign page template — goal progress bar, total raised, recent donors list</li>
+              <li>Event registration page — dynamic form from CMS schema, ticket price display</li>
+              <li>Checkout flow — ticket payment → optional donation upsell step → confirmation</li>
+              <li>Donation section embedded on Gala Dinner page</li>
+              <li>Homepage hero widget — donation call-to-action on hero slide (CMS-controlled per slide)</li>
+              <li>CMS admin: Campaign management UI (create, edit, link to event)</li>
+              <li>CMS admin: Event management UI (title, date, ticket price, questions, capacity)</li>
+              <li>CMS admin: Donation product management (add/edit presets, set homepage visibility)</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Deliverables at End of Week 2</div>
+        <div>
+          <span class="deliverable-pill gold">Gala Dinner campaign live on staging</span>
+          <span class="deliverable-pill gold">Donation section visible on Gala Dinner page</span>
+          <span class="deliverable-pill">Event registration with ticket payment working</span>
+          <span class="deliverable-pill">Donation upsell step at checkout functional</span>
+          <span class="deliverable-pill">Homepage hero donation widget live</span>
+          <span class="deliverable-pill">Brevo sync confirmed for test donations</span>
+          <span class="deliverable-pill">CMS: campaigns and events manageable by admin</span>
+        </div>
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Acceptance Criteria</div>
+        <ul class="acceptance-list">
+          <li>Registering for a paid event with Stripe card completes and sends email confirmation</li>
+          <li>Optional donation upsell at checkout is skippable without affecting registration</li>
+          <li>Upsell donation frequency choice (one-time / monthly) is persisted correctly</li>
+          <li>Coupon code applies correct discount percentage at checkout</li>
+          <li>Event at capacity shows "Sold Out" and blocks further registrations</li>
+          <li>Campaign progress bar updates in real time after a test donation</li>
+          <li>Homepage hero slide shows donation widget controlled from the CMS</li>
+          <li>New donor appears in Brevo with correct campaign tag within 2 minutes of donation</li>
+          <li>Admin can create, edit, and publish a new campaign from the CMS without developer help</li>
+          <li>Admin can create, edit, and publish a new event with custom registration questions</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 6 — WEEK 3 & WEEK 4 MILESTONES
+════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <img src="src/assets/images/Homepage/smalllogo.png" alt="MIAA" class="page-header-logo" onerror="this.style.display='none';" />
+    <div class="page-header-meta"><strong>Technical Analysis &amp; Milestone Deliverables</strong>Think Studio · 30 June 2026</div>
+  </div>
+
+  <!-- WEEK 3 -->
+  <div class="milestone-block">
+    <div class="milestone-header w3">
+      <div>
+        <div class="milestone-week">Week 3 — Admin Portal &amp; Donor Portal</div>
+        <div class="milestone-title">Full Donor Dashboard, Admin Reporting &amp; UAT</div>
+      </div>
+      <div class="milestone-dates">14 – 20 July 2026</div>
+    </div>
+    <div class="milestone-body">
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Development Tasks</div>
+        <div class="task-grid">
+          <div class="task-col">
+            <h4>Backend</h4>
+            <ul>
+              <li>Donor portal API — full donation history, subscription management, cancellation requests</li>
+              <li>Installment cancellation approval workflow — request → admin notification → approve/reject → Stripe cancel</li>
+              <li>Annual tax statement generation — per-donor PDF (DGR details applied from MIAA inputs)</li>
+              <li>Donation CSV export endpoint for admin</li>
+              <li>Dedicated donations-only admin portal permissions tier</li>
+              <li>Admin dashboard aggregates — total raised, active subscriptions, campaign progress</li>
+              <li>Receipt PDF download from donor portal</li>
+            </ul>
+          </div>
+          <div class="task-col">
+            <h4>Front End &amp; UAT</h4>
+            <ul>
+              <li>Donor dashboard — full history, receipt downloads, subscription management, cancel request button</li>
+              <li>Admin portal: donor management — view donor, generate tax statement, see donation history</li>
+              <li>Admin portal: donation management — filter by date, status, campaign, export CSV</li>
+              <li>Admin portal: cancellation approval queue — approve or reject with single click</li>
+              <li>Admin portal: audit log viewer — filterable, paginated</li>
+              <li class="blocker">UAT begins — staging access handed to MIAA team</li>
+              <li>UAT feedback tracked and triaged; critical items fixed same day</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Deliverables at End of Week 3</div>
+        <div>
+          <span class="deliverable-pill gold">Full UAT environment ready for MIAA sign-off</span>
+          <span class="deliverable-pill">Donor portal fully functional</span>
+          <span class="deliverable-pill">Admin portal: all donation management features complete</span>
+          <span class="deliverable-pill">Tax statement PDF generation working</span>
+          <span class="deliverable-pill">Installment cancellation workflow end-to-end</span>
+          <span class="deliverable-pill">Dedicated donations admin portal available</span>
+          <span class="deliverable-pill">All UAT critical issues resolved</span>
+        </div>
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Acceptance Criteria (UAT Sign-Off)</div>
+        <ul class="acceptance-list">
+          <li>Donor can log in, view full history, and download a receipt PDF</li>
+          <li>Donor can request cancellation of a recurring subscription from the portal</li>
+          <li>Committed installment cancellation request appears in admin approval queue</li>
+          <li>Admin can approve or reject a cancellation request — Stripe subscription updates correctly</li>
+          <li>Admin can generate an annual tax statement PDF for any donor</li>
+          <li>Admin can filter and export a donation CSV covering a selected date range</li>
+          <li>Audit log shows all payment events with gateway ID, amount, status, and timestamp</li>
+          <li>All screens are mobile-responsive (tested on iPhone and Android)</li>
+          <li>Gala Dinner campaign page displays correctly on desktop and mobile</li>
+          <li>MIAA admin team confirms: campaigns, events, and donation products editable without developer help</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- WEEK 4 -->
+  <div class="milestone-block">
+    <div class="milestone-header w4">
+      <div>
+        <div class="milestone-week">Week 4 — Go-Live</div>
+        <div class="milestone-title">Production Switch, Final QA &amp; Gala Dinner Launch</div>
+      </div>
+      <div class="milestone-dates">21 – 25 July 2026</div>
+    </div>
+    <div class="milestone-body">
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Development Tasks</div>
+        <div class="task-grid">
+          <div class="task-col">
+            <h4>Production Preparation (Mon 21 – Wed 23)</h4>
+            <ul>
+              <li>Switch Stripe keys from test mode to live mode</li>
+              <li>Switch PayPal from sandbox to live credentials</li>
+              <li>Verify Brevo sender domain is authenticated (SPF/DKIM)</li>
+              <li>Production smoke test — end-to-end donation with a real card (&lt;$1 test charge)</li>
+              <li>Load test — verify auto-scaling handles Gala Dinner traffic spike</li>
+              <li>Admin account setup for all MIAA team members requiring access</li>
+              <li>Gala Dinner campaign final content review and sign-off with MIAA</li>
+              <li>All UAT-raised items confirmed resolved on staging before production deploy</li>
+            </ul>
+          </div>
+          <div class="task-col">
+            <h4>Go-Live Day (Fri 25 July)</h4>
+            <ul>
+              <li>Final production deployment — tagged release</li>
+              <li>Homepage hero donation widget confirmed live</li>
+              <li>Gala Dinner campaign and donation section confirmed live</li>
+              <li>Tax statement generation confirmed operational in production</li>
+              <li>Monitoring: error tracking active for first 48 hours post-launch</li>
+              <li>Think Studio engineer on call during the Gala Dinner event</li>
+              <li>Hotfix deployment pipeline ready (sub-30-minute deploy if needed)</li>
+              <li>Post-launch check: first live donation confirmed and receipt received</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Deliverables at Go-Live</div>
+        <div>
+          <span class="deliverable-pill gold">Donation platform live on miaa.com.au</span>
+          <span class="deliverable-pill gold">Gala Dinner campaign active and taking donations</span>
+          <span class="deliverable-pill gold">Event registration with payment live</span>
+          <span class="deliverable-pill gold">Donation upsell at checkout live</span>
+          <span class="deliverable-pill gold">Annual tax statement generation operational</span>
+          <span class="deliverable-pill">Homepage hero donation widget live</span>
+          <span class="deliverable-pill">Recurring giving fully operational</span>
+          <span class="deliverable-pill">Donor portal live — history, receipts, subscriptions</span>
+          <span class="deliverable-pill">Admin portal — all features complete</span>
+          <span class="deliverable-pill">All admin team accounts provisioned</span>
+          <span class="deliverable-pill">Post-launch monitoring active</span>
+        </div>
+      </div>
+
+      <div class="milestone-section">
+        <div class="milestone-section-title">Final Go-Live Checklist</div>
+        <ul class="acceptance-list">
+          <li>Stripe live mode: real donation processed successfully end-to-end</li>
+          <li>PayPal live mode: real PayPal payment processed successfully</li>
+          <li>Receipt email received within 60 seconds of live payment</li>
+          <li>Admin notification email received for live payment</li>
+          <li>Brevo: live donor contact created and tagged correctly</li>
+          <li>Gala Dinner campaign shows correct goal, imagery, and donation widget</li>
+          <li>Gala Dinner event registration accepts ticket purchase with payment</li>
+          <li>Donation upsell step presents correctly after ticket selection</li>
+          <li>Homepage hero donation widget visible and clickable</li>
+          <li>Admin can generate annual tax statement PDF for a donor</li>
+          <li>All admin accounts confirmed active and accessible</li>
+          <li>Audit log recording live transactions</li>
+          <li>Mobile checkout tested on physical device (iPhone + Android)</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="callout" style="margin-top:24px;">
+    <strong>Phase 2 — Post-Gala (August 2026):</strong> Peer-to-peer fundraising (supporter page builder,
+    admin moderation queue, and campaign progress rollup) is the one feature with a soft deadline. It is
+    scoped and built in parallel but ships after the Gala Dinner, in August 2026 — it is not required for
+    the 25 July go-live.
+  </div>
+
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PAGE 7 — GALA DINNER SUMMARY + RISK REGISTER
+════════════════════════════════════════════════ -->
+<div class="page">
+  <div class="page-header">
+    <img src="src/assets/images/Homepage/smalllogo.png" alt="MIAA" class="page-header-logo" onerror="this.style.display='none';" />
+    <div class="page-header-meta"><strong>Technical Analysis &amp; Milestone Deliverables</strong>Think Studio · 30 June 2026</div>
+  </div>
+
+  <!-- GALA DINNER CALLOUT -->
+  <div class="gala-block">
+    <div class="gala-label">Hard Deadline · Go-Live Milestone</div>
+    <div class="gala-title">Gala Dinner — 25 July 2026</div>
+    <div class="gala-date">All features below must be live, tested, and operational before doors open.</div>
+    <div class="gala-checklist">
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Donation platform live on the MIAA website
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Gala Dinner campaign page with donation section
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Homepage hero donation widget (CMS-controlled)
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Stripe live mode — cards, Apple Pay, Google Pay
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        PayPal live mode
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        One-time and recurring donations operational
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Installment plans and split donations
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Named donation products and gallery causes
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Event registration with ticket payment
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Donation upsell at event checkout
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Campaigns and appeals management
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Automated receipt email on every donation
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Annual tax statement generation (admin)
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Donor portal — history, receipts, subscriptions
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Admin portal — full donations management
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Full audit logging of all transactions
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Brevo CRM donor sync active
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Admin notification on every donation
+      </div>
+      <div class="gala-check">
+        <span class="gala-check-icon">✓</span>
+        Think Studio engineer on call during event
+      </div>
+    </div>
+  </div>
+
+  <!-- RISK REGISTER -->
+  <h2 style="margin-top:32px;">Risk Register</h2>
+  <hr class="section-rule">
+
+  <table class="risk-table">
+    <thead>
+      <tr><th>Risk</th><th>Likelihood</th><th>Impact</th><th>Mitigation</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Stripe live API keys not provided before Week 4</td>
+        <td><span class="risk-high">High</span></td>
+        <td><span class="risk-high">High</span></td>
+        <td>Requested from MIAA by end of Week 2. Think Studio can create a Stripe account under MIAA if needed and transfer ownership post-launch.</td>
+      </tr>
+      <tr>
+        <td>PayPal live credentials delayed</td>
+        <td><span class="risk-medium">Medium</span></td>
+        <td><span class="risk-medium">Medium</span></td>
+        <td>PayPal can be omitted at go-live if credentials are not ready — Stripe covers Visa, Mastercard, Apple Pay, and Google Pay as a safe fallback.</td>
+      </tr>
+      <tr>
+        <td>DGR details not confirmed before go-live</td>
+        <td><span class="risk-medium">Medium</span></td>
+        <td><span class="risk-low">Low</span></td>
+        <td>DGR details required from MIAA by end of Week 2. Tax statement template built in Week 3 using provided ABN and charity name. Receipts can issue without DGR wording if confirmation arrives late — template is updated same day once details land.</td>
+      </tr>
+      <tr>
+        <td>UAT feedback volume in Week 3 delays go-live</td>
+        <td><span class="risk-medium">Medium</span></td>
+        <td><span class="risk-high">High</span></td>
+        <td>UAT starts Day 1 of Week 3, leaving all of Week 4 as a dedicated fix and stabilisation buffer. Critical and high-priority issues resolved within 24 hours. Scope is fixed — no new features accepted after Week 2 sign-off.</td>
+      </tr>
+      <tr>
+        <td>Brevo transactional email goes to spam</td>
+        <td><span class="risk-low">Low</span></td>
+        <td><span class="risk-medium">Medium</span></td>
+        <td>SPF and DKIM authenticated on MIAA sender domain. Brevo warm-up required if the domain is new to transactional email — handled in Week 2.</td>
+      </tr>
+      <tr>
+        <td>Traffic spike on Gala Dinner night overwhelms server</td>
+        <td><span class="risk-low">Low</span></td>
+        <td><span class="risk-high">High</span></td>
+        <td>Auto-scaling infrastructure adapts to concurrent users. Load testing performed in Week 4 to confirm capacity before go-live.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="footnote">
+    This document is confidential and prepared exclusively for the Museum of Islamic Art Australia (MIAA).
+    Development and engineering by <strong>Think Studio</strong>.
+    All timelines are subject to timely receipt of MIAA-owned credentials and assets noted in the Dependencies section.
+    The complete feature set — including tax statements, donor portal, admin portal, and all payment integrations — is delivered within the 4-week window ending 25 July 2026, with no post-Gala delivery tail. The sole exception is peer-to-peer fundraising, which has a soft deadline and follows in Phase 2 (August 2026).
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     DOCUMENT FOOTER
+════════════════════════════════════════════════ -->
+<div class="doc-footer">
+  <div class="doc-footer-left">
+    <img
+      src="src/assets/images/Homepage/smalllogo.png"
+      alt="MIAA"
+      class="doc-footer-logo-img"
+      onerror="this.style.display='none';"
+    />
+    <div class="doc-footer-text">
+      <strong>Museum of Islamic Art Australia</strong>
+      An initiative of ISRA · Sydney, Australia
+    </div>
+  </div>
+  <div class="doc-footer-right">
+    <strong>Technical Analysis &amp; Milestone Deliverables · V1.0</strong>
+    Prepared by Think Studio · 30 June 2026 · Confidential
+  </div>
+</div>
+
+</body>
+</html>
