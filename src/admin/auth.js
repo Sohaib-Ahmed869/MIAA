@@ -116,6 +116,12 @@ export const adminApi = {
   updateBlog: (id, payload) => request(`/api/blog/${id}`, { method: "PATCH", body: payload }),
   deleteBlog: (id) => request(`/api/blog/${id}`, { method: "DELETE" }),
 
+  // sponsors (Gala Dinner logos)
+  listSponsors: () => request("/api/sponsors/admin/all"),
+  createSponsor: (payload) => request("/api/sponsors", { method: "POST", body: payload }),
+  updateSponsor: (id, payload) => request(`/api/sponsors/${id}`, { method: "PATCH", body: payload }),
+  deleteSponsor: (id) => request(`/api/sponsors/${id}`, { method: "DELETE" }),
+
   // uploads
   presign: ({ filename, contentType, folder }) =>
     request("/api/uploads/presign", {

@@ -62,4 +62,10 @@ export const api = {
     return request(`/api/blog${qs ? `?${qs}` : ""}`)
   },
   blogBySlug: (slug) => request(`/api/blog/${encodeURIComponent(slug)}`),
+
+  // Sponsors (public) — logos shown on the Gala Dinner page
+  sponsors: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/sponsors${qs ? `?${qs}` : ""}`)
+  },
 }

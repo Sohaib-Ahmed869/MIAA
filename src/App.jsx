@@ -27,6 +27,7 @@ import TeamAdmin from "./admin/pages/TeamAdmin"
 import ContactAdmin from "./admin/pages/ContactAdmin"
 import NewsletterAdmin from "./admin/pages/NewsletterAdmin"
 import BlogAdmin from "./admin/pages/BlogAdmin"
+import SponsorsAdmin from "./admin/pages/SponsorsAdmin"
 import EventListsAdmin from "./admin/pages/EventListsAdmin"
 
 export default function App() {
@@ -48,6 +49,7 @@ export default function App() {
           <Route path="previous-events" element={<PreviousEventsAdmin />} />
           <Route path="team" element={<TeamAdmin />} />
           <Route path="blog" element={<BlogAdmin />} />
+          <Route path="sponsors" element={<SponsorsAdmin />} />
           <Route path="contact" element={<ContactAdmin />} />
           <Route path="newsletter" element={<NewsletterAdmin />} />
           <Route path="event-lists" element={<EventListsAdmin />} />

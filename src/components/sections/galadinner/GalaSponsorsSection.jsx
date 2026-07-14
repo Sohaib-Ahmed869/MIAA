@@ -1,5 +1,7 @@
 import { motion } from "framer-motion"
 import { fadeInUp } from "../../../lib/motion"
+import { useCMS } from "../../../hooks/useCMS"
+import { api } from "../../../lib/api"
 import SectionDivider from "../../ui/SectionDivider"
 import hikmaLegal from "../../../assets/images/Sponsor Logos/Hikma Legal - Silver (1).png"
 import metroStrata from "../../../assets/images/Sponsor Logos/Metro Strata Levy Header.png"
@@ -8,7 +10,10 @@ import thinkStudio from "../../../assets/images/Sponsor Logos/think-studio.svg"
 import tcLogo from "../../../assets/images/Sponsor Logos/TC-LogoRGB-Horizontal-FullColour.png"
 import universalFederation from "../../../assets/images/Sponsor Logos/Universal Federation logo stg5_blue (1).png"
 
-const SPONSORS = [
+// Static fallback — rendered if the CMS is unreachable or has no sponsors yet.
+// Sponsors managed in the admin CMS return a presigned `logoUrl` instead of a
+// bundled `logo` asset; the card reads whichever is present.
+const FALLBACK_SPONSORS = [
   { name: "Hikma Legal", logo: hikmaLegal, url: "https://www.hikma.legal/" },
   { name: "Metro Strata Levy", logo: metroStrata, url: "https://www.metro-strata.com/" },
   { name: "The Tax Factor", logo: taxFactor, url: "https://thetaxfactor.com.au/" },
@@ -17,15 +22,15 @@ const SPONSORS = [
   { name: "Australian Universal Federation", logo: universalFederation, url: "https://auf.net.au/" },
 ]
 
-// How many times to repeat the 3 sponsors within a single set. With only a few
+// How many times to repeat the sponsors within a single set. With only a few
 // sponsors, one set must be wider than the viewport or the -50% loop leaves a
 // gap on the right. Repeating fills the widest screens seamlessly.
 const REPEAT = 4
 
 // One set of glass logo cards. The track renders two of these back-to-back so
 // the CSS marquee (translateX 0 → -50%) loops seamlessly.
-function SponsorSet({ ariaHidden = false }) {
-  const cards = Array.from({ length: REPEAT }, () => SPONSORS).flat()
+function SponsorSet({ sponsors, ariaHidden = false }) {
+  const cards = Array.from({ length: REPEAT }, () => sponsors).flat()
   const cardClass =
     "group mx-4 md:mx-6 3xl:mx-8 shrink-0 flex items-center justify-center " +
     "w-56 md:w-72 3xl:w-96 h-32 md:h-40 3xl:h-52 px-8 rounded-2xl " +
@@ -37,7 +42,7 @@ function SponsorSet({ ariaHidden = false }) {
       {cards.map((sponsor, i) => {
         const logo = (
           <img
-            src={sponsor.logo}
+            src={sponsor.logoUrl || sponsor.logo}
             alt={sponsor.name}
             className="max-h-20 md:max-h-24 3xl:max-h-32 w-auto max-w-full object-contain
                        transition-transform duration-300 group-hover:scale-105"
@@ -67,6 +72,14 @@ function SponsorSet({ ariaHidden = false }) {
 }
 
 export default function GalaSponsorsSection() {
+  const { data: sponsors } = useCMS(
+    () => api.sponsors({ surface: "gala" }),
+    FALLBACK_SPONSORS
+  )
+
+  // Nothing to show and no fallback — render nothing rather than an empty band.
+  if (!sponsors || sponsors.length === 0) return null
+
   return (
     <section className="bg-accent-cream">
       {/* Full-width glassmorphic slider band — light glass-on-cream.
@@ -101,8 +114,8 @@ export default function GalaSponsorsSection() {
 
         {/* Scrolling track — two identical sets = seamless loop; pauses on hover */}
         <div className="relative flex w-max sponsor-marquee">
-          <SponsorSet />
-          <SponsorSet ariaHidden />
+          <SponsorSet sponsors={sponsors} />
+          <SponsorSet sponsors={sponsors} ariaHidden />
         </div>
       </motion.div>
     </section>

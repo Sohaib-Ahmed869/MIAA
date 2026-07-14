@@ -11,6 +11,7 @@ import {
   ExternalLink,
   FileText,
   Ticket,
+  Award,
 } from "lucide-react"
 import { clearSession, getAdminUser } from "../auth"
 import { ToastProvider } from "./Toast"
@@ -23,6 +24,7 @@ const NAV = [
   { to: "/admin/previous-events", label: "Previous Events", icon: Archive },
   { to: "/admin/team", label: "Team", icon: Users },
   { to: "/admin/blog", label: "Blog Posts", icon: FileText },
+  { to: "/admin/sponsors", label: "Sponsors", icon: Award },
   { to: "/admin/contact", label: "Contact Submissions", icon: Inbox },
   { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { to: "/admin/event-lists", label: "Event Lists", icon: Ticket },
