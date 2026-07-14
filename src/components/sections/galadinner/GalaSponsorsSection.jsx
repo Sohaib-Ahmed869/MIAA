@@ -5,12 +5,16 @@ import hikmaLegal from "../../../assets/images/Sponsor Logos/Hikma Legal - Silve
 import metroStrata from "../../../assets/images/Sponsor Logos/Metro Strata Levy Header.png"
 import taxFactor from "../../../assets/images/Sponsor Logos/The Tax Factor.svg"
 import thinkStudio from "../../../assets/images/Sponsor Logos/think-studio.svg"
+import tcLogo from "../../../assets/images/Sponsor Logos/TC-LogoRGB-Horizontal-FullColour.png"
+import universalFederation from "../../../assets/images/Sponsor Logos/Universal Federation logo stg5_blue (1).png"
 
 const SPONSORS = [
   { name: "Hikma Legal", logo: hikmaLegal, url: "https://www.hikma.legal/" },
   { name: "Metro Strata Levy", logo: metroStrata, url: "https://www.metro-strata.com/" },
   { name: "The Tax Factor", logo: taxFactor, url: "https://thetaxfactor.com.au/" },
   { name: "Think Studio", logo: thinkStudio, url: "https://www.thinkstudio.com.au/" },
+  { name: "Theorem Consulting", logo: tcLogo, url: "https://www.theoremconsulting.com.au/" },
+  { name: "Australian Universal Federation", logo: universalFederation, url: "https://auf.net.au/" },
 ]
 
 // How many times to repeat the 3 sponsors within a single set. With only a few
@@ -22,30 +26,42 @@ const REPEAT = 4
 // the CSS marquee (translateX 0 → -50%) loops seamlessly.
 function SponsorSet({ ariaHidden = false }) {
   const cards = Array.from({ length: REPEAT }, () => SPONSORS).flat()
+  const cardClass =
+    "group mx-4 md:mx-6 3xl:mx-8 shrink-0 flex items-center justify-center " +
+    "w-56 md:w-72 3xl:w-96 h-32 md:h-40 3xl:h-52 px-8 rounded-2xl " +
+    "border border-white/30 bg-white/20 backdrop-blur-md " +
+    "shadow-[0_8px_28px_-10px_rgba(33,73,82,0.18)] " +
+    "transition-all duration-300 hover:bg-white/35 hover:-translate-y-1"
   return (
     <div className="flex items-center shrink-0" aria-hidden={ariaHidden || undefined}>
-      {cards.map((sponsor, i) => (
-        <a
-          key={`${sponsor.name}-${i}`}
-          href={sponsor.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={sponsor.name}
-          tabIndex={ariaHidden ? -1 : undefined}
-          className="group mx-4 md:mx-6 3xl:mx-8 shrink-0 flex items-center justify-center
-                     w-56 md:w-72 3xl:w-96 h-32 md:h-40 3xl:h-52 px-8 rounded-2xl
-                     border border-white/30 bg-white/20 backdrop-blur-md
-                     shadow-[0_8px_28px_-10px_rgba(33,73,82,0.18)]
-                     transition-all duration-300 hover:bg-white/35 hover:-translate-y-1"
-        >
+      {cards.map((sponsor, i) => {
+        const logo = (
           <img
             src={sponsor.logo}
             alt={sponsor.name}
             className="max-h-20 md:max-h-24 3xl:max-h-32 w-auto max-w-full object-contain
                        transition-transform duration-300 group-hover:scale-105"
           />
-        </a>
-      ))}
+        )
+        // Sponsors without a URL render as a plain card, not a link.
+        return sponsor.url ? (
+          <a
+            key={`${sponsor.name}-${i}`}
+            href={sponsor.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={sponsor.name}
+            tabIndex={ariaHidden ? -1 : undefined}
+            className={cardClass}
+          >
+            {logo}
+          </a>
+        ) : (
+          <div key={`${sponsor.name}-${i}`} className={cardClass}>
+            {logo}
+          </div>
+        )
+      })}
     </div>
   )
 }
