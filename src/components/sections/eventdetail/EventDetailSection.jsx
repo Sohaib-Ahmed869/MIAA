@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { Calendar, MapPin, Clock, ArrowLeft } from "lucide-react"
+import { Calendar, MapPin, Clock, ArrowLeft, Heart } from "lucide-react"
 import { fadeInUp, fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 
@@ -41,6 +41,17 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
   const highlights = Array.isArray(event.highlights)
     ? event.highlights.filter((h) => h && (h.tag || h.title || h.body))
     : []
+
+  // Donations — the admin enables this per event. Link to the shared checkout
+  // with the event pre-selected (accepts an _id or slug).
+  const acceptsDonations = Boolean(event.acceptDonations)
+  const donateTarget = event.slug || event._id
+  const donateUrl = `/donate/checkout?event=${encodeURIComponent(donateTarget || "")}`
+  const raised = Number(event.raisedAmount || 0)
+  const goal = Number(event.goalAmount || 0)
+  const pct = goal > 0 ? Math.min(100, Math.round((raised / goal) * 100)) : 0
+  const fmtMoney = (cents) =>
+    `$${(cents / 100).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
 
   return (
     <article className="bg-bg">
@@ -202,7 +213,49 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
                 >
                   View All Events
                 </Link>
+                {acceptsDonations && (
+                  <CTAButton to={donateUrl} icon={Heart}>
+                    Donate to this Event
+                  </CTAButton>
+                )}
               </div>
+
+              {acceptsDonations && (
+                <div className="mt-8 rounded-xl border border-secondary-terra/25 bg-secondary-terra/5 p-5 md:p-6">
+                  <p className="text-[0.6875rem] 3xl:text-sm tracking-[0.25em] uppercase text-secondary-terra font-semibold">
+                    Support this event
+                  </p>
+                  <p className="mt-2 text-sm 3xl:text-base text-primary/75 leading-relaxed">
+                    Your contribution helps MIAA bring programs like this to the
+                    community. Every donation goes directly toward this event.
+                  </p>
+                  {goal > 0 ? (
+                    <div className="mt-4">
+                      <div className="flex justify-between text-[0.6875rem] 3xl:text-sm tracking-[0.15em] uppercase text-primary/60 mb-1.5">
+                        <span className="text-primary font-semibold">
+                          {fmtMoney(raised)} raised
+                        </span>
+                        <span>{fmtMoney(goal)} goal</span>
+                      </div>
+                      <div className="h-2 bg-primary/10 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-secondary-terra rounded-full transition-all duration-500"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  ) : (
+                    raised > 0 && (
+                      <p className="mt-4 text-sm 3xl:text-base text-primary/70">
+                        <span className="text-primary font-semibold">
+                          {fmtMoney(raised)}
+                        </span>{" "}
+                        raised so far — thank you.
+                      </p>
+                    )
+                  )}
+                </div>
+              )}
             </motion.div>
           </div>
         </div>

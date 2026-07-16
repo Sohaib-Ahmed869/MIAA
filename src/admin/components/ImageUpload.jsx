@@ -22,6 +22,7 @@ export default function ImageUpload({
   currentKey,
   onUploaded,
   label = "Image",
+  hint = "",
 }) {
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState("")
@@ -30,13 +31,11 @@ export default function ImageUpload({
 
   useEffect(() => {
     let cancelled = false
-    if (currentKey) {
-      fetchPresignedGet(currentKey).then((url) => {
-        if (!cancelled) setPreviewUrl(url)
-      })
-    } else {
-      setPreviewUrl("")
-    }
+    // fetchPresignedGet returns "" for an empty key, so this also clears the
+    // preview when currentKey is removed — no synchronous setState needed.
+    fetchPresignedGet(currentKey).then((url) => {
+      if (!cancelled) setPreviewUrl(url)
+    })
     return () => {
       cancelled = true
     }
@@ -75,6 +74,7 @@ export default function ImageUpload({
       <p className="block text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1.5">
         {label}
       </p>
+      {hint && <p className="text-[0.6875rem] text-primary/40 mb-2 -mt-0.5">{hint}</p>}
 
       {previewUrl ? (
         <motion.div

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react"
 import { NavLink, Outlet, useNavigate, Link, useLocation } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import {
@@ -12,9 +13,18 @@ import {
   FileText,
   Ticket,
   Award,
+  Heart,
+  Target,
+  RefreshCw,
+  UserCheck,
+  ScrollText,
+  Settings,
+  BarChart3,
+  Megaphone,
 } from "lucide-react"
-import { clearSession, getAdminUser } from "../auth"
+import { clearSession, getAdminUser, adminApi } from "../auth"
 import { ToastProvider } from "./Toast"
+import { ConfirmProvider } from "../../components/ui/ConfirmDialog"
 import smallLogo from "../../assets/images/Homepage/smalllogo.png"
 import Quatrefoil from "./Quatrefoil"
 
@@ -28,9 +38,20 @@ const NAV = [
   { to: "/admin/contact", label: "Contact Submissions", icon: Inbox },
   { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { to: "/admin/event-lists", label: "Event Lists", icon: Ticket },
+  { separator: true, label: "Donations" },
+  { to: "/admin/donations-dashboard", label: "Dashboard", icon: BarChart3 },
+  { to: "/admin/donation-products", label: "Products", icon: Heart },
+  { to: "/admin/donations", label: "Donations", icon: Target },
+  { to: "/admin/campaigns", label: "Campaigns", icon: Target },
+  { to: "/admin/campaign-requests", label: "Campaign Requests", icon: Megaphone, badgeKey: "campaignRequests" },
+  { to: "/admin/donors", label: "Donors", icon: UserCheck },
+  { to: "/admin/subscriptions", label: "Subscriptions", icon: RefreshCw },
+  { to: "/admin/audit-log", label: "Audit Log", icon: ScrollText },
+  { separator: true, label: "Settings" },
+  { to: "/admin/settings", label: "Site Settings", icon: Settings },
 ]
 
-function NavItem({ item }) {
+function NavItem({ item, badge = 0 }) {
   return (
     <NavLink to={item.to} end={item.end} className="block">
       {({ isActive }) => (
@@ -58,6 +79,17 @@ function NavItem({ item }) {
           </AnimatePresence>
           <item.icon strokeWidth={1.75} className="w-4 h-4" />
           <span className="tracking-wide">{item.label}</span>
+          {badge > 0 && (
+            <motion.span
+              key={badge}
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 400, damping: 18 }}
+              className="ml-auto min-w-[1.25rem] h-5 px-1.5 inline-flex items-center justify-center rounded-full bg-secondary-terra text-white text-[0.625rem] font-bold leading-none"
+            >
+              {badge > 99 ? "99+" : badge}
+            </motion.span>
+          )}
         </div>
       )}
     </NavLink>
@@ -68,6 +100,30 @@ export default function AdminLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const admin = getAdminUser()
+  const [pendingRequests, setPendingRequests] = useState(0)
+
+  // Live count of pending campaign requests for the nav badge. Refetches on
+  // navigation and when the requests page signals a change.
+  useEffect(() => {
+    let alive = true
+    const fetchCount = () => {
+      adminApi
+        .campaignRequestsCount()
+        .then((d) => {
+          if (alive) setPendingRequests(d?.pending || 0)
+        })
+        .catch(() => {})
+    }
+    fetchCount()
+    window.addEventListener("miaa:campaign-requests-changed", fetchCount)
+    return () => {
+      alive = false
+      window.removeEventListener("miaa:campaign-requests-changed", fetchCount)
+    }
+  }, [location.pathname])
+
+  const badgeFor = (item) =>
+    item.badgeKey === "campaignRequests" ? pendingRequests : 0
 
   const onLogout = () => {
     clearSession()
@@ -76,6 +132,7 @@ export default function AdminLayout() {
 
   return (
     <ToastProvider>
+      <ConfirmProvider>
       <div className="min-h-screen bg-accent-cream text-primary">
         <div className="flex">
           {/* Sidebar — branded dark teal */}
@@ -99,10 +156,18 @@ export default function AdminLayout() {
               />
             </div>
 
-            <nav className="flex-1 py-5 px-3 flex flex-col gap-0.5">
-              {NAV.map((item) => (
-                <NavItem key={item.to} item={item} />
-              ))}
+            <nav className="flex-1 py-5 px-3 flex flex-col gap-0.5 overflow-y-auto">
+              {NAV.map((item) =>
+                item.separator ? (
+                  <div key={item.label} className="pt-4 pb-1.5 px-4">
+                    <p className="text-[0.5625rem] tracking-[0.25em] uppercase text-accent-wheat/50">
+                      {item.label}
+                    </p>
+                  </div>
+                ) : (
+                  <NavItem key={item.to} item={item} badge={badgeFor(item)} />
+                )
+              )}
             </nav>
 
             <div className="px-5 pb-6">
@@ -144,7 +209,7 @@ export default function AdminLayout() {
 
           {/* Content area */}
           <main className="ml-64 flex-1 min-h-screen">
-            <div className="max-w-[75rem] mx-auto px-8 lg:px-12 py-10">
+            <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-6 md:px-8 lg:px-12 2xl:px-16 py-10">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={location.pathname}
@@ -160,6 +225,7 @@ export default function AdminLayout() {
           </main>
         </div>
       </div>
+      </ConfirmProvider>
     </ToastProvider>
   )
 }

@@ -68,4 +68,33 @@ export const api = {
     const qs = new URLSearchParams(params).toString()
     return request(`/api/sponsors${qs ? `?${qs}` : ""}`)
   },
+
+  // Donations (public)
+  donationProducts: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/donation-products${qs ? `?${qs}` : ""}`)
+  },
+  donationProduct: (idOrSlug) =>
+    request(`/api/donation-products/${encodeURIComponent(idOrSlug)}`),
+  campaigns: () => request(`/api/campaigns`),
+  campaign: (idOrSlug) =>
+    request(`/api/campaigns/${encodeURIComponent(idOrSlug)}`),
+  campaignDonations: (idOrSlug) =>
+    request(`/api/campaigns/${encodeURIComponent(idOrSlug)}/donations`),
+  donationConfig: () => request(`/api/donations/config`),
+  createStripeCheckout: (payload) =>
+    request(`/api/donations/checkout/stripe`, { method: "POST", body: payload }),
+  createPaymentIntent: (payload) =>
+    request(`/api/donations/payment-intent`, { method: "POST", body: payload }),
+  confirmStripeDonation: (payload) =>
+    request(`/api/donations/confirm/stripe`, { method: "POST", body: payload }),
+  createPaypalOrder: (payload) =>
+    request(`/api/donations/checkout/paypal`, { method: "POST", body: payload }),
+  capturePaypalOrder: (payload) =>
+    request(`/api/donations/capture/paypal`, { method: "POST", body: payload }),
+  upsellProducts: (excludeId) =>
+    request(`/api/donations/upsell${excludeId ? `?excludeProduct=${excludeId}` : ""}`),
+
+  // Site settings (public)
+  siteSettings: () => request(`/api/settings`),
 }

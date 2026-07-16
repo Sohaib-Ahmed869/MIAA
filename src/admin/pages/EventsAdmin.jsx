@@ -9,7 +9,9 @@ import EmptyState from "../components/EmptyState"
 import ImageUpload from "../components/ImageUpload"
 import { Field, TextInput, NumberInput, TextArea, Select, Checkbox } from "../components/Field"
 import { useToast } from "../components/Toast"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonCardGrid } from "../components/Skeleton"
+import FilterTabs from "../components/FilterTabs"
 
 const EMPTY = {
   category: "offsite",
@@ -34,6 +36,8 @@ const EMPTY = {
   imageKey: "",
   order: 0,
   published: true,
+  acceptDonations: false,
+  goalAmount: 0,
 }
 
 function slugify(s = "") {
@@ -53,6 +57,7 @@ export default function EventsAdmin() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const { notify } = useToast()
+  const confirm = useConfirm()
 
   const filtered = filter === "all" ? items : items.filter((it) => it.category === filter)
 
@@ -68,7 +73,24 @@ export default function EventsAdmin() {
     }
   }
   useEffect(() => {
-    load()
+    let active = true
+    adminApi
+      .listEvents()
+      .then((data) => {
+        if (active) {
+          setItems(data)
+          setError("")
+        }
+      })
+      .catch((err) => {
+        if (active) setError(err.message)
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => {
+      active = false
+    }
   }, [])
 
   const open = (item) => {
@@ -103,6 +125,7 @@ export default function EventsAdmin() {
       const payload = {
         ...form,
         slug: slugify(form.slug || form.title),
+        goalAmount: Math.max(0, Math.round(Number(form.goalAmount) || 0)),
         highlights: (form.highlights || [])
           .map((h) => ({
             tag: (h.tag || "").trim(),
@@ -111,6 +134,10 @@ export default function EventsAdmin() {
           }))
           .filter((h) => h.tag || h.title || h.body),
       }
+      // raisedAmount / donationCount are computed by the donation pipeline —
+      // never send them back or a concurrent donation could be clobbered.
+      delete payload.raisedAmount
+      delete payload.donationCount
       if (editing === "new") {
         await adminApi.createEvent(payload)
         notify("Event created")
@@ -128,7 +155,7 @@ export default function EventsAdmin() {
   }
 
   const remove = async (id) => {
-    if (!confirm("Delete this event?")) return
+    if (!(await confirm({ title: "Delete this event?", confirmLabel: "Delete", danger: true }))) return
     await adminApi.deleteEvent(id)
     notify("Event deleted")
     load()
@@ -149,25 +176,17 @@ export default function EventsAdmin() {
       />
 
       {/* Category filter */}
-      <div className="flex items-center gap-2 mb-6">
-        {[
-          { value: "all", label: "All" },
-          { value: "homepage", label: "Homepage" },
-          { value: "offsite", label: "Offsite" },
-        ].map((opt) => (
-          <button
-            key={opt.value}
-            onClick={() => setFilter(opt.value)}
-            className={`px-4 py-1.5 text-[0.625rem] tracking-[0.2em] uppercase rounded-sm border transition-colors ${
-              filter === opt.value
-                ? "bg-primary text-white border-primary"
-                : "bg-white text-primary/70 border-primary/15 hover:border-primary/40"
-            }`}
-          >
-            {opt.label}
-          </button>
-        ))}
-        <span className="text-[0.625rem] text-primary/40 ml-2">
+      <div className="flex items-center gap-3 mb-6 flex-wrap">
+        <FilterTabs
+          value={filter}
+          onChange={setFilter}
+          options={[
+            { value: "all", label: "All" },
+            { value: "homepage", label: "Homepage" },
+            { value: "offsite", label: "Offsite" },
+          ]}
+        />
+        <span className="text-[0.625rem] text-primary/40">
           {filtered.length} of {items.length} events
         </span>
       </div>
@@ -184,7 +203,7 @@ export default function EventsAdmin() {
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4"
         >
           {filtered.map((it) => (
             <motion.div
@@ -231,6 +250,28 @@ export default function EventsAdmin() {
                   <p className="text-[0.8125rem] text-primary/75 mt-3 line-clamp-2">
                     {it.description}
                   </p>
+                )}
+                {it.acceptDonations && (
+                  <div className="mt-3">
+                    <div className="flex items-center justify-between text-[0.625rem] tracking-[0.15em] uppercase text-primary/55 mb-1">
+                      <span className="text-secondary-terra font-medium">
+                        ${((it.raisedAmount || 0) / 100).toLocaleString()} raised
+                      </span>
+                      {it.goalAmount > 0 && (
+                        <span>${(it.goalAmount / 100).toLocaleString()} goal</span>
+                      )}
+                    </div>
+                    {it.goalAmount > 0 && (
+                      <div className="h-1 bg-primary/10 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-secondary-terra rounded-full"
+                          style={{
+                            width: `${Math.min(100, ((it.raisedAmount || 0) / it.goalAmount) * 100)}%`,
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
                 )}
                 <div className="flex gap-2 mt-4 pt-4 border-t border-primary/8">
                   <button
@@ -460,6 +501,50 @@ export default function EventsAdmin() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="border-t border-primary/10 pt-5">
+            <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1">
+              Donations
+            </p>
+            <p className="text-[0.6875rem] text-primary/50 mb-4">
+              When enabled, a “Donate to this Event” button appears on the event
+              detail page and contributions are tracked against this event.
+            </p>
+            <Checkbox
+              label="Accept donations for this event"
+              checked={form.acceptDonations}
+              onChange={(v) => setForm({ ...form, acceptDonations: v })}
+            />
+            {form.acceptDonations && (
+              <div className="mt-4">
+                <Field
+                  label="Fundraising Goal (AUD)"
+                  hint="Optional. Set a target to show a progress bar. Leave 0 to just track total raised."
+                >
+                  <NumberInput
+                    value={form.goalAmount ? form.goalAmount / 100 : ""}
+                    onChange={(e) =>
+                      setForm({
+                        ...form,
+                        goalAmount: Math.round((Number(e.target.value) || 0) * 100),
+                      })
+                    }
+                    placeholder="0"
+                  />
+                </Field>
+                {editing !== "new" && (
+                  <p className="text-[0.6875rem] text-primary/55 mt-3">
+                    Raised so far:{" "}
+                    <span className="text-primary font-medium">
+                      ${((form.raisedAmount || 0) / 100).toLocaleString()}
+                    </span>{" "}
+                    · {form.donationCount || 0} donation
+                    {(form.donationCount || 0) === 1 ? "" : "s"}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           <ImageUpload

@@ -9,6 +9,7 @@ import EmptyState from "../components/EmptyState"
 import ImageUpload from "../components/ImageUpload"
 import { Field, TextInput, TextArea, Select, Checkbox } from "../components/Field"
 import { useToast } from "../components/Toast"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonCardGrid } from "../components/Skeleton"
 
 const EMPTY = {
@@ -41,6 +42,7 @@ export default function BlogAdmin() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const { notify } = useToast()
+  const confirm = useConfirm()
 
   const load = async () => {
     setLoading(true)
@@ -98,7 +100,7 @@ export default function BlogAdmin() {
   }
 
   const remove = async (id) => {
-    if (!confirm("Delete this post?")) return
+    if (!(await confirm({ title: "Delete this post?", confirmLabel: "Delete", danger: true }))) return
     await adminApi.deleteBlog(id)
     notify("Post deleted")
     load()
@@ -130,7 +132,7 @@ export default function BlogAdmin() {
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-          className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 3xl:grid-cols-5 gap-4"
         >
           {items.map((it) => (
             <motion.div

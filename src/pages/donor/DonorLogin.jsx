@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react"
-import { useLocation, useNavigate, Navigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion"
-import { ArrowUpRight, Mail, Lock, Eye, EyeOff } from "lucide-react"
-import { adminApi, setSession, getToken } from "../auth"
+import { ArrowUpRight, Mail, Lock, Eye, EyeOff, Heart } from "lucide-react"
+import { donorApi, setDonorSession, getDonorToken } from "../../lib/donorAuth"
 import smallLogo from "../../assets/images/Homepage/smalllogo.png"
-import Quatrefoil from "../components/Quatrefoil"
-import DottedDivider from "../components/DottedDivider"
+import Quatrefoil from "../../admin/components/Quatrefoil"
+import DottedDivider from "../../admin/components/DottedDivider"
 
 import float1 from "../../assets/images/About/float1.png"
 import float2 from "../../assets/images/About/float2.png"
@@ -44,7 +44,7 @@ function FloatingIcon({ piece, springX, springY, delay }) {
   )
 }
 
-export default function Login() {
+export default function DonorLogin() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
@@ -52,8 +52,6 @@ export default function Login() {
   const [focusedField, setFocusedField] = useState(null)
   const [showPassword, setShowPassword] = useState(false)
   const navigate = useNavigate()
-  const location = useLocation()
-  const from = location.state?.from?.pathname || "/admin"
 
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -71,19 +69,18 @@ export default function Login() {
     return () => window.removeEventListener("mousemove", onMove)
   }, [mouseX, mouseY])
 
-  // Already authenticated → skip the login page and go to the CMS
-  if (getToken()) {
-    return <Navigate to={from} replace />
-  }
+  useEffect(() => {
+    if (getDonorToken()) navigate("/donor", { replace: true })
+  }, [navigate])
 
   const onSubmit = async (e) => {
     e.preventDefault()
     setBusy(true)
     setError("")
     try {
-      const { token, admin } = await adminApi.login(email, password)
-      setSession(token, admin)
-      navigate(from, { replace: true })
+      const { token, donor } = await donorApi.login(email, password)
+      setDonorSession(token, donor)
+      navigate("/donor", { replace: true })
     } catch (err) {
       setError(err.message || "Login failed")
     } finally {
@@ -119,7 +116,7 @@ export default function Login() {
           <div className="flex items-center gap-2 mb-2">
             <Quatrefoil className="w-3 h-3" />
             <span className="text-[0.625rem] font-normal tracking-[0.25em] uppercase text-secondary-terra">
-              CMS Admin
+              Donor Portal
             </span>
           </div>
           <DottedDivider color="rgba(215,184,147,0.4)" />
@@ -139,7 +136,7 @@ export default function Login() {
           transition={{ duration: 0.6, delay: 0.35 }}
           className="text-sm text-accent-cream/60 mb-8"
         >
-          Sign in to manage Museum of Islamic Art Australia content.
+          Sign in to view your donations, receipts, and manage subscriptions.
         </motion.p>
 
         <motion.form
@@ -216,9 +213,23 @@ export default function Login() {
                 tabIndex={-1}
                 className="flex-shrink-0 text-primary/30 hover:text-primary/60 transition-colors duration-200"
               >
-                {showPassword ? <EyeOff strokeWidth={1.8} className="w-4 h-4" /> : <Eye strokeWidth={1.8} className="w-4 h-4" />}
+                {showPassword ? (
+                  <EyeOff strokeWidth={1.8} className="w-4 h-4" />
+                ) : (
+                  <Eye strokeWidth={1.8} className="w-4 h-4" />
+                )}
               </button>
             </div>
+          </div>
+
+          {/* Forgot password link */}
+          <div className="flex justify-end mb-6 -mt-4">
+            <Link
+              to="/donor/forgot-password"
+              className="text-[0.6875rem] text-secondary-terra hover:text-secondary-rust font-medium transition-colors"
+            >
+              Forgot password?
+            </Link>
           </div>
 
           {error && (
@@ -257,7 +268,33 @@ export default function Login() {
             )}
             <span className="absolute inset-0 bg-secondary-terra origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
           </motion.button>
+
+          {/* Register link */}
+          <p className="text-center text-[0.8125rem] text-primary/50 mt-6">
+            Don't have an account?{" "}
+            <Link
+              to="/donor/register"
+              className="text-secondary-terra hover:text-secondary-rust font-medium transition-colors"
+            >
+              Create one
+            </Link>
+          </p>
         </motion.form>
+
+        {/* Back to site link */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="mt-6 text-center"
+        >
+          <Link
+            to="/"
+            className="text-[0.6875rem] text-accent-cream/40 hover:text-accent-cream/70 transition-colors"
+          >
+            ← Back to MIAA website
+          </Link>
+        </motion.div>
       </motion.div>
     </div>
   )

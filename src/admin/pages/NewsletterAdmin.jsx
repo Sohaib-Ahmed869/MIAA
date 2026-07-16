@@ -6,6 +6,7 @@ import PageHeader from "../components/PageHeader"
 import Button from "../components/Button"
 import EmptyState from "../components/EmptyState"
 import { useToast } from "../components/Toast"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonList } from "../components/Skeleton"
 
 export default function NewsletterAdmin() {
@@ -14,6 +15,7 @@ export default function NewsletterAdmin() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState("")
   const { notify } = useToast()
+  const confirm = useConfirm()
 
   const load = async () => {
     setLoading(true)
@@ -39,7 +41,7 @@ export default function NewsletterAdmin() {
   }, [items, query])
 
   const remove = async (id) => {
-    if (!confirm("Remove this subscriber?")) return
+    if (!(await confirm({ title: "Remove this subscriber?", confirmLabel: "Remove", danger: true }))) return
     await adminApi.deleteSubscriber(id)
     notify("Subscriber removed")
     load()

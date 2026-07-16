@@ -9,7 +9,9 @@ import EmptyState from "../components/EmptyState"
 import ImageUpload from "../components/ImageUpload"
 import { Field, TextInput, NumberInput, Select, Checkbox } from "../components/Field"
 import { useToast } from "../components/Toast"
+import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonList } from "../components/Skeleton"
+import FilterTabs from "../components/FilterTabs"
 
 const EMPTY = { title: "", subtitle: "", imageKey: "", date: "", surface: "homepage", order: 0, published: true }
 
@@ -29,6 +31,7 @@ export default function PreviousEventsAdmin() {
   const [filter, setFilter] = useState("all")
   const [view, setView] = useState("list")
   const { notify } = useToast()
+  const confirm = useConfirm()
 
   const filtered = useMemo(
     () => filter === "all" ? items : items.filter((it) => it.surface === filter),
@@ -47,7 +50,24 @@ export default function PreviousEventsAdmin() {
     }
   }
   useEffect(() => {
-    load()
+    let active = true
+    adminApi
+      .listPreviousEvents()
+      .then((data) => {
+        if (active) {
+          setItems(data)
+          setError("")
+        }
+      })
+      .catch((err) => {
+        if (active) setError(err.message)
+      })
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => {
+      active = false
+    }
   }, [])
 
   const open = (item) => {
@@ -85,7 +105,7 @@ export default function PreviousEventsAdmin() {
     }
   }
   const remove = async (id) => {
-    if (!confirm("Delete this entry?")) return
+    if (!(await confirm({ title: "Delete this entry?", confirmLabel: "Delete", danger: true }))) return
     await adminApi.deletePreviousEvent(id)
     notify("Deleted")
     load()
@@ -106,33 +126,19 @@ export default function PreviousEventsAdmin() {
       />
 
       {/* Toolbar — filter + view toggle */}
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-1.5">
-          {SURFACE_OPTIONS.map((opt) => (
-            <button
-              key={opt.value}
-              onClick={() => setFilter(opt.value)}
-              className={`px-3 py-1.5 rounded-full text-[0.6875rem] tracking-[0.15em] uppercase transition-colors ${
-                filter === opt.value
-                  ? "bg-primary text-white"
-                  : "bg-white border border-primary/15 text-primary/70 hover:border-primary/30"
-              }`}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-        <div className="flex items-center gap-1 bg-white border border-primary/15 rounded-sm overflow-hidden">
+      <div className="flex items-center justify-between gap-3 mb-4 flex-wrap">
+        <FilterTabs value={filter} onChange={setFilter} options={SURFACE_OPTIONS} />
+        <div className="inline-flex items-center gap-0.5 bg-white border border-primary/10 rounded-full p-1 shadow-sm shadow-primary/5">
           <button
             onClick={() => setView("list")}
-            className={`p-1.5 transition-colors ${view === "list" ? "bg-primary text-white" : "text-primary/50 hover:text-primary"}`}
+            className={`grid place-items-center w-8 h-8 rounded-full transition-colors ${view === "list" ? "bg-primary text-white shadow-sm shadow-primary/20" : "text-primary/45 hover:bg-primary/[0.06] hover:text-primary"}`}
             title="List view"
           >
             <List className="w-4 h-4" />
           </button>
           <button
             onClick={() => setView("grid")}
-            className={`p-1.5 transition-colors ${view === "grid" ? "bg-primary text-white" : "text-primary/50 hover:text-primary"}`}
+            className={`grid place-items-center w-8 h-8 rounded-full transition-colors ${view === "grid" ? "bg-primary text-white shadow-sm shadow-primary/20" : "text-primary/45 hover:bg-primary/[0.06] hover:text-primary"}`}
             title="Grid view"
           >
             <LayoutGrid className="w-4 h-4" />
@@ -192,7 +198,7 @@ export default function PreviousEventsAdmin() {
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.04 } } }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 3xl:grid-cols-5 gap-4"
         >
           {filtered.map((it) => (
             <motion.div

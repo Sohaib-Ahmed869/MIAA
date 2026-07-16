@@ -40,7 +40,7 @@ export default function CTAButton({
         {children}
       </span>
       {showArrow && (
-        <span className="relative z-10 inline-flex overflow-hidden w-[13px] h-[13px] 3xl:w-4 3xl:h-4">
+        <span className="pointer-events-none relative z-10 inline-flex overflow-hidden w-[13px] h-[13px] 3xl:w-4 3xl:h-4">
           {/* Default arrow — slides out top-right on hover */}
           <Icon
             className="w-3.5 h-3.5"
@@ -56,7 +56,7 @@ export default function CTAButton({
         </span>
       )}
       {/* Background sweep on hover */}
-      <span className="absolute inset-0 bg-secondary-rust origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
+      <span className="pointer-events-none absolute inset-0 bg-secondary-rust origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
     </>
   )
 
