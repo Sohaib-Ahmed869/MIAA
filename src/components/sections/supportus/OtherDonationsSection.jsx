@@ -40,7 +40,7 @@ export default function OtherDonationsSection() {
               Other Individual Donations Arranged Through Our Team
             </h2>
 
-            <CTAButton href="#donate" className="mt-8 lg:mt-10 self-start">Donate Now</CTAButton>
+            <CTAButton to="/donate" className="mt-8 lg:mt-10 self-start">Donate Now</CTAButton>
           </motion.div>
 
           {/* Right — checklist */}

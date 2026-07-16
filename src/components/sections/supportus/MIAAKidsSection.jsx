@@ -47,7 +47,7 @@ export default function MIAAKidsSection() {
               *Excludes ticketed events
             </p>
 
-            <CTAButton href="#join">Join Membership</CTAButton>
+            <CTAButton to="/contact">Join Membership</CTAButton>
           </motion.div>
 
           {/* Right — image */}

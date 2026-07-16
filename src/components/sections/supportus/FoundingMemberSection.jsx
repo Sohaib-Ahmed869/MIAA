@@ -54,7 +54,7 @@ export default function FoundingMemberSection() {
             </p>
 
             <div className="flex flex-wrap items-center gap-6 mt-2">
-              <CTAButton href="#donate" className="px-5 sm:px-7 py-3 sm:py-3.5 rounded-lg">Donate Now</CTAButton>
+              <CTAButton to="/donate" className="px-5 sm:px-7 py-3 sm:py-3.5 rounded-lg">Donate Now</CTAButton>
               <p className="text-sm md:text-[0.9375rem] 3xl:text-lg text-primary font-semibold italic leading-snug max-w-[260px] 3xl:max-w-[16rem]">
                 Stay in touch and be the first to hear about our upcoming
                 campaign
