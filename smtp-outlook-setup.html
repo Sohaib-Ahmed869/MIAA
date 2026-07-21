@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Sending Setup — Microsoft 365 (Outlook) | MIAA Donation Platform</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #1a1a1a;
+      background: #fff;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── COVER PAGE ── */
+    .cover {
+      background: #0d3b2e;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 48px 60px 40px;
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cover::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -60px;
+      width: 600px; height: 600px;
+      background: repeating-linear-gradient(
+        45deg,
+        transparent,
+        transparent 18px,
+        rgba(255,255,255,0.025) 18px,
+        rgba(255,255,255,0.025) 20px
+      );
+      pointer-events: none;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      border: 1px solid rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.75);
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 2px;
+      align-self: flex-end;
+    }
+
+    .cover-logo img { height: 66px; width: auto; display: block; }
+
+    .cover-category {
+      color: rgba(255,255,255,0.55);
+      font-size: 11px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-top: auto;
+      padding-top: 100px;
+    }
+
+    .cover-title {
+      color: #fff;
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.05;
+      margin-top: 14px;
+      letter-spacing: -1px;
+    }
+
+    .cover-title span { color: #c9a55a; display: block; }
+
+    .cover-subtitle {
+      color: rgba(255,255,255,0.65);
+      font-size: 15px;
+      margin-top: 20px;
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .cover-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      border-top: 1px solid rgba(255,255,255,0.15);
+      padding-top: 28px;
+      margin-top: 80px;
+    }
+
+    .cover-footer-label {
+      color: rgba(255,255,255,0.45);
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .cover-footer-value { color: #fff; font-size: 14px; font-weight: 500; }
+
+    .cover-footer-value small {
+      display: block;
+      color: rgba(255,255,255,0.5);
+      font-size: 12px;
+      font-weight: 400;
+      margin-top: 2px;
+    }
+
+    /* ── CONTENT PAGES ── */
+    .page {
+      padding: 56px 60px;
+      page-break-after: always;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .page:last-child { page-break-after: avoid; }
+
+    h2 {
+      font-size: 32px;
+      font-weight: 700;
+      color: #0d1f1a;
+      margin-bottom: 10px;
+      letter-spacing: -0.5px;
+    }
+
+    .section-rule {
+      display: block;
+      width: 36px;
+      height: 3px;
+      background: #c9a55a;
+      margin-bottom: 24px;
+      border: none;
+    }
+
+    p { color: #3a3a3a; margin-bottom: 12px; }
+
+    strong { color: #1a1a1a; }
+
+    /* ── REQUIREMENT CARD ── */
+    .req {
+      border: 1px solid #e4e4e4;
+      border-radius: 10px;
+      padding: 26px 28px;
+      margin-top: 24px;
+      page-break-inside: avoid;
+    }
+
+    .req-head {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 6px;
+    }
+
+    .req-letter {
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: #0d3b2e;
+      color: #c9a55a;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .req-title { font-size: 18px; font-weight: 700; color: #0d1f1a; }
+
+    .req-sub { font-size: 12.5px; color: #888; font-weight: 500; margin-top: 1px; }
+
+    .req-purpose {
+      font-size: 13px;
+      color: #555;
+      background: #f8f8f6;
+      border-left: 3px solid #c9a55a;
+      padding: 10px 14px;
+      border-radius: 0 4px 4px 0;
+      margin: 14px 0 18px;
+    }
+
+    /* ── STEP LIST ── */
+    .steps { list-style: none; counter-reset: step; padding: 0; }
+
+    .steps > li {
+      counter-increment: step;
+      position: relative;
+      padding: 0 0 12px 34px;
+      font-size: 13.5px;
+      color: #3a3a3a;
+      line-height: 1.55;
+    }
+
+    .steps > li::before {
+      content: counter(step);
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 22px;
+      height: 22px;
+      background: #eef3f0;
+      color: #0d3b2e;
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .steps > li:last-child { padding-bottom: 0; }
+
+    /* ── DELIVER BOX ── */
+    .deliver {
+      margin-top: 16px;
+      background: #fffdf5;
+      border: 1px solid #ecdcae;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+
+    .deliver-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a9812e;
+      margin-bottom: 4px;
+    }
+
+    .deliver ul { list-style: none; padding: 0; margin: 0; }
+
+    .deliver li {
+      font-size: 13px;
+      color: #3a3a3a;
+      padding: 2px 0 2px 14px;
+      position: relative;
+    }
+
+    .deliver li::before {
+      content: '›';
+      color: #c9a55a;
+      position: absolute;
+      left: 0;
+      font-weight: 700;
+    }
+
+    code {
+      font-family: 'SF Mono', Menlo, Consolas, monospace;
+      font-size: 12px;
+      background: #f0efe9;
+      color: #0d3b2e;
+      padding: 1px 6px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .tip {
+      font-size: 12.5px;
+      color: #666;
+      margin-top: 12px;
+      padding-left: 14px;
+      border-left: 2px solid #e4e4e4;
+    }
+
+    /* ── WARNING NOTE ── */
+    .warn {
+      background: #fdf6ee;
+      border: 1px solid #edd6b4;
+      border-left: 3px solid #c9873a;
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      margin-top: 16px;
+      font-size: 13px;
+      color: #5a4326;
+    }
+
+    .warn strong { color: #7a4f18; }
+
+    /* ── TABLE ── */
+    .scope-table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+
+    .scope-table th {
+      text-align: left;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #888;
+      padding: 0 16px 10px 16px;
+      border-bottom: 2px solid #e4e4e4;
+    }
+
+    .scope-table td {
+      padding: 11px 16px;
+      font-size: 13px;
+      color: #3a3a3a;
+      border-bottom: 1px solid #f0f0f0;
+      vertical-align: top;
+    }
+
+    .scope-table tr:last-child td { border-bottom: none; }
+
+    /* ── SETTINGS TABLE ── */
+    .settings-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 18px;
+      border: 1px solid #e4e4e4;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .settings-table td {
+      padding: 12px 16px;
+      font-size: 13.5px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .settings-table tr:last-child td { border-bottom: none; }
+
+    .settings-table td:first-child {
+      background: #f8f8f6;
+      font-weight: 600;
+      color: #0d1f1a;
+      width: 38%;
+    }
+
+    .tag-req {
+      display: inline-block;
+      background: #e6f4ee;
+      color: #1a7a46;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+
+    /* ── CALLOUT ── */
+    .callout {
+      background: #0d3b2e;
+      color: #fff;
+      border-radius: 10px;
+      padding: 26px 30px;
+      margin-top: 28px;
+    }
+
+    .callout h3 {
+      color: #c9a55a;
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: 0.02em;
+    }
+
+    .callout p { color: rgba(255,255,255,0.8); font-size: 13.5px; margin-bottom: 8px; }
+    .callout p:last-child { margin-bottom: 0; }
+    .callout strong { color: #fff; }
+    .callout code { background: rgba(255,255,255,0.12); color: #e8d9b0; }
+
+    .lead { font-size: 15px; color: #444; line-height: 1.65; }
+
+    /* ── FOOTER ── */
+    .doc-footer {
+      background: #f8f8f6;
+      padding: 28px 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid #e4e4e4;
+    }
+
+    .doc-footer-logo { color: #0d3b2e; font-size: 11px; font-weight: 600; }
+    .doc-footer-logo span { font-weight: 400; color: #888; }
+
+    .doc-footer-right { text-align: right; font-size: 11px; color: #888; }
+    .doc-footer-right strong { color: #333; }
+
+    /* ── PRINT ── */
+    @media print {
+      @page { size: A4; margin: 0; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .cover { min-height: 297mm; }
+      .page { page-break-after: always; }
+      .req, .callout { page-break-inside: avoid; }
+      .doc-footer { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     COVER PAGE
+════════════════════════════════════════════════ -->
+<div class="cover">
+  <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+    <div class="cover-logo">
+      <img src="data:image/png;base64,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" alt="Museum of Islamic Art Australia">
+    </div>
+    <span class="cover-badge">Email Setup Guide · Action Required</span>
+  </div>
+
+  <div>
+    <div class="cover-category">Donation Platform · Email Sending (SMTP)</div>
+    <h1 class="cover-title">
+      Setting Up Email
+      <span>With Microsoft 365</span>
+    </h1>
+    <p class="cover-subtitle">
+      The platform needs permission to send receipts and confirmations from MIAA's own email
+      address. This guide walks your Microsoft 365 administrator through it, step by step,
+      and lists exactly what to send us at the end.
+    </p>
+  </div>
+
+  <div class="cover-footer">
+    <div>
+      <div class="cover-footer-label">Prepared For</div>
+      <div class="cover-footer-value">
+        Museum of Islamic Art Australia (MIAA)
+        <small>An initiative of ISRA · Attn: Zeliha Baydogan</small>
+      </div>
+    </div>
+    <div>
+      <div class="cover-footer-label">Prepared By</div>
+      <div class="cover-footer-value">Think Studio<small>Delivery Team</small></div>
+    </div>
+    <div>
+      <div class="cover-footer-label">Date</div>
+      <div class="cover-footer-value">17 July 2026</div>
+    </div>
+    <div>
+      <div class="cover-footer-label">Who Needs To Do This</div>
+      <div class="cover-footer-value">Microsoft 365 Admin<small>≈ 20 minutes total</small></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     OVERVIEW
+════════════════════════════════════════════════ -->
+<div class="page">
+  <h2>What This Is For</h2>
+  <hr class="section-rule">
+
+  <p class="lead">
+    Every time someone donates, buys an event ticket, or registers, the platform needs to send
+    them an email — a receipt, a confirmation, a ticket. Those emails should come
+    <strong>from MIAA</strong>, not from an unfamiliar address, so that donors trust them and
+    they land in the inbox rather than the junk folder.
+  </p>
+
+  <p style="margin-top:18px;">
+    <strong>What is SMTP?</strong> It's simply the standard way software sends email on your
+    behalf. You give the platform a mailbox and a password, and it can then send from that
+    address automatically. Think of it as handing over a key to one specific mailbox — nothing
+    else in your Microsoft 365 account is touched.
+  </p>
+
+  <p>
+    Because MIAA's email is hosted on <strong>Microsoft 365</strong>, we can send through
+    Microsoft directly. There are three things your administrator needs to do, and then one
+    short list of details to send us.
+  </p>
+
+  <table class="scope-table">
+    <thead>
+      <tr>
+        <th style="width:32px;"></th>
+        <th>Step</th>
+        <th style="width:120px;">Time</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Choose (or create) the mailbox the emails will be sent from</td>
+        <td>≈ 5 min</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Turn on <strong>Authenticated SMTP</strong> for that mailbox</td>
+        <td>≈ 2 min</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>Create an <strong>app password</strong> for the platform to use</td>
+        <td>≈ 10 min</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>Send us the details (securely — see the last page)</td>
+        <td>≈ 2 min</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="warn">
+    <strong>Please read the note on page 6 before starting.</strong> Microsoft is retiring this
+    method of sending at the end of December 2026. It works today and is fine for the Gala
+    Dinner, but there's a longer-term decision to make together — we've set it out plainly so
+    nothing catches MIAA by surprise.
+  </div>
+
+  <p class="tip">
+    Everything below is done by whoever administers MIAA's Microsoft 365 account — the person
+    who can add users and reset passwords. If that's an external IT provider, this guide can be
+    forwarded to them as-is.
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     STEP 1 — SENDING MAILBOX
+════════════════════════════════════════════════ -->
+<div class="page">
+  <h2>1 · Choose the Sending Mailbox</h2>
+  <hr class="section-rule">
+
+  <p>
+    This is the address donors will see in the “From” line of every receipt and confirmation —
+    for example <code>donations@miaaustralia.org</code>.
+  </p>
+
+  <div class="req">
+    <div class="req-head">
+      <span class="req-letter">1</span>
+      <div>
+        <div class="req-title">Pick a licensed user mailbox to send from</div>
+        <div class="req-sub">≈ 5 minutes · Microsoft 365 admin center</div>
+      </div>
+    </div>
+    <div class="req-purpose">
+      Purpose: gives receipts a clear, recognisable sender that donors trust, and gives MIAA one
+      place to see what the platform has sent.
+    </div>
+
+    <ol class="steps">
+      <li>Decide on the address. We suggest a dedicated one such as <code>donations@miaaustralia.org</code> or <code>noreply@miaaustralia.org</code>, rather than a personal staff mailbox — so it keeps working when people change roles.</li>
+      <li>If it doesn't exist yet, create it in the <strong>Microsoft 365 admin center</strong> under <strong>Users → Active users → Add a user</strong>.</li>
+      <li>Make sure the account has a <strong>licence assigned</strong> (any plan that includes Exchange Online email).</li>
+      <li>Set a password for it and keep that password to hand — you'll need it briefly in Step 3.</li>
+    </ol>
+
+    <div class="warn">
+      <strong>Important — this cannot be a “shared mailbox”.</strong> Microsoft 365 shared
+      mailboxes are free but have no password and cannot sign in, so the platform can't send
+      through one. It must be a normal <strong>licensed user account</strong>. If MIAA already
+      uses <code>donations@</code> as a shared mailbox, please tell us — we'll suggest the
+      cleanest way around it rather than have you undo anything.
+    </div>
+
+    <p class="tip">
+      Whatever address you choose, the platform can only send <em>as that exact mailbox</em>.
+      If you'd like receipts to appear to come from a different address than the one we sign in
+      with, that's possible but needs one extra permission — just let us know and we'll set it
+      up with you.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     STEP 2 — AUTHENTICATED SMTP
+════════════════════════════════════════════════ -->
+<div class="page">
+  <h2>2 · Turn On Authenticated SMTP</h2>
+  <hr class="section-rule">
+
+  <p>
+    Microsoft switches this off by default as a security measure. It needs to be turned on for
+    the one sending mailbox — and only that mailbox.
+  </p>
+
+  <div class="req">
+    <div class="req-head">
+      <span class="req-letter">2</span>
+      <div>
+        <div class="req-title">Enable Authenticated SMTP on the sending mailbox</div>
+        <div class="req-sub">≈ 2 minutes · Microsoft 365 admin center</div>
+      </div>
+    </div>
+    <div class="req-purpose">
+      Purpose: allows the donation platform — and nothing else — to sign in to that one mailbox
+      and send mail through it.
+    </div>
+
+    <ol class="steps">
+      <li>Go to the <strong>Microsoft 365 admin center</strong> (<code>admin.microsoft.com</code>) and sign in as an administrator.</li>
+      <li>Open <strong>Users → Active users</strong> and click the sending mailbox you chose in Step 1.</li>
+      <li>In the panel that opens, select the <strong>Mail</strong> tab.</li>
+      <li>Under <strong>Email apps</strong>, click <strong>Manage email apps</strong>.</li>
+      <li>Tick the box for <strong>Authenticated SMTP</strong>.</li>
+      <li>Click <strong>Save changes</strong>.</li>
+    </ol>
+
+    <p class="tip">
+      Leave every other option on that screen exactly as it is. Only <strong>Authenticated
+      SMTP</strong> needs to change, and only on this one account — Microsoft recommends keeping
+      it off everywhere else, which we'd echo.
+    </p>
+  </div>
+
+  <div class="warn">
+    <strong>If the tick box is greyed out or won't save:</strong> it usually means SMTP is
+    switched off across the whole tenant, which is a separate setting an administrator can lift.
+    Don't fight it — send us a screenshot and we'll point your IT provider straight at the
+    setting.
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     STEP 3 — APP PASSWORD
+════════════════════════════════════════════════ -->
+<div class="page">
+  <h2>3 · Create an App Password</h2>
+  <hr class="section-rule">
+
+  <p>
+    An <strong>app password</strong> is a long, randomly generated password that works for one
+    application only. We use it instead of the mailbox's real password, so MIAA's actual
+    password is never stored in the platform and can be changed at any time without breaking
+    anything. It can also be revoked on its own if it's ever no longer needed.
+  </p>
+
+  <div class="req">
+    <div class="req-head">
+      <span class="req-letter">3</span>
+      <div>
+        <div class="req-title">Generate an app password for the sending mailbox</div>
+        <div class="req-sub">≈ 10 minutes · Microsoft 365 admin center &amp; security settings</div>
+      </div>
+    </div>
+    <div class="req-purpose">
+      Purpose: lets the platform sign in to send receipts, without ever holding MIAA's real
+      mailbox password.
+    </div>
+
+    <p style="font-size:13.5px; margin:14px 0 6px;"><strong>First — the prerequisite (admin):</strong></p>
+    <ol class="steps">
+      <li>In the <strong>Microsoft 365 admin center</strong>, go to <strong>Users → Active users</strong> and click <strong>Multi-factor authentication</strong> in the toolbar.</li>
+      <li>Find the sending mailbox in the list and set its status to <strong>Enabled</strong>.</li>
+      <li>Open the <strong>Service settings</strong> tab and make sure <strong>“Allow users to create app passwords to sign into non-browser apps”</strong> is selected.</li>
+    </ol>
+
+    <p style="font-size:13.5px; margin:16px 0 6px;"><strong>Then — generate the password:</strong></p>
+    <ol class="steps">
+      <li>Sign in to <code>mysignins.microsoft.com/security-info</code> <em>as the sending mailbox</em> (using the password from Step 1).</li>
+      <li>Complete the multi-factor setup prompt if it appears.</li>
+      <li>Click <strong>Add sign-in method</strong> and choose <strong>App password</strong>.</li>
+      <li>Name it something recognisable, e.g. <code>MIAA Donation Platform</code>.</li>
+      <li><strong>Copy the password that appears and keep it safe.</strong> Microsoft shows it once and never again — if it's lost, you simply delete it and create another.</li>
+    </ol>
+
+    <div class="warn">
+      <strong>If “App password” doesn't appear as an option</strong>, it's almost always because
+      the tenant uses <strong>Security Defaults</strong> or <strong>Conditional Access</strong>,
+      which deliberately block app passwords. This is a genuine fork in the road, not a small
+      settings tweak — <strong>please stop here and contact us rather than turning security
+      features off.</strong> Weakening MIAA's overall account security to enable email sending
+      isn't a trade we'd recommend, and there are better options we can walk through on a call.
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     STEP 4 — WHAT TO SEND US
+════════════════════════════════════════════════ -->
+<div class="page">
+  <h2>4 · What To Send Us</h2>
+  <hr class="section-rule">
+
+  <p>
+    Once the three steps above are done, we need the following. Most of it is standard and
+    already filled in below — realistically the only things unique to MIAA are the address and
+    the app password.
+  </p>
+
+  <table class="settings-table">
+    <tr>
+      <td>SMTP server</td>
+      <td><code>smtp.office365.com</code> <span class="tag-req">Standard</span></td>
+    </tr>
+    <tr>
+      <td>Port</td>
+      <td><code>587</code> <span class="tag-req">Standard</span></td>
+    </tr>
+    <tr>
+      <td>Encryption</td>
+      <td><code>STARTTLS</code> <span class="tag-req">Standard</span></td>
+    </tr>
+    <tr>
+      <td>Username</td>
+      <td>The full sending address, e.g. <code>donations@miaaustralia.org</code></td>
+    </tr>
+    <tr>
+      <td>Password</td>
+      <td>The <strong>app password</strong> from Step 3 — <em>not</em> the mailbox's real password</td>
+    </tr>
+    <tr>
+      <td>From name</td>
+      <td>How MIAA should appear in the inbox, e.g. <code>Museum of Islamic Art Australia</code></td>
+    </tr>
+  </table>
+
+  <div class="deliver">
+    <div class="deliver-label">Please send us</div>
+    <ul>
+      <li><strong>Sending address</strong> — e.g. <code>donations@miaaustralia.org</code></li>
+      <li><strong>From name</strong> — how MIAA should appear to donors</li>
+      <li><strong>App password</strong> <em>(via the secure method on the last page — never by plain email)</em></li>
+      <li>Confirmation that <strong>Authenticated SMTP</strong> is ticked for that mailbox</li>
+    </ul>
+  </div>
+
+  <div class="callout">
+    <h3>Good to know — sending limits</h3>
+    <p>
+      Microsoft 365 caps this method at roughly <strong>30 messages per minute</strong> and
+      <strong>10,000 recipients per rolling 24 hours</strong>. For donation receipts and event
+      confirmations — sent one at a time, as they happen — that is comfortably more than MIAA
+      will ever need, including on Gala night.
+    </p>
+    <p>
+      It is <em>not</em> suitable for bulk newsletters or mass campaigns to the whole donor
+      list. Those should go out through a proper marketing tool, which keeps MIAA's mailbox
+      reputation clean and protects the deliverability of the receipts that really matter.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     THE DECEMBER 2026 CHANGE
+════════════════════════════════════════════════ -->
+<div class="page">
+  <h2>One Thing To Be Aware Of</h2>
+  <hr class="section-rule">
+
+  <p class="lead">
+    We want to be upfront about this rather than have it surface later. The method in this guide
+    — signing in with an app password — is something <strong>Microsoft has announced it is
+    retiring</strong>. It works today, and it will comfortably carry MIAA through the Gala
+    Dinner. But it has a known end date, and it's better that MIAA hears that from us now.
+  </p>
+
+  <table class="scope-table">
+    <thead>
+      <tr>
+        <th style="width:170px;">When</th>
+        <th>What Microsoft has said will happen</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Now → Dec 2026</strong></td>
+        <td>No change. App passwords and SMTP work exactly as described in this guide.</td>
+      </tr>
+      <tr>
+        <td><strong>End of Dec 2026</strong></td>
+        <td>Switched off by default for existing accounts. An administrator can still switch it back on.</td>
+      </tr>
+      <tr>
+        <td><strong>Second half of 2027</strong></td>
+        <td>Microsoft expects to announce a final date after which it stops working altogether.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:22px;">
+    <strong>What this means in practice.</strong> Nothing needs to happen before the Gala.
+    Around <strong>November 2026</strong>, we'll come back to MIAA with a recommendation and
+    handle the switch — most likely moving to a modern sign-in method that doesn't use a
+    password at all, or to a dedicated sending service. Either way it's our job to manage, not
+    something MIAA needs to track.
+  </p>
+
+  <div class="callout">
+    <h3>Why we're not simply recommending the modern method today</h3>
+    <p>
+      Honestly: time. The modern approach requires registering an application in MIAA's
+      Microsoft tenant and granting it permissions — a heavier piece of work needing
+      coordination with whoever administers your Microsoft 365. With the Gala Dinner on
+      <strong>25 July 2026</strong>, the app password route gets MIAA live and taking donations
+      now, with a clear plan to move before Microsoft's deadline.
+    </p>
+    <p>
+      If MIAA would prefer to go straight to the long-term setup and skip this interim step,
+      we're glad to — <strong>just say the word and we'll scope it.</strong> It's a longer setup,
+      not a harder one.
+    </p>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     SECURE SHARING & TROUBLESHOOTING
+════════════════════════════════════════════════ -->
+<div class="page">
+  <h2>Sending It To Us Safely</h2>
+  <hr class="section-rule">
+
+  <div class="callout">
+    <h3>Please don't send the app password by email or chat</h3>
+    <p>
+      An app password can send email as MIAA. Plain email, WhatsApp and chat apps keep copies
+      on servers and in backups indefinitely — they simply aren't built for credentials.
+    </p>
+    <p><strong>Instead, please use one of these:</strong></p>
+    <p>
+      • A one-time secure link such as <strong>onetimesecret.com</strong> — paste the password
+      in, send us the link, and it destroys itself once we've opened it.<br>
+      • A password manager share. We're happy to set up a shared vault for MIAA.<br>
+      • Read it to us over the phone, if that's easiest.
+    </p>
+    <p style="margin-top:12px;">
+      If a password is ever sent somewhere it shouldn't have been, it's no drama — delete it in
+      Microsoft 365 and create another. That's exactly why we use app passwords rather than the
+      real one.
+    </p>
+  </div>
+
+  <h2 style="margin-top:44px; font-size:22px;">If Something Doesn't Work</h2>
+  <hr class="section-rule">
+
+  <table class="scope-table">
+    <thead>
+      <tr>
+        <th style="width:44%;">What you see</th>
+        <th>What it usually means</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>“App password” option is missing</td>
+        <td>Security Defaults or Conditional Access is on. Please contact us — don't turn them off.</td>
+      </tr>
+      <tr>
+        <td><code>5.7.57 Client not authenticated</code></td>
+        <td>Authenticated SMTP isn't ticked yet (Step 2), or the real password was used instead of the app password.</td>
+      </tr>
+      <tr>
+        <td><code>SmtpClientAuthentication is disabled</code></td>
+        <td>SMTP is switched off across the whole tenant — an administrator needs to allow it.</td>
+      </tr>
+      <tr>
+        <td>Authenticated SMTP tick won't save</td>
+        <td>Usually the same tenant-wide setting as above.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p style="margin-top:24px;">
+    <strong>Not sure about a step?</strong> Please don't worry about getting every technical
+    detail right. Create the mailbox, and if anything at all is unclear, reply to us and we'll
+    jump on a short call and finish the setup together — it usually takes about ten minutes.
+    Once we have the details, receipts and confirmations will be sending from MIAA's own address
+    ahead of the Gala Dinner on <strong>25 July 2026</strong>.
+  </p>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER
+════════════════════════════════════════════════ -->
+<div class="doc-footer">
+  <div class="doc-footer-logo">
+    Museum of Islamic Art Australia
+    <span> · An initiative of ISRA · www.miaaustralia.org</span>
+  </div>
+  <div class="doc-footer-right">
+    Prepared by <strong>Think Studio</strong><br>
+    <span>This document is confidential and intended solely for the Museum of Islamic Art Australia.</span>
+  </div>
+</div>
+
+</body>
+</html>
