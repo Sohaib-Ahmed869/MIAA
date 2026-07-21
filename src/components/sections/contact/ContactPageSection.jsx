@@ -11,6 +11,8 @@ const TOPICS = [
   "Visitor Information",
   "Exhibition Information",
   "Partnership Opportunities",
+  "Volunteering",
+  "Membership",
 ]
 
 function TikTokIcon() {

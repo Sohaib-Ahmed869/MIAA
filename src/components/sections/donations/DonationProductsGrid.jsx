@@ -1,10 +1,18 @@
+import { useState } from "react"
 import { motion } from "framer-motion"
-import { HandHeart } from "lucide-react"
+import { HandHeart, ChevronDown } from "lucide-react"
 import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 
-export default function DonationProductsGrid({ products = [] }) {
+// `initialCount` caps how many cards show at first; the rest reveal via a
+// "View more" button. Omit it to render every cause at once.
+export default function DonationProductsGrid({ products = [], initialCount }) {
+  const [expanded, setExpanded] = useState(false)
   if (products.length === 0) return null
+
+  const hasMore = initialCount != null && products.length > initialCount
+  const visibleProducts =
+    hasMore && !expanded ? products.slice(0, initialCount) : products
 
   return (
     <section id="choose-a-cause" className="scroll-mt-24 py-16 md:py-24 3xl:py-32 bg-bg">
@@ -37,7 +45,7 @@ export default function DonationProductsGrid({ products = [] }) {
           viewport={{ once: true, margin: "-80px" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 3xl:gap-10"
         >
-          {products.map((p) => {
+          {visibleProducts.map((p) => {
             const pct = p.goalAmount > 0
               ? Math.min(100, ((p.raisedAmount || 0) / p.goalAmount) * 100)
               : 0
@@ -106,6 +114,19 @@ export default function DonationProductsGrid({ products = [] }) {
             )
           })}
         </motion.div>
+
+        {hasMore && !expanded && (
+          <motion.div {...fadeInUp} className="mt-10 md:mt-14 flex justify-center">
+            <button
+              type="button"
+              onClick={() => setExpanded(true)}
+              className="group inline-flex items-center gap-2 px-6 py-3 rounded-sm border border-primary/25 text-primary text-[0.6875rem] 3xl:text-sm font-semibold tracking-[0.15em] uppercase hover:border-secondary-terra hover:text-secondary-terra transition-colors"
+            >
+              View more causes
+              <ChevronDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   )

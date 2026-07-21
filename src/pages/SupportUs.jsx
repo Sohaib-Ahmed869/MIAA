@@ -1,6 +1,7 @@
 import SupportHeroSection from "../components/sections/supportus/SupportHeroSection"
 import FoundingMemberSection from "../components/sections/supportus/FoundingMemberSection"
 import OtherDonationsSection from "../components/sections/supportus/OtherDonationsSection"
+import SupportCausesSection from "../components/sections/supportus/SupportCausesSection"
 import MIAAKidsSection from "../components/sections/supportus/MIAAKidsSection"
 import VolunteerSection from "../components/sections/supportus/VolunteerSection"
 import VolunteerFAQSection from "../components/sections/supportus/VolunteerFAQSection"
@@ -16,6 +17,8 @@ export default function SupportUs() {
 
       <SectionDivider label="Ways to Give" bg="bg-bg" variant="light" />
       <OtherDonationsSection />
+
+      <SupportCausesSection />
 
       <SectionDivider label="MIAA Memberships" bg="bg-primary" variant="dark" />
       <MIAAKidsSection />

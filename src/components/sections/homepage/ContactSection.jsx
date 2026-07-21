@@ -10,6 +10,8 @@ const TOPICS = [
   "Visitor Information",
   "Exhibition Information",
   "Partnership Opportunities",
+  "Volunteering",
+  "Membership",
 ]
 
 export default function ContactSection() {
