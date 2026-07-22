@@ -5,7 +5,7 @@ import CTAButton from "../../ui/Button"
 import ornament from "../../../assets/images/Homepage/Ornament_1.png"
 
 const REASSURANCES = [
-  { icon: ShieldCheck, label: "Secure payments", sub: "Stripe & PayPal" },
+  { icon: ShieldCheck, label: "Secure payments", sub: "Stripe" },
   { icon: ReceiptText, label: "Tax-deductible", sub: "Instant receipts" },
   { icon: HeartHandshake, label: "Direct impact", sub: "Funds our programs" },
 ]

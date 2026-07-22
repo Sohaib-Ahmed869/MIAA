@@ -161,7 +161,6 @@ export default function DonationCheckout() {
   const [donorEmail, setDonorEmail] = useState(donor?.email || "")
   const [message, setMessage] = useState("")
   const [isAnonymous, setIsAnonymous] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState("stripe")
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [clientSecret, setClientSecret] = useState("")
@@ -287,24 +286,10 @@ export default function DonationCheckout() {
     }
   }
 
-  // PayPal: create the order and redirect to PayPal for approval.
-  const handlePaypal = async () => {
-    if (!validate()) return
-    setBusy(true)
-    try {
-      const { approvalUrl } = await api.createPaypalOrder(buildPayload())
-      window.location.href = approvalUrl
-    } catch (err) {
-      setError(err.message)
-      setBusy(false)
-    }
-  }
-
   const inputClass =
     "w-full py-3 px-4 bg-white/[0.06] text-accent-cream border border-white/10 rounded-lg text-sm placeholder:text-accent-cream/30 focus:border-secondary-terra focus:ring-2 focus:ring-secondary-terra/25 focus:outline-none transition-colors"
 
   const showCardForm =
-    paymentMethod === "stripe" &&
     clientSecret &&
     intentSignature === giftSignature &&
     stripePromise
@@ -575,62 +560,35 @@ export default function DonationCheckout() {
             {/* Payment method */}
             <div>
               <SectionHead>Payment Method</SectionHead>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("stripe")}
-                  className={`flex items-center justify-center gap-2 py-3.5 rounded-lg text-sm font-medium transition-all ${
-                    paymentMethod === "stripe"
-                      ? "bg-secondary-terra text-white shadow-lg shadow-secondary-terra/25 ring-2 ring-secondary-terra/40"
-                      : "bg-white/[0.06] text-accent-cream/70 border border-white/10 hover:bg-white/10 hover:border-white/25"
-                  }`}
-                >
-                  <CreditCard className="w-4 h-4" /> Card / Apple Pay
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setPaymentMethod("paypal")}
-                  className={`flex items-center justify-center gap-2 py-3.5 rounded-lg text-sm font-medium transition-all ${
-                    paymentMethod === "paypal"
-                      ? "bg-secondary-terra text-white shadow-lg shadow-secondary-terra/25 ring-2 ring-secondary-terra/40"
-                      : "bg-white/[0.06] text-accent-cream/70 border border-white/10 hover:bg-white/10 hover:border-white/25"
-                  }`}
-                >
-                  PayPal
-                </button>
-              </div>
+              <button
+                type="button"
+                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-lg text-sm font-medium bg-secondary-terra text-white shadow-lg shadow-secondary-terra/25 ring-2 ring-secondary-terra/40"
+              >
+                <CreditCard className="w-4 h-4" /> Card / Apple Pay
+              </button>
 
               {/* On-page card fields (Stripe Payment Element) */}
-              {paymentMethod === "stripe" && (
-                <div className="mt-4">
-                  {showCardForm ? (
-                    <Elements
-                      stripe={stripePromise}
-                      options={{ clientSecret, appearance: STRIPE_APPEARANCE }}
-                    >
-                      <CardPaymentForm
-                        amountLabel={amountLabel}
-                        isRecurring={isRecurring}
-                        freqLabel={freqLabel}
-                        onSuccess={() => navigate("/donate/success")}
-                        onEdit={() => setClientSecret("")}
-                      />
-                    </Elements>
-                  ) : (
-                    <p className="text-xs text-accent-cream/45 leading-relaxed">
-                      Card details are entered securely on this page. Press
-                      “Continue to secure payment” to enter your card.
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {paymentMethod === "paypal" && (
-                <p className="mt-4 text-xs text-accent-cream/45 leading-relaxed">
-                  You’ll be redirected to PayPal to approve your donation, then
-                  returned here.
-                </p>
-              )}
+              <div className="mt-4">
+                {showCardForm ? (
+                  <Elements
+                    stripe={stripePromise}
+                    options={{ clientSecret, appearance: STRIPE_APPEARANCE }}
+                  >
+                    <CardPaymentForm
+                      amountLabel={amountLabel}
+                      isRecurring={isRecurring}
+                      freqLabel={freqLabel}
+                      onSuccess={() => navigate("/donate/success")}
+                      onEdit={() => setClientSecret("")}
+                    />
+                  </Elements>
+                ) : (
+                  <p className="text-xs text-accent-cream/45 leading-relaxed">
+                    Card details are entered securely on this page. Press
+                    “Continue to secure payment” to enter your card.
+                  </p>
+                )}
+              </div>
             </div>
           </motion.div>
 
@@ -693,16 +651,7 @@ export default function DonationCheckout() {
 
             {/* Primary action. For card, this reveals the on-page card form;
                 the final "Donate" button lives with the card fields. */}
-            {paymentMethod === "paypal" ? (
-              <button
-                type="button"
-                onClick={handlePaypal}
-                disabled={busy}
-                className="w-full py-4 bg-secondary-terra hover:bg-secondary-rust text-white text-sm font-semibold tracking-wide rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-secondary-terra/25"
-              >
-                {busy ? "Redirecting…" : `Donate ${amountLabel} with PayPal`}
-              </button>
-            ) : showCardForm ? (
+            {showCardForm ? (
               <p className="text-center text-xs text-accent-cream/50">
                 Complete your card details to finish your donation →
               </p>
@@ -727,7 +676,7 @@ export default function DonationCheckout() {
             <div className="mt-4 space-y-2">
               <p className="flex items-center gap-2 text-xs text-accent-cream/50">
                 <ShieldCheck className="w-3.5 h-3.5 text-accent-wheat/70 flex-shrink-0" />
-                Secure, encrypted checkout via {paymentMethod === "paypal" ? "PayPal" : "Stripe"}
+                Secure, encrypted checkout via Stripe
               </p>
               <p className="flex items-center gap-2 text-xs text-accent-cream/50">
                 <Heart className="w-3.5 h-3.5 text-accent-wheat/70 flex-shrink-0" />

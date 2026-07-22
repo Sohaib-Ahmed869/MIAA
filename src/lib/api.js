@@ -38,6 +38,14 @@ export const api = {
     return request(`/api/events${qs ? `?${qs}` : ""}`)
   },
   eventById: (id) => request(`/api/events/${encodeURIComponent(id)}`),
+  // Event registration (public)
+  registerForEvent: (payload) =>
+    request(`/api/event-registrations`, { method: "POST", body: payload }),
+  confirmEventRegistration: (payload) =>
+    request(`/api/event-registrations/confirm`, { method: "POST", body: payload }),
+  // Direct URL to the event pass PDF (guarded by the pass code).
+  eventPassUrl: (id, code) =>
+    `${BASE}/api/event-registrations/${id}/pass.pdf?code=${encodeURIComponent(code)}`,
   previousEvents: (params = {}) => {
     const qs = new URLSearchParams(params).toString()
     return request(`/api/previous-events${qs ? `?${qs}` : ""}`)

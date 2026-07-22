@@ -72,6 +72,21 @@ export const adminApi = {
   updateEvent: (id, payload) => request(`/api/events/${id}`, { method: "PATCH", body: payload }),
   deleteEvent: (id) => request(`/api/events/${id}`, { method: "DELETE" }),
 
+  // event registrations (paid / free)
+  listEventRegistrations: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/event-registrations${qs ? `?${qs}` : ""}`)
+  },
+  getEventRegistration: (id) => request(`/api/event-registrations/${id}`),
+  updateEventRegistration: (id, payload) =>
+    request(`/api/event-registrations/${id}`, { method: "PATCH", body: payload }),
+  eventAnalytics: (id) => request(`/api/event-registrations/analytics/${id}`),
+  checkinRegistration: (passCode) =>
+    request(`/api/event-registrations/checkin`, {
+      method: "POST",
+      body: { passCode },
+    }),
+
   // previous events
   listPreviousEvents: (params = {}) => {
     const qs = new URLSearchParams(params).toString()

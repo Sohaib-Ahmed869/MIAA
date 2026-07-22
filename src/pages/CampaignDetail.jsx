@@ -238,7 +238,7 @@ export default function CampaignDetail() {
                   </p>
                 )}
                 <p className="flex items-center justify-center gap-1.5 text-[0.75rem] text-primary/45 mt-3">
-                  <ShieldCheck className="w-3.5 h-3.5" /> Secure donation via Stripe &amp; PayPal
+                  <ShieldCheck className="w-3.5 h-3.5" /> Secure donation via Stripe
                 </p>
               </motion.div>
             </aside>

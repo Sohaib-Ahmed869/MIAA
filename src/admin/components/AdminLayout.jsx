@@ -21,6 +21,8 @@ import {
   Settings,
   BarChart3,
   Megaphone,
+  ClipboardList,
+  ScanLine,
 } from "lucide-react"
 import { clearSession, getAdminUser, adminApi } from "../auth"
 import { ToastProvider } from "./Toast"
@@ -31,6 +33,8 @@ import Quatrefoil from "./Quatrefoil"
 const NAV = [
   { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
   { to: "/admin/events", label: "Events", icon: Calendar },
+  { to: "/admin/event-registrations", label: "Registrations", icon: ClipboardList },
+  { to: "/admin/event-checkin", label: "Door Check-in", icon: ScanLine },
   { to: "/admin/previous-events", label: "Previous Events", icon: Archive },
   { to: "/admin/team", label: "Team", icon: Users },
   { to: "/admin/blog", label: "Blog Posts", icon: FileText },

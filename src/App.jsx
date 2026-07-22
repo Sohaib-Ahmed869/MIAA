@@ -6,6 +6,7 @@ import IslamicArt from "./pages/IslamicArt"
 import OffsiteEvents from "./pages/OffsiteEvents"
 import Events from "./pages/Events"
 import EventDetail from "./pages/EventDetail"
+import EventRegister from "./pages/EventRegister"
 import CommunityEngagement from "./pages/CommunityEngagement"
 import Timeline from "./pages/Timeline"
 import Contact from "./pages/Contact"
@@ -25,6 +26,8 @@ import ProtectedRoute from "./admin/components/ProtectedRoute"
 import Login from "./admin/pages/Login"
 import Dashboard from "./admin/pages/Dashboard"
 import EventsAdmin from "./admin/pages/EventsAdmin"
+import EventRegistrationsAdmin from "./admin/pages/EventRegistrationsAdmin"
+import EventCheckInAdmin from "./admin/pages/EventCheckInAdmin"
 import PreviousEventsAdmin from "./admin/pages/PreviousEventsAdmin"
 import TeamAdmin from "./admin/pages/TeamAdmin"
 import ContactAdmin from "./admin/pages/ContactAdmin"
@@ -71,6 +74,8 @@ export default function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="events" element={<EventsAdmin />} />
+          <Route path="event-registrations" element={<EventRegistrationsAdmin />} />
+          <Route path="event-checkin" element={<EventCheckInAdmin />} />
           <Route path="previous-events" element={<PreviousEventsAdmin />} />
           <Route path="team" element={<TeamAdmin />} />
           <Route path="blog" element={<BlogAdmin />} />
@@ -118,6 +123,7 @@ export default function App() {
           <Route path="offsite-events" element={<OffsiteEvents />} />
           <Route path="events" element={<Events />} />
           <Route path="event/:id" element={<EventDetail />} />
+          <Route path="event/:id/register" element={<EventRegister />} />
           <Route path="community-engagement" element={<CommunityEngagement />} />
           <Route path="timeline" element={<Timeline />} />
           <Route path="contact" element={<Contact />} />

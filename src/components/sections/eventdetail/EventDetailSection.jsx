@@ -53,6 +53,19 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
   const fmtMoney = (cents) =>
     `$${(cents / 100).toLocaleString(undefined, { maximumFractionDigits: 0 })}`
 
+  // Registration — admin enables this per event. Sends the visitor to the
+  // registration wizard (which handles the free RSVP or the paid flow).
+  const registrationEnabled = Boolean(event.registrationEnabled)
+  const registerTarget = event.slug || event._id
+  const registerUrl = `/event/${encodeURIComponent(registerTarget || "")}/register`
+  const ticketPrices = Array.isArray(event.ticketTypes)
+    ? event.ticketTypes.map((t) => Number(t.price) || 0)
+    : []
+  const fromPrice = ticketPrices.length ? Math.min(...ticketPrices) : 0
+  const registerLabel = event.paymentRequired
+    ? `Register${fromPrice ? ` — from ${fmtMoney(fromPrice)}` : ""}`
+    : "Register — Free"
+
   return (
     <article className="bg-bg">
       {/* Hero */}
@@ -202,7 +215,9 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
               ))}
 
               <div className="mt-10 flex flex-wrap gap-4 items-center">
-                {rsvpIsExternal ? (
+                {registrationEnabled ? (
+                  <CTAButton to={registerUrl}>{registerLabel}</CTAButton>
+                ) : rsvpIsExternal ? (
                   <CTAButton href={rsvpUrl}>{rsvpLabel}</CTAButton>
                 ) : (
                   <CTAButton to={rsvpUrl}>{rsvpLabel}</CTAButton>

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Plus, Pencil, Trash2 } from "lucide-react"
+import { Plus, Pencil, Trash2, BarChart3 } from "lucide-react"
 import { adminApi } from "../auth"
+import EventAnalyticsDrawer from "./EventAnalyticsDrawer"
 import PageHeader from "../components/PageHeader"
 import Button from "../components/Button"
 import Drawer from "../components/Drawer"
 import EmptyState from "../components/EmptyState"
 import ImageUpload from "../components/ImageUpload"
-import { Field, TextInput, NumberInput, TextArea, Select, Checkbox } from "../components/Field"
+import { Field, TextInput, NumberInput, TextArea, Checkbox } from "../components/Field"
+import Dropdown from "../../components/ui/Dropdown"
 import { useToast } from "../components/Toast"
 import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonCardGrid } from "../components/Skeleton"
@@ -38,6 +40,15 @@ const EMPTY = {
   published: true,
   acceptDonations: false,
   goalAmount: 0,
+  // Registration & ticketing
+  registrationEnabled: false,
+  paymentRequired: false,
+  pricingMode: "fixed",
+  ticketTypes: [{ name: "General Admission", price: 0, description: "", capacity: 0 }],
+  maxQuantity: 10,
+  capacity: 0,
+  customQuestions: [],
+  currency: "AUD",
 }
 
 function slugify(s = "") {
@@ -52,6 +63,7 @@ export default function EventsAdmin() {
   const [items, setItems] = useState([])
   const [filter, setFilter] = useState("all")
   const [editing, setEditing] = useState(null)
+  const [analyticsFor, setAnalyticsFor] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [busy, setBusy] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -101,6 +113,25 @@ export default function EventsAdmin() {
       next.highlights = [0, 1, 2].map(
         (i) => existing[i] || { tag: "", title: "", body: "" }
       )
+      // Always keep at least one ticket-type row so the editor renders.
+      next.ticketTypes =
+        Array.isArray(item.ticketTypes) && item.ticketTypes.length
+          ? item.ticketTypes.map((t) => ({
+              name: t.name || "",
+              price: t.price || 0,
+              description: t.description || "",
+              capacity: t.capacity || 0,
+            }))
+          : [{ name: "General Admission", price: 0, description: "", capacity: 0 }]
+      next.customQuestions = Array.isArray(item.customQuestions)
+        ? item.customQuestions.map((q) => ({
+            id: q.id || "",
+            label: q.label || "",
+            type: q.type || "text",
+            required: !!q.required,
+            options: Array.isArray(q.options) ? q.options : [],
+          }))
+        : []
       setEditing(item._id)
       setForm(next)
     } else {
@@ -118,10 +149,76 @@ export default function EventsAdmin() {
     setError("")
   }
 
+  // ── Ticket type + custom question editors ──────────────────
+  const updateTicket = (i, key, value) => {
+    const next = [...form.ticketTypes]
+    next[i] = { ...next[i], [key]: value }
+    setForm({ ...form, ticketTypes: next })
+  }
+  const addTicket = () =>
+    setForm({
+      ...form,
+      ticketTypes: [
+        ...form.ticketTypes,
+        { name: "", price: 0, description: "", capacity: 0 },
+      ],
+    })
+  const removeTicket = (i) =>
+    setForm({ ...form, ticketTypes: form.ticketTypes.filter((_, idx) => idx !== i) })
+
+  const updateQuestion = (i, key, value) => {
+    const next = [...form.customQuestions]
+    next[i] = { ...next[i], [key]: value }
+    setForm({ ...form, customQuestions: next })
+  }
+  const addQuestion = () =>
+    setForm({
+      ...form,
+      customQuestions: [
+        ...form.customQuestions,
+        {
+          id: `q_${Math.random().toString(36).slice(2, 9)}`,
+          label: "",
+          type: "text",
+          required: false,
+          options: [],
+        },
+      ],
+    })
+  const removeQuestion = (i) =>
+    setForm({
+      ...form,
+      customQuestions: form.customQuestions.filter((_, idx) => idx !== i),
+    })
+
   const save = async () => {
     setBusy(true)
     setError("")
     try {
+      const cleanTicketTypes = (
+        form.pricingMode === "tiers" ? form.ticketTypes : form.ticketTypes.slice(0, 1)
+      )
+        .map((t) => ({
+          name: (t.name || "General Admission").trim(),
+          price: Math.max(0, Math.round(Number(t.price) || 0)),
+          description: (t.description || "").trim(),
+          capacity: Math.max(0, Math.round(Number(t.capacity) || 0)),
+        }))
+        .filter((t) => t.name)
+
+      const cleanQuestions = (form.customQuestions || [])
+        .filter((q) => (q.label || "").trim())
+        .map((q) => ({
+          id: q.id || `q_${Math.random().toString(36).slice(2, 9)}`,
+          label: q.label.trim(),
+          type: q.type || "text",
+          required: !!q.required,
+          options:
+            q.type === "select"
+              ? (q.options || []).map((o) => (o || "").trim()).filter(Boolean)
+              : [],
+        }))
+
       const payload = {
         ...form,
         slug: slugify(form.slug || form.title),
@@ -133,11 +230,20 @@ export default function EventsAdmin() {
             body: (h.body || "").trim(),
           }))
           .filter((h) => h.tag || h.title || h.body),
+        registrationEnabled: !!form.registrationEnabled,
+        paymentRequired: !!form.paymentRequired,
+        pricingMode: form.pricingMode || "fixed",
+        ticketTypes: cleanTicketTypes,
+        maxQuantity: Math.max(1, Math.round(Number(form.maxQuantity) || 1)),
+        capacity: Math.max(0, Math.round(Number(form.capacity) || 0)),
+        customQuestions: cleanQuestions,
       }
-      // raisedAmount / donationCount are computed by the donation pipeline —
-      // never send them back or a concurrent donation could be clobbered.
+      // raisedAmount / donationCount / registeredCount are computed by the
+      // payment pipeline — never send them back or a concurrent charge could be
+      // clobbered.
       delete payload.raisedAmount
       delete payload.donationCount
+      delete payload.registeredCount
       if (editing === "new") {
         await adminApi.createEvent(payload)
         notify("Event created")
@@ -273,12 +379,18 @@ export default function EventsAdmin() {
                     )}
                   </div>
                 )}
-                <div className="flex gap-2 mt-4 pt-4 border-t border-primary/8">
+                <div className="flex gap-3 mt-4 pt-4 border-t border-primary/8">
                   <button
                     onClick={() => open(it)}
                     className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
                   >
                     <Pencil className="w-3 h-3" /> Edit
+                  </button>
+                  <button
+                    onClick={() => setAnalyticsFor(it)}
+                    className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
+                  >
+                    <BarChart3 className="w-3 h-3" /> Analytics
                   </button>
                   <button
                     onClick={() => remove(it._id)}
@@ -313,13 +425,15 @@ export default function EventsAdmin() {
           )}
           <div className="grid grid-cols-2 gap-4">
             <Field label="Category">
-              <Select
+              <Dropdown
+                fullWidth
                 value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-              >
-                <option value="homepage">Homepage</option>
-                <option value="offsite">Offsite Events page</option>
-              </Select>
+                onChange={(v) => setForm({ ...form, category: v })}
+                options={[
+                  { value: "homepage", label: "Homepage" },
+                  { value: "offsite", label: "Offsite Events page" },
+                ]}
+              />
             </Field>
             <Field label="Order" hint="Lower numbers appear first">
               <NumberInput
@@ -547,6 +661,246 @@ export default function EventsAdmin() {
             )}
           </div>
 
+          <div className="border-t border-primary/10 pt-5">
+            <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1">
+              Registration & Ticketing
+            </p>
+            <p className="text-[0.6875rem] text-primary/50 mb-4">
+              When enabled, a “Register” button appears on the event detail page and
+              attendee registrations are collected under the Registrations tab.
+            </p>
+            <Checkbox
+              label="Enable registration for this event"
+              checked={form.registrationEnabled}
+              onChange={(v) => setForm({ ...form, registrationEnabled: v })}
+            />
+
+            {form.registrationEnabled && (
+              <div className="mt-4 flex flex-col gap-5">
+                <Checkbox
+                  label="Require payment to register"
+                  checked={form.paymentRequired}
+                  onChange={(v) => setForm({ ...form, paymentRequired: v })}
+                />
+
+                {form.paymentRequired && (
+                  <>
+                    <Field label="Pricing Mode">
+                      <Dropdown
+                        fullWidth
+                        value={form.pricingMode}
+                        onChange={(v) => setForm({ ...form, pricingMode: v })}
+                        options={[
+                          { value: "fixed", label: "Single fixed price" },
+                          { value: "quantity", label: "Price × quantity" },
+                          { value: "tiers", label: "Multiple ticket types" },
+                        ]}
+                      />
+                    </Field>
+
+                    {form.pricingMode !== "tiers" ? (
+                      <div className="grid grid-cols-2 gap-4">
+                        <Field label="Ticket Name">
+                          <TextInput
+                            value={form.ticketTypes[0]?.name || ""}
+                            onChange={(e) => updateTicket(0, "name", e.target.value)}
+                            placeholder="General Admission"
+                          />
+                        </Field>
+                        <Field label="Price (AUD)">
+                          <NumberInput
+                            value={
+                              form.ticketTypes[0]?.price
+                                ? form.ticketTypes[0].price / 100
+                                : ""
+                            }
+                            onChange={(e) =>
+                              updateTicket(
+                                0,
+                                "price",
+                                Math.round((Number(e.target.value) || 0) * 100)
+                              )
+                            }
+                            placeholder="50"
+                          />
+                        </Field>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col gap-4">
+                        {form.ticketTypes.map((t, i) => (
+                          <div
+                            key={i}
+                            className="border border-primary/10 rounded-sm p-4 bg-white"
+                          >
+                            <div className="flex items-center justify-between mb-3">
+                              <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/45">
+                                Ticket {i + 1}
+                              </p>
+                              {form.ticketTypes.length > 1 && (
+                                <button
+                                  type="button"
+                                  onClick={() => removeTicket(i)}
+                                  className="text-[0.625rem] tracking-[0.15em] uppercase text-primary/50 hover:text-rose-600"
+                                >
+                                  Remove
+                                </button>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-2 gap-3">
+                              <Field label="Name">
+                                <TextInput
+                                  value={t.name}
+                                  onChange={(e) => updateTicket(i, "name", e.target.value)}
+                                  placeholder="VIP"
+                                />
+                              </Field>
+                              <Field label="Price (AUD)">
+                                <NumberInput
+                                  value={t.price ? t.price / 100 : ""}
+                                  onChange={(e) =>
+                                    updateTicket(
+                                      i,
+                                      "price",
+                                      Math.round((Number(e.target.value) || 0) * 100)
+                                    )
+                                  }
+                                  placeholder="120"
+                                />
+                              </Field>
+                            </div>
+                          </div>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={addTicket}
+                          className="self-start inline-flex items-center gap-1 text-[0.6875rem] tracking-[0.15em] uppercase text-secondary-terra hover:text-secondary-rust"
+                        >
+                          <Plus className="w-3 h-3" /> Add ticket type
+                        </button>
+                      </div>
+                    )}
+
+                    {form.pricingMode === "quantity" && (
+                      <Field label="Max tickets per registration">
+                        <NumberInput
+                          value={form.maxQuantity}
+                          onChange={(e) =>
+                            setForm({ ...form, maxQuantity: Number(e.target.value) })
+                          }
+                          placeholder="10"
+                        />
+                      </Field>
+                    )}
+                  </>
+                )}
+
+                <Field
+                  label="Capacity"
+                  hint="Total seats available. Leave 0 for unlimited."
+                >
+                  <NumberInput
+                    value={form.capacity}
+                    onChange={(e) => setForm({ ...form, capacity: Number(e.target.value) })}
+                    placeholder="0"
+                  />
+                </Field>
+
+                {editing !== "new" && (
+                  <p className="text-[0.6875rem] text-primary/55 -mt-2">
+                    Registered so far:{" "}
+                    <span className="text-primary font-medium">
+                      {form.registeredCount || 0}
+                    </span>
+                    {form.capacity > 0 ? ` / ${form.capacity}` : ""}
+                  </p>
+                )}
+
+                {/* Custom questions */}
+                <div>
+                  <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1">
+                    Custom Questions
+                  </p>
+                  <p className="text-[0.6875rem] text-primary/50 mb-3">
+                    Extra questions asked during registration (e.g. dietary needs).
+                  </p>
+                  <div className="flex flex-col gap-4">
+                    {form.customQuestions.map((q, i) => (
+                      <div
+                        key={q.id || i}
+                        className="border border-primary/10 rounded-sm p-4 bg-white"
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/45">
+                            Question {i + 1}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => removeQuestion(i)}
+                            className="text-[0.625rem] tracking-[0.15em] uppercase text-primary/50 hover:text-rose-600"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3 mb-3">
+                          <Field label="Question">
+                            <TextInput
+                              value={q.label}
+                              onChange={(e) => updateQuestion(i, "label", e.target.value)}
+                              placeholder="Dietary requirements"
+                            />
+                          </Field>
+                          <Field label="Type">
+                            <Dropdown
+                              fullWidth
+                              value={q.type}
+                              onChange={(v) => updateQuestion(i, "type", v)}
+                              options={[
+                                { value: "text", label: "Short text" },
+                                { value: "textarea", label: "Long text" },
+                                { value: "number", label: "Number" },
+                                { value: "select", label: "Dropdown" },
+                                { value: "checkbox", label: "Checkbox" },
+                              ]}
+                            />
+                          </Field>
+                        </div>
+                        {q.type === "select" && (
+                          <Field label="Options" hint="Comma-separated choices">
+                            <TextInput
+                              value={(q.options || []).join(", ")}
+                              onChange={(e) =>
+                                updateQuestion(
+                                  i,
+                                  "options",
+                                  e.target.value.split(",").map((o) => o.trim())
+                                )
+                              }
+                              placeholder="Vegetarian, Halal, Vegan"
+                            />
+                          </Field>
+                        )}
+                        <div className="mt-3">
+                          <Checkbox
+                            label="Required"
+                            checked={q.required}
+                            onChange={(v) => updateQuestion(i, "required", v)}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={addQuestion}
+                      className="self-start inline-flex items-center gap-1 text-[0.6875rem] tracking-[0.15em] uppercase text-secondary-terra hover:text-secondary-rust"
+                    >
+                      <Plus className="w-3 h-3" /> Add question
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <ImageUpload
             folder="events"
             currentKey={form.imageKey}
@@ -561,6 +915,12 @@ export default function EventsAdmin() {
           </div>
         </div>
       </Drawer>
+
+      <EventAnalyticsDrawer
+        event={analyticsFor}
+        open={analyticsFor !== null}
+        onClose={() => setAnalyticsFor(null)}
+      />
     </div>
   )
 }
