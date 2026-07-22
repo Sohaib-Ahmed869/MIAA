@@ -360,7 +360,7 @@ export default function DonationProductsAdmin() {
               placeholder={slugify(form.name || "")}
             />
           </Field>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Category">
               <Select
                 value={form.category}
@@ -386,7 +386,7 @@ export default function DonationProductsAdmin() {
               placeholder="Describe what this donation supports…"
             />
           </Field>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Order" hint="Lower numbers appear first">
               <NumberInput
                 value={form.order}
@@ -399,7 +399,7 @@ export default function DonationProductsAdmin() {
             currentKey={form.imageKey}
             onUploaded={(key) => setForm({ ...form, imageKey: key })}
           />
-          <div className="flex gap-6 pt-2">
+          <div className="flex flex-wrap gap-x-6 gap-y-3 pt-2">
             <Checkbox
               label="Published"
               checked={form.published}

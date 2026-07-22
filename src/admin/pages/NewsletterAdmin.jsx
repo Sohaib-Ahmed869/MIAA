@@ -9,6 +9,21 @@ import { useToast } from "../components/Toast"
 import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonList } from "../components/Skeleton"
 
+// Soft avatar tints + initials for subscriber rows.
+const AVATAR_TINTS = [
+  "bg-secondary-terra/12 text-secondary-terra",
+  "bg-primary/10 text-primary",
+  "bg-secondary-amber/15 text-secondary-amber",
+  "bg-accent-sage/30 text-primary",
+]
+
+const emailInitials = (email) => {
+  const local = (email || "?").split("@")[0]
+  const parts = local.split(/[._-]+/).filter(Boolean)
+  const chars = parts.length >= 2 ? parts[0][0] + parts[1][0] : local[0] || "?"
+  return chars.toUpperCase()
+}
+
 export default function NewsletterAdmin() {
   const [items, setItems] = useState([])
   const [query, setQuery] = useState("")
@@ -73,16 +88,13 @@ export default function NewsletterAdmin() {
         subtitle="Email addresses captured from the footer signup."
         actions={
           <Button onClick={exportCsv} variant="dark">
-            <Download className="w-3.5 h-3.5" className="-ml-0.5 mr-1" /> Export CSV
+            <Download className="w-3.5 h-3.5 -ml-0.5 mr-1" /> Export CSV
           </Button>
         }
       />
 
       <div className="mb-4 relative max-w-sm">
-        <Search
-          className="w-3.5 h-3.5"
-          className="absolute left-3 top-1/2 -translate-y-1/2 text-primary/40"
-        />
+        <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-primary/40" />
         <input
           type="text"
           value={query}
@@ -114,26 +126,48 @@ export default function NewsletterAdmin() {
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.02 } } }}
           className="bg-white border border-primary/10 rounded-sm divide-y divide-primary/8 overflow-hidden"
         >
-          {filtered.map((s) => (
+          {filtered.map((s, i) => (
             <motion.li
               key={s._id}
               variants={{ hidden: { opacity: 0, y: 4 }, visible: { opacity: 1, y: 0 } }}
-              className="flex items-center gap-4 px-5 py-3 hover:bg-accent-cream/60 transition-colors"
+              className="flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-3 hover:bg-accent-cream/60 transition-colors"
             >
+              {/* Avatar */}
+              <span
+                className={`grid place-items-center w-9 h-9 rounded-full text-[0.6875rem] font-semibold flex-shrink-0 ${
+                  AVATAR_TINTS[i % AVATAR_TINTS.length]
+                }`}
+              >
+                {emailInitials(s.email)}
+              </span>
+
+              {/* Identity */}
               <div className="flex-1 min-w-0">
-                <p className="text-primary text-sm truncate">{s.email}</p>
-                <p className="text-[0.6875rem] tracking-[0.15em] uppercase text-primary/45">
-                  via {s.source}
-                </p>
+                <p className="text-primary text-sm break-all sm:truncate">{s.email}</p>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <p className="text-[0.6875rem] tracking-[0.15em] uppercase text-primary/45 truncate">
+                    via {s.source}
+                  </p>
+                  {/* Mobile-only date */}
+                  <span className="sm:hidden text-[0.625rem] tracking-[0.1em] uppercase text-primary/40 ml-auto whitespace-nowrap">
+                    {new Date(s.createdAt).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
-              <span className="text-[0.625rem] tracking-[0.15em] uppercase text-primary/45 w-32 text-right">
+
+              {/* Desktop date */}
+              <span className="hidden sm:block text-[0.625rem] tracking-[0.15em] uppercase text-primary/45 w-28 text-right">
                 {new Date(s.createdAt).toLocaleDateString()}
               </span>
+
+              {/* Remove — icon-only on mobile, labelled on sm+ */}
               <button
                 onClick={() => remove(s._id)}
-                className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/45 hover:text-rose-600 transition-colors"
+                aria-label="Remove subscriber"
+                className="inline-flex items-center gap-1 p-2 sm:p-0 rounded-sm text-[0.625rem] tracking-[0.2em] uppercase text-primary/45 hover:text-rose-600 hover:bg-rose-500/[0.06] sm:hover:bg-transparent transition-colors flex-shrink-0"
               >
-                <Trash2 className="w-3 h-3" /> Remove
+                <Trash2 className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
+                <span className="hidden sm:inline">Remove</span>
               </button>
             </motion.li>
           ))}

@@ -217,7 +217,7 @@ export default function BlogAdmin() {
           {error && (
             <p className="text-xs text-rose-600 bg-rose-50 px-3 py-2 rounded-sm">{error}</p>
           )}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Category">
               <Select
                 value={form.category}
@@ -281,7 +281,7 @@ export default function BlogAdmin() {
             onUploaded={(key) => setForm({ ...form, coverImageKey: key })}
             label="Cover Image"
           />
-          <div className="flex gap-6 pt-2">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 pt-2">
             <Checkbox
               label="Published"
               checked={form.published}

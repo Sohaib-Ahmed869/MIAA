@@ -270,8 +270,8 @@ function ResultCard({ result }) {
         </div>
       </div>
       <div className="space-y-1">
-        <p className="text-lg font-semibold text-primary">{reg.name || "Guest"}</p>
-        <p className="text-sm text-primary/60">{reg.email}</p>
+        <p className="text-lg font-semibold text-primary break-words">{reg.name || "Guest"}</p>
+        <p className="text-sm text-primary/60 break-all">{reg.email}</p>
         {reg.event?.title && (
           <p className="text-sm text-primary/70 mt-1">{reg.event.title}</p>
         )}

@@ -88,7 +88,7 @@ export default function TeamAdmin() {
         subtitle="The team displayed on the About page."
         actions={
           <Button onClick={() => open(null)} variant="primary" withArrow>
-            <Plus className="w-3.5 h-3.5" strokeWidth={2.5} className="-ml-0.5 mr-0.5" />
+            <Plus className="w-3.5 h-3.5 -ml-0.5 mr-0.5" strokeWidth={2.5} />
             New Member
           </Button>
         }
@@ -103,15 +103,15 @@ export default function TeamAdmin() {
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 3xl:grid-cols-5 gap-5"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 3xl:grid-cols-5 gap-3 sm:gap-5"
         >
           {items.map((p) => (
             <motion.div
               key={p._id}
               variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-              className="group bg-white border border-primary/10 rounded-sm p-5 flex flex-col items-center text-center hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
+              className="group bg-white border border-primary/10 rounded-sm p-3 sm:p-5 flex flex-col items-center text-center hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
             >
-              <div className="w-24 h-24 rounded-full bg-accent-cream overflow-hidden mb-3">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-accent-cream overflow-hidden mb-2.5 sm:mb-3">
                 {p.photoUrl ? (
                   <img src={p.photoUrl} alt={p.name} className="w-full h-full object-cover" />
                 ) : (
@@ -122,16 +122,16 @@ export default function TeamAdmin() {
               </div>
               <p className="text-primary text-sm font-semibold leading-tight">{p.name}</p>
               <p className="text-primary/55 text-[0.6875rem] mt-1 leading-snug">{p.role}</p>
-              <div className="flex gap-2 mt-4 pt-3 border-t border-primary/8 w-full justify-center">
+              <div className="flex gap-1.5 sm:gap-2 mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-primary/8 w-full justify-center">
                 <button
                   onClick={() => open(p)}
-                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
+                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
                 >
                   <Pencil className="w-3 h-3" /> Edit
                 </button>
                 <button
                   onClick={() => remove(p._id)}
-                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
+                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
                 >
                   <Trash2 className="w-3 h-3" /> Delete
                 </button>

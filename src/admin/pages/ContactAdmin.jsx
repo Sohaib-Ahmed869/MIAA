@@ -17,6 +17,23 @@ const STATUS_STYLES = {
   archived: "bg-primary/10 text-primary/60",
 }
 
+// Soft avatar tints for the submission list.
+const AVATAR_TINTS = [
+  "bg-secondary-terra/12 text-secondary-terra",
+  "bg-primary/10 text-primary",
+  "bg-secondary-amber/15 text-secondary-amber",
+  "bg-accent-sage/30 text-primary",
+]
+
+const initials = (name) =>
+  (name || "?")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase() || "?"
+
 export default function ContactAdmin() {
   const [items, setItems] = useState([])
   const [filter, setFilter] = useState("")
@@ -87,36 +104,61 @@ export default function ContactAdmin() {
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
           className="bg-white border border-primary/10 rounded-sm divide-y divide-primary/8 overflow-hidden"
         >
-          {items.map((s) => (
+          {items.map((s, i) => (
             <motion.li
               key={s._id}
               variants={{ hidden: { opacity: 0, y: 6 }, visible: { opacity: 1, y: 0 } }}
             >
               <button
                 onClick={() => setOpen(open === s._id ? null : s._id)}
-                className="w-full text-left flex items-center gap-4 px-5 py-3 hover:bg-accent-cream/60 transition-colors"
+                className="w-full text-left flex items-center gap-3 sm:gap-4 px-4 sm:px-5 py-3.5 sm:py-3 hover:bg-accent-cream/60 transition-colors"
               >
+                {/* Avatar */}
+                <span
+                  className={`grid place-items-center w-9 h-9 rounded-full text-[0.6875rem] font-semibold flex-shrink-0 ${
+                    AVATAR_TINTS[i % AVATAR_TINTS.length]
+                  }`}
+                >
+                  {initials(s.fullName)}
+                </span>
+
+                {/* Identity */}
                 <div className="flex-1 min-w-0">
-                  <p className="text-primary text-sm font-medium truncate">{s.fullName}</p>
-                  <p className="text-[0.75rem] text-primary/55 truncate">
+                  <p className="text-primary text-sm font-semibold truncate">{s.fullName}</p>
+                  <p className="text-[0.75rem] text-primary/55 break-all sm:truncate">
                     {s.email}
                     {s.topic ? ` · ${s.topic}` : ""}
                   </p>
+                  {/* Mobile-only meta — status + date beneath the identity */}
+                  <div className="flex sm:hidden items-center gap-2 mt-1.5">
+                    <span
+                      className={`text-[0.5625rem] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full ${
+                        STATUS_STYLES[s.status] || ""
+                      }`}
+                    >
+                      {s.status.replace("_", " ")}
+                    </span>
+                    <span className="text-[0.625rem] tracking-[0.1em] uppercase text-primary/40 ml-auto">
+                      {new Date(s.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
                 </div>
+
+                {/* Desktop status + date */}
                 <span
-                  className={`text-[0.625rem] tracking-[0.2em] uppercase px-2 py-1 rounded-sm ${
+                  className={`hidden sm:inline-block text-[0.625rem] tracking-[0.2em] uppercase px-2 py-1 rounded-sm ${
                     STATUS_STYLES[s.status] || ""
                   }`}
                 >
                   {s.status.replace("_", " ")}
                 </span>
-                <span className="text-[0.625rem] tracking-[0.15em] uppercase text-primary/40 w-32 text-right">
+                <span className="hidden sm:block text-[0.625rem] tracking-[0.15em] uppercase text-primary/40 w-28 text-right">
                   {new Date(s.createdAt).toLocaleDateString()}
                 </span>
+
                 <ChevronDown
-                  className="w-3.5 h-3.5"
                   strokeWidth={2}
-                  className={`text-primary/40 transition-transform duration-200 ${
+                  className={`w-4 h-4 flex-shrink-0 text-primary/40 transition-transform duration-200 ${
                     open === s._id ? "rotate-180" : ""
                   }`}
                 />
@@ -131,15 +173,15 @@ export default function ContactAdmin() {
                     transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
                     className="overflow-hidden bg-accent-cream/50 border-t border-primary/8"
                   >
-                    <div className="px-5 py-4">
-                      <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1">
+                    <div className="px-4 sm:px-5 py-4">
+                      <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1.5">
                         Message
                       </p>
                       <p className="whitespace-pre-wrap text-sm text-primary leading-relaxed">
                         {s.message}
                       </p>
-                      <div className="mt-4 flex items-center gap-3">
-                        <div className="w-44">
+                      <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                        <div className="w-full sm:w-44">
                           <Select
                             value={s.status}
                             onChange={(e) => setStatus(s._id, e.target.value)}
@@ -149,18 +191,21 @@ export default function ContactAdmin() {
                             ))}
                           </Select>
                         </div>
-                        <a
-                          href={`mailto:${s.email}`}
-                          className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-secondary-terra hover:text-secondary-rust transition-colors"
-                        >
-                          Reply by email
-                        </a>
-                        <button
-                          onClick={() => remove(s._id)}
-                          className="ml-auto inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
-                        >
-                          <Trash2 className="w-3 h-3" /> Delete
-                        </button>
+                        {/* On mobile these share a row; at sm they dissolve into the parent row */}
+                        <div className="flex items-center justify-between sm:contents">
+                          <a
+                            href={`mailto:${s.email}`}
+                            className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-secondary-terra hover:text-secondary-rust transition-colors"
+                          >
+                            Reply by email
+                          </a>
+                          <button
+                            onClick={() => remove(s._id)}
+                            className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors sm:ml-auto"
+                          >
+                            <Trash2 className="w-3 h-3" /> Delete
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </motion.div>

@@ -99,12 +99,12 @@ function KPICard({ icon: Icon, label, value, prefix, suffix, to, delay = 0 }) {
       {to ? (
         <Link
           to={to}
-          className="group block bg-white border border-primary/10 rounded-sm p-6 hover:border-secondary-terra/50 hover:shadow-md transition-all duration-300 h-full"
+          className="group block bg-white border border-primary/10 rounded-sm p-4 sm:p-6 hover:border-secondary-terra/50 hover:shadow-md transition-all duration-300 h-full"
         >
           {inner}
         </Link>
       ) : (
-        <div className="bg-white border border-primary/10 rounded-sm p-6 h-full">
+        <div className="bg-white border border-primary/10 rounded-sm p-4 sm:p-6 h-full">
           {inner}
         </div>
       )}
@@ -120,7 +120,7 @@ function ChartCard({ title, linkTo, linkLabel, delay = 0, children }) {
       transition={{ duration: 0.55, delay, ease: [0.25, 0.1, 0.25, 1] }}
       className="bg-white border border-primary/10 rounded-sm overflow-hidden"
     >
-      <div className="px-6 py-4 border-b border-primary/8 flex items-center justify-between">
+      <div className="px-4 sm:px-6 py-4 border-b border-primary/8 flex items-center justify-between gap-3">
         <p
           className="text-base text-primary tracking-tight"
           style={{ fontFamily: "var(--font-display)" }}
@@ -140,7 +140,7 @@ function ChartCard({ title, linkTo, linkLabel, delay = 0, children }) {
           </Link>
         )}
       </div>
-      <div className="p-6">{children}</div>
+      <div className="p-4 sm:p-6">{children}</div>
     </motion.div>
   )
 }

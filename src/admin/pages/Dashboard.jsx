@@ -95,16 +95,15 @@ export default function Dashboard() {
             >
               <Link
                 to={c.to}
-                className="group block bg-white border border-primary/10 rounded-sm p-5 hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
+                className="group block bg-white border border-primary/10 rounded-sm p-4 sm:p-5 hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
               >
                 <div className="flex items-start justify-between mb-4">
                   <span className="inline-flex items-center justify-center w-9 h-9 rounded-sm bg-accent-cream text-primary">
                     <c.icon className="w-4 h-4" strokeWidth={1.75} />
                   </span>
                   <ArrowUpRight
-                    className="w-3.5 h-3.5"
                     strokeWidth={2}
-                    className="text-primary/30 group-hover:text-secondary-terra transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                    className="w-3.5 h-3.5 text-primary/30 group-hover:text-secondary-terra transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   />
                 </div>
                 <p
@@ -128,7 +127,7 @@ export default function Dashboard() {
         transition={{ duration: 0.5, delay: 0.5 }}
         className="mt-10 bg-white border border-primary/10 rounded-sm overflow-hidden"
       >
-        <div className="px-6 py-4 border-b border-primary/10 flex items-center justify-between">
+        <div className="px-4 sm:px-6 py-4 border-b border-primary/10 flex items-center justify-between gap-3">
           <p
             className="text-base text-primary tracking-tight"
             style={{ fontFamily: "var(--font-display)" }}
@@ -141,9 +140,8 @@ export default function Dashboard() {
           >
             View all
             <ArrowUpRight
-              className="w-3 h-3"
               strokeWidth={2.5}
-              className="transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              className="w-3 h-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
             />
           </Link>
         </div>
@@ -160,7 +158,7 @@ export default function Dashboard() {
             {recent.map((s) => (
               <li
                 key={s._id}
-                className="px-6 py-3 flex items-center justify-between gap-4 text-sm hover:bg-accent-cream/60 transition-colors"
+                className="px-4 sm:px-6 py-3 flex items-center justify-between gap-4 text-sm hover:bg-accent-cream/60 transition-colors"
               >
                 <div className="min-w-0 flex-1">
                   <p className="text-primary font-medium truncate">{s.fullName}</p>

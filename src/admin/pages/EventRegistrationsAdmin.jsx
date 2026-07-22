@@ -23,6 +23,23 @@ const STATUS_COLORS = {
 
 const money = (cents) => `$${((cents || 0) / 100).toFixed(2)}`
 
+// Soft avatar tints for the mobile registration cards.
+const AVATAR_TINTS = [
+  "bg-secondary-terra/12 text-secondary-terra",
+  "bg-primary/10 text-primary",
+  "bg-secondary-amber/15 text-secondary-amber",
+  "bg-accent-sage/30 text-primary",
+]
+
+const initials = (name) =>
+  (name || "Guest")
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((w) => w[0])
+    .join("")
+    .toUpperCase() || "?"
+
 export default function EventRegistrationsAdmin() {
   const [rows, setRows] = useState([])
   const [events, setEvents] = useState([])
@@ -122,17 +139,25 @@ export default function EventRegistrationsAdmin() {
         subtitle="Attendees who registered for events — free RSVPs and paid tickets."
       />
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-8">
+      {/* Stats — full-width rows on phones, 3-up tiles on larger screens */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
         {statCards.map((s) => (
-          <div key={s.label} className="bg-white border border-primary/10 rounded-sm p-5">
-            <div className="flex items-center gap-2 mb-2">
-              <s.icon className="w-4 h-4 text-secondary-terra" strokeWidth={1.75} />
+          <div
+            key={s.label}
+            className="bg-white border border-primary/10 rounded-sm px-4 py-3.5 sm:p-5 flex items-center justify-between gap-3 sm:block"
+          >
+            <div className="flex items-center gap-2 sm:mb-2">
+              <s.icon
+                className="w-4 h-4 text-secondary-terra flex-shrink-0"
+                strokeWidth={1.75}
+              />
               <span className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/55">
                 {s.label}
               </span>
             </div>
-            <p className="text-2xl font-medium text-primary">{s.value}</p>
+            <p className="text-xl sm:text-2xl font-medium text-primary tabular-nums whitespace-nowrap">
+              {s.value}
+            </p>
           </div>
         ))}
       </div>
@@ -144,7 +169,7 @@ export default function EventRegistrationsAdmin() {
       )}
 
       {/* Filters */}
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
+      <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between mb-6">
         <FilterTabs
           value={status}
           onChange={setStatus}
@@ -156,7 +181,7 @@ export default function EventRegistrationsAdmin() {
             { value: "refunded", label: "Refunded", dot: "bg-slate-400" },
           ]}
         />
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:flex sm:flex-wrap sm:items-center">
           <Dropdown
             value={checkin}
             onChange={setCheckin}
@@ -194,7 +219,7 @@ export default function EventRegistrationsAdmin() {
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
           className="flex flex-col gap-2"
         >
-          <div className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_4rem_5.5rem_6rem_5rem_5.5rem] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
+          <div className="hidden lg:grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_4rem_5.5rem_6rem_5rem_5.5rem] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
             <span>Attendee</span>
             <span>Event</span>
             <span className="text-center">Tickets</span>
@@ -203,35 +228,59 @@ export default function EventRegistrationsAdmin() {
             <span className="text-center">Check-in</span>
             <span className="text-right">Date</span>
           </div>
-          {rows.map((r) => (
+          {rows.map((r, i) => (
             <motion.div
               key={r._id}
               variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}
               onClick={() => setViewing(r)}
-              className="grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_4rem_5.5rem_6rem_5rem_5.5rem] gap-4 items-center px-4 py-3 bg-white border border-primary/8 rounded-sm hover:border-secondary-terra/40 hover:shadow-sm transition-all cursor-pointer"
+              className="grid grid-cols-[1fr_auto] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_4rem_5.5rem_6rem_5rem_5.5rem] gap-x-3 gap-y-0 lg:gap-4 items-start lg:items-center px-4 py-3.5 lg:py-3 bg-white border border-primary/8 rounded-lg lg:rounded-sm hover:border-secondary-terra/40 hover:shadow-sm hover:shadow-primary/5 transition-all cursor-pointer"
             >
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-primary truncate">
-                  {r.name || "Guest"}
-                </p>
-                <p className="text-[0.6875rem] text-primary/50 truncate">
-                  {r.email || "—"}
-                </p>
+              {/* Attendee — always visible (avatar shows on mobile only) */}
+              <div className="min-w-0 flex items-center gap-3">
+                <span
+                  className={`lg:hidden grid place-items-center w-9 h-9 rounded-full text-[0.6875rem] font-semibold flex-shrink-0 ${
+                    AVATAR_TINTS[i % AVATAR_TINTS.length]
+                  }`}
+                >
+                  {initials(r.name)}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold lg:font-medium text-primary truncate">
+                    {r.name || "Guest"}
+                  </p>
+                  <p className="text-[0.6875rem] text-primary/50 truncate">
+                    {r.email || "—"}
+                  </p>
+                </div>
               </div>
-              <p className="text-sm text-primary truncate">{r.event?.title || "—"}</p>
-              <p className="text-sm text-primary text-center">{r.quantity || 1}</p>
-              <p className="text-sm font-medium text-primary text-right">
-                {r.amount ? money(r.amount) : "Free"}
+
+              {/* Event — desktop column */}
+              <p className="hidden lg:block text-sm text-primary truncate">
+                {r.event?.title || "—"}
               </p>
+
+              {/* Tickets — desktop column */}
+              <p className="hidden lg:block text-sm text-primary text-center">
+                {r.quantity || 1}
+              </p>
+
+              {/* Amount — top-right on mobile, column 4 on desktop */}
+              <p className="text-[0.9375rem] lg:text-sm font-semibold lg:font-medium text-primary text-right whitespace-nowrap">
+                {r.amount ? money(r.amount) : <span className="text-primary/45">Free</span>}
+              </p>
+
+              {/* Status — desktop column */}
               <span
-                className={`justify-self-center text-[0.5625rem] tracking-[0.2em] uppercase px-2 py-1 rounded-sm text-center ${
+                className={`hidden lg:block justify-self-center text-[0.5625rem] tracking-[0.2em] uppercase px-2 py-1 rounded-sm text-center ${
                   STATUS_COLORS[r.paymentStatus] || "bg-primary/20 text-primary"
                 }`}
               >
                 {r.paymentStatus}
               </span>
+
+              {/* Check-in — desktop column */}
               <span
-                className="justify-self-center"
+                className="hidden lg:block justify-self-center"
                 title={
                   r.checkedIn && r.checkedInAt
                     ? `Checked in ${new Date(r.checkedInAt).toLocaleString("en-AU")}`
@@ -246,9 +295,38 @@ export default function EventRegistrationsAdmin() {
                   <span className="text-primary/25">—</span>
                 )}
               </span>
-              <span className="text-[0.6875rem] text-primary/50 text-right">
+
+              {/* Date — desktop column */}
+              <span className="hidden lg:block text-[0.6875rem] text-primary/50 text-right">
                 {new Date(r.createdAt).toLocaleDateString("en-AU")}
               </span>
+
+              {/* Mobile meta — event + status/tickets/check-in/date */}
+              <div className="col-span-2 flex lg:hidden flex-col gap-2.5 mt-3 pt-3 border-t border-primary/[0.07]">
+                <p className="text-[0.8125rem] text-primary/75 font-medium truncate">
+                  {r.event?.title || "—"}
+                </p>
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  <span
+                    className={`inline-flex text-[0.5625rem] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full ${
+                      STATUS_COLORS[r.paymentStatus] || "bg-primary/20 text-primary"
+                    }`}
+                  >
+                    {r.paymentStatus}
+                  </span>
+                  <span className="inline-flex text-[0.5625rem] tracking-[0.15em] uppercase px-2 py-0.5 rounded-full bg-accent-cream text-primary/70">
+                    {r.quantity || 1} {(r.quantity || 1) === 1 ? "ticket" : "tickets"}
+                  </span>
+                  {r.checkedIn && (
+                    <span className="inline-flex items-center gap-1 text-[0.5625rem] tracking-[0.15em] uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold ring-1 ring-inset ring-emerald-500/20">
+                      <CheckCircle2 className="w-3 h-3" /> In
+                    </span>
+                  )}
+                  <span className="text-[0.6875rem] text-primary/45 ml-auto whitespace-nowrap">
+                    {new Date(r.createdAt).toLocaleDateString("en-AU")}
+                  </span>
+                </div>
+              </div>
             </motion.div>
           ))}
         </motion.div>

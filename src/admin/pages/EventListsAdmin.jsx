@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Trash2, Star, Plus, X, Pencil, ExternalLink } from "lucide-react"
+import { Trash2, Star, Plus, X, Pencil, ExternalLink, Power } from "lucide-react"
 import { adminApi } from "../auth"
 import PageHeader from "../components/PageHeader"
 import Button from "../components/Button"
@@ -152,7 +152,7 @@ export default function EventListsAdmin() {
       {/* Add / edit form */}
       <form
         onSubmit={submit}
-        className="bg-white border border-primary/10 rounded-sm p-5 mb-8"
+        className="bg-white border border-primary/10 rounded-sm p-4 sm:p-5 mb-8"
       >
         <div className="flex items-center justify-between mb-4">
           <h3 className="text-sm font-medium text-primary">
@@ -200,13 +200,13 @@ export default function EventListsAdmin() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mt-4">
           <label className="inline-flex items-center gap-2 text-xs text-primary/65 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={form.isDefault}
               onChange={(e) => setForm({ ...form, isDefault: e.target.checked })}
-              className="accent-secondary-terra"
+              className="accent-secondary-terra flex-shrink-0"
             />
             Use as the default (catch-all) list
           </label>
@@ -246,12 +246,12 @@ export default function EventListsAdmin() {
             <motion.li
               key={item._id}
               variants={{ hidden: { opacity: 0, y: 4 }, visible: { opacity: 1, y: 0 } }}
-              className={`flex items-center gap-4 px-5 py-3.5 transition-colors ${
+              className={`flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 px-4 sm:px-5 py-3.5 transition-colors ${
                 item.active ? "hover:bg-accent-cream/60" : "bg-primary/[0.02] opacity-70"
               }`}
             >
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap">
                   <p className="text-primary text-sm truncate font-medium">
                     {item.eventName || <span className="text-primary/40">Unnamed event</span>}
                   </p>
@@ -266,14 +266,14 @@ export default function EventListsAdmin() {
                     </span>
                   )}
                 </div>
-                <p className="text-[0.6875rem] text-primary/45 mt-0.5 truncate">
+                <p className="text-[0.6875rem] text-primary/45 mt-0.5 break-all sm:truncate">
                   <code className="text-primary/55">{item.ttEventId}</code>
                   <span className="mx-2 text-primary/25">→</span>
                   Brevo list <span className="text-primary/70">#{item.brevoListId}</span>
                 </p>
               </div>
 
-              <div className="flex items-center gap-3 shrink-0">
+              <div className="flex items-center flex-wrap gap-x-4 gap-y-2 sm:gap-3 shrink-0 pt-2.5 sm:pt-0 border-t sm:border-t-0 border-primary/8">
                 {!item.isDefault && (
                   <button
                     onClick={() => makeDefault(item)}
@@ -285,9 +285,9 @@ export default function EventListsAdmin() {
                 )}
                 <button
                   onClick={() => toggleActive(item)}
-                  className="text-[0.625rem] tracking-[0.15em] uppercase text-primary/45 hover:text-primary transition-colors"
+                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.15em] uppercase text-primary/45 hover:text-primary transition-colors"
                 >
-                  {item.active ? "Disable" : "Enable"}
+                  <Power className="w-3 h-3" /> {item.active ? "Disable" : "Enable"}
                 </button>
                 <button
                   onClick={() => startEdit(item)}

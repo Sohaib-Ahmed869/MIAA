@@ -163,31 +163,37 @@ export default function PreviousEventsAdmin() {
             <motion.li
               key={it._id}
               variants={{ hidden: { opacity: 0, y: 6 }, visible: { opacity: 1, y: 0 } }}
-              className="flex items-center gap-4 px-5 py-3 hover:bg-accent-cream/60 transition-colors"
+              className="flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-3 hover:bg-accent-cream/60 transition-colors"
             >
-              <div className="w-16 h-12 bg-accent-cream rounded-sm overflow-hidden flex-shrink-0">
+              <div className="w-14 h-14 sm:w-16 sm:h-12 bg-accent-cream rounded-sm overflow-hidden flex-shrink-0">
                 {it.imageUrl && (
                   <img src={it.imageUrl} alt="" className="w-full h-full object-cover" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-primary text-sm font-medium truncate">{it.title}</p>
-                <p className="text-[0.6875rem] text-primary/55 tracking-wide uppercase">
+                <p className="text-[0.6875rem] text-primary/55 tracking-wide uppercase truncate">
                   {it.surface} {it.subtitle && `· ${it.subtitle}`} {it.date && `· ${it.date}`}
                 </p>
               </div>
-              <button
-                onClick={() => open(it)}
-                className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
-              >
-                <Pencil className="w-3 h-3" /> Edit
-              </button>
-              <button
-                onClick={() => remove(it._id)}
-                className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
-              >
-                <Trash2 className="w-3 h-3" /> Delete
-              </button>
+              <div className="flex items-center gap-1 sm:gap-3 flex-shrink-0">
+                <button
+                  onClick={() => open(it)}
+                  aria-label="Edit"
+                  className="inline-flex items-center gap-1 p-2 sm:p-0 rounded-sm text-[0.625rem] tracking-[0.2em] uppercase text-primary hover:text-secondary-terra hover:bg-primary/[0.04] sm:hover:bg-transparent transition-colors"
+                >
+                  <Pencil className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
+                  <span className="hidden sm:inline">Edit</span>
+                </button>
+                <button
+                  onClick={() => remove(it._id)}
+                  aria-label="Delete"
+                  className="inline-flex items-center gap-1 p-2 sm:p-0 rounded-sm text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 hover:bg-rose-500/[0.06] sm:hover:bg-transparent transition-colors"
+                >
+                  <Trash2 className="w-3.5 h-3.5 sm:w-3 sm:h-3" />
+                  <span className="hidden sm:inline">Delete</span>
+                </button>
+              </div>
             </motion.li>
           ))}
         </motion.ul>

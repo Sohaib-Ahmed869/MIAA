@@ -110,25 +110,28 @@ export default function AuditLogAdmin() {
               <motion.div
                 key={entry._id}
                 variants={{ hidden: { opacity: 0 }, visible: { opacity: 1 } }}
-                className="flex items-start gap-4 px-4 py-3 bg-white border border-primary/6 rounded-sm"
+                className="flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-4 px-4 py-3 bg-white border border-primary/6 rounded-sm"
               >
-                <span className="text-[0.6875rem] text-primary/40 min-w-[8rem] pt-0.5">
-                  {new Date(entry.createdAt).toLocaleString("en-AU", {
-                    day: "2-digit",
-                    month: "short",
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}
-                </span>
-                <span
-                  className={`text-[0.625rem] tracking-[0.15em] uppercase font-medium min-w-[10rem] pt-0.5 ${
-                    ACTION_COLORS[entry.action] || "text-primary/60"
-                  }`}
-                >
-                  {entry.action}
-                </span>
-                <div className="flex-1">
-                  <p className="text-sm text-primary/80">
+                {/* Mobile: action + time share a row; at sm they dissolve into columns */}
+                <div className="flex items-center justify-between gap-3 sm:contents">
+                  <span
+                    className={`text-[0.625rem] tracking-[0.15em] uppercase font-medium sm:min-w-[10rem] sm:order-2 sm:pt-0.5 ${
+                      ACTION_COLORS[entry.action] || "text-primary/60"
+                    }`}
+                  >
+                    {entry.action}
+                  </span>
+                  <span className="text-[0.6875rem] text-primary/40 whitespace-nowrap sm:min-w-[8rem] sm:order-1 sm:pt-0.5">
+                    {new Date(entry.createdAt).toLocaleString("en-AU", {
+                      day: "2-digit",
+                      month: "short",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </span>
+                </div>
+                <div className="flex-1 min-w-0 sm:order-3">
+                  <p className="text-sm text-primary/80 break-words">
                     {entry.actor?.email || entry.actor?.type || "system"}
                   </p>
                   {entry.details && Object.keys(entry.details).length > 0 && (

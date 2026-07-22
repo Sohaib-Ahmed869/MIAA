@@ -104,7 +104,7 @@ export default function SponsorsAdmin() {
       />
 
       {loading ? (
-        <SkeletonCardGrid count={6} columns="md:grid-cols-2 xl:grid-cols-3" />
+        <SkeletonCardGrid count={6} columns="grid-cols-2 md:grid-cols-3 lg:grid-cols-4" />
       ) : items.length === 0 ? (
         <EmptyState title="No sponsors yet" hint="Add a sponsor to populate the Gala Dinner marquee." />
       ) : (
@@ -112,15 +112,15 @@ export default function SponsorsAdmin() {
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-5"
         >
           {items.map((s) => (
             <motion.div
               key={s._id}
               variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-              className="group bg-white border border-primary/10 rounded-sm p-5 flex flex-col items-center text-center hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
+              className="group bg-white border border-primary/10 rounded-sm p-3 sm:p-5 flex flex-col items-center text-center hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
             >
-              <div className="w-full h-24 rounded-sm bg-accent-cream/60 overflow-hidden mb-3 flex items-center justify-center p-3">
+              <div className="w-full h-20 sm:h-24 rounded-sm bg-accent-cream/60 overflow-hidden mb-2.5 sm:mb-3 flex items-center justify-center p-2 sm:p-3">
                 {s.logoUrl ? (
                   <img src={s.logoUrl} alt={s.name} className="max-h-full max-w-full object-contain" />
                 ) : (
@@ -145,16 +145,16 @@ export default function SponsorsAdmin() {
                   <span className="truncate">{s.url.replace(/^https?:\/\//, "")}</span>
                 </a>
               )}
-              <div className="flex gap-2 mt-4 pt-3 border-t border-primary/8 w-full justify-center">
+              <div className="flex gap-1.5 sm:gap-2 mt-3 sm:mt-4 pt-2.5 sm:pt-3 border-t border-primary/8 w-full justify-center">
                 <button
                   onClick={() => open(s)}
-                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
+                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
                 >
                   <Pencil className="w-3 h-3" /> Edit
                 </button>
                 <button
                   onClick={() => setConfirming(s)}
-                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
+                  className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.15em] sm:tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
                 >
                   <Trash2 className="w-3 h-3" /> Delete
                 </button>

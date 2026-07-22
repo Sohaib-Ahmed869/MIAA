@@ -83,19 +83,21 @@ export default function DonationsAdmin() {
 
       {/* Stats row */}
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-8">
           {statCards.map((s) => (
             <div
               key={s.label}
-              className="bg-white border border-primary/10 rounded-sm p-5"
+              className="bg-white border border-primary/10 rounded-sm p-3.5 sm:p-5 overflow-hidden"
             >
-              <div className="flex items-center gap-2 mb-2">
-                <s.icon className="w-4 h-4 text-secondary-terra" strokeWidth={1.75} />
-                <span className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/55">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-1.5 sm:mb-2">
+                <s.icon className="w-4 h-4 text-secondary-terra flex-shrink-0" strokeWidth={1.75} />
+                <span className="text-[0.5625rem] sm:text-[0.625rem] tracking-[0.12em] sm:tracking-[0.2em] uppercase text-primary/55 truncate">
                   {s.label}
                 </span>
               </div>
-              <p className="text-2xl font-medium text-primary">{s.value}</p>
+              <p className="text-xl sm:text-2xl font-medium text-primary tabular-nums truncate">
+                {s.value}
+              </p>
             </div>
           ))}
         </div>
@@ -143,7 +145,7 @@ export default function DonationsAdmin() {
           className="flex flex-col gap-2"
         >
           {/* Table header */}
-          <div className="grid grid-cols-[1fr_1fr_auto_auto_auto_auto] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
+          <div className="hidden lg:grid grid-cols-[1fr_1fr_auto_auto_auto_auto] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
             <span>Donor</span>
             <span>Product / Cause</span>
             <span>Amount</span>
@@ -156,9 +158,10 @@ export default function DonationsAdmin() {
               key={d._id}
               variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}
               onClick={() => setViewing(d)}
-              className="grid grid-cols-[1fr_1fr_auto_auto_auto_auto] gap-4 items-center px-4 py-3 bg-white border border-primary/8 rounded-sm hover:border-secondary-terra/40 hover:shadow-sm transition-all cursor-pointer"
+              className="grid grid-cols-[1fr_auto] lg:grid-cols-[1fr_1fr_auto_auto_auto_auto] gap-x-3 gap-y-0 lg:gap-4 items-start lg:items-center px-4 py-3.5 lg:py-3 bg-white border border-primary/8 rounded-lg lg:rounded-sm hover:border-secondary-terra/40 hover:shadow-sm transition-all cursor-pointer"
             >
-              <div>
+              {/* Donor — always visible */}
+              <div className="min-w-0">
                 <p className="text-sm font-medium text-primary truncate">
                   {d.isAnonymous ? "Anonymous" : d.donorName || d.donor?.firstName ? `${d.donor?.firstName || ""} ${d.donor?.lastName || ""}`.trim() : "Guest"}
                 </p>
@@ -166,7 +169,9 @@ export default function DonationsAdmin() {
                   {d.donorEmail || d.donor?.email || "—"}
                 </p>
               </div>
-              <div>
+
+              {/* Product / Cause — desktop column */}
+              <div className="hidden lg:block min-w-0">
                 <p className="text-sm text-primary truncate">
                   {d.product?.name || d.event?.title || "—"}
                 </p>
@@ -181,22 +186,53 @@ export default function DonationsAdmin() {
                   </p>
                 )}
               </div>
-              <p className="text-sm font-medium text-primary min-w-[5rem] text-right">
+
+              {/* Amount — top-right on mobile, column 3 on desktop */}
+              <p className="text-[0.9375rem] lg:text-sm font-semibold lg:font-medium text-primary min-w-[5rem] text-right whitespace-nowrap">
                 ${(d.amount / 100).toFixed(2)}
               </p>
-              <span className="text-[0.5625rem] tracking-[0.2em] uppercase text-primary/60 min-w-[4rem] text-center">
+
+              {/* Method — desktop column */}
+              <span className="hidden lg:block text-[0.5625rem] tracking-[0.2em] uppercase text-primary/60 min-w-[4rem] text-center">
                 {d.paymentMethod}
               </span>
+
+              {/* Status — desktop column */}
               <span
-                className={`text-[0.5625rem] tracking-[0.2em] uppercase px-2 py-1 rounded-sm min-w-[5rem] text-center ${
+                className={`hidden lg:block text-[0.5625rem] tracking-[0.2em] uppercase px-2 py-1 rounded-sm min-w-[5rem] text-center ${
                   STATUS_COLORS[d.paymentStatus] || "bg-primary/20 text-primary"
                 }`}
               >
                 {d.paymentStatus}
               </span>
-              <span className="text-[0.6875rem] text-primary/50 min-w-[5rem] text-right">
+
+              {/* Date — desktop column */}
+              <span className="hidden lg:block text-[0.6875rem] text-primary/50 min-w-[5rem] text-right">
                 {new Date(d.createdAt).toLocaleDateString("en-AU")}
               </span>
+
+              {/* Mobile meta — product/cause + method/status/date */}
+              <div className="col-span-2 flex lg:hidden flex-col gap-2 mt-3 pt-3 border-t border-primary/[0.07]">
+                <p className="text-[0.8125rem] text-primary/70 truncate">
+                  {d.product?.name || d.event?.title || "General"}
+                  {d.campaign?.title ? ` · ${d.campaign.title}` : ""}
+                </p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span
+                    className={`text-[0.5625rem] tracking-[0.18em] uppercase px-2 py-0.5 rounded-full ${
+                      STATUS_COLORS[d.paymentStatus] || "bg-primary/20 text-primary"
+                    }`}
+                  >
+                    {d.paymentStatus}
+                  </span>
+                  <span className="text-[0.5625rem] tracking-[0.15em] uppercase px-2 py-0.5 rounded-full bg-accent-cream text-primary/70">
+                    {d.paymentMethod}
+                  </span>
+                  <span className="text-[0.6875rem] text-primary/45 ml-auto whitespace-nowrap">
+                    {new Date(d.createdAt).toLocaleDateString("en-AU")}
+                  </span>
+                </div>
+              </div>
             </motion.div>
           ))}
         </motion.div>

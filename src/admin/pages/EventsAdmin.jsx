@@ -423,7 +423,7 @@ export default function EventsAdmin() {
           {error && (
             <p className="text-xs text-rose-600 bg-rose-50 px-3 py-2 rounded-sm">{error}</p>
           )}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Category">
               <Dropdown
                 fullWidth
@@ -442,7 +442,7 @@ export default function EventsAdmin() {
               />
             </Field>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Date" hint="e.g. 07.02.26 or TBA">
               <TextInput
                 value={form.date}
@@ -476,7 +476,7 @@ export default function EventsAdmin() {
               placeholder={slugify(form.title || "")}
             />
           </Field>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Time" hint="Optional — shown in the detail page hero">
               <TextInput
                 value={form.time}
@@ -492,7 +492,7 @@ export default function EventsAdmin() {
               />
             </Field>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Admission" hint="e.g. Free / RSVP, $25, Members Only">
               <TextInput
                 value={form.admission}
@@ -576,7 +576,7 @@ export default function EventsAdmin() {
                   <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/45 mb-3">
                     Card {i + 1}
                   </p>
-                  <div className="grid grid-cols-2 gap-3 mb-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                     <Field label="Tag">
                       <TextInput
                         value={h.tag}
@@ -699,7 +699,7 @@ export default function EventsAdmin() {
                     </Field>
 
                     {form.pricingMode !== "tiers" ? (
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <Field label="Ticket Name">
                           <TextInput
                             value={form.ticketTypes[0]?.name || ""}
@@ -746,7 +746,7 @@ export default function EventsAdmin() {
                                 </button>
                               )}
                             </div>
-                            <div className="grid grid-cols-2 gap-3">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                               <Field label="Name">
                                 <TextInput
                                   value={t.name}
@@ -841,7 +841,7 @@ export default function EventsAdmin() {
                             Remove
                           </button>
                         </div>
-                        <div className="grid grid-cols-2 gap-3 mb-3">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
                           <Field label="Question">
                             <TextInput
                               value={q.label}

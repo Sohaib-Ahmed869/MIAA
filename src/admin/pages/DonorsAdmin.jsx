@@ -51,7 +51,7 @@ export default function DonorsAdmin() {
           className="flex flex-col gap-2"
         >
           {/* Table header */}
-          <div className="grid grid-cols-[1fr_1fr_auto_auto_auto] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
+          <div className="hidden lg:grid grid-cols-[1fr_1fr_auto_auto_auto] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
             <span>Name</span>
             <span>Email</span>
             <span>Total Donated</span>
@@ -63,21 +63,43 @@ export default function DonorsAdmin() {
               key={d._id}
               variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}
               onClick={() => setViewing(d)}
-              className="grid grid-cols-[1fr_1fr_auto_auto_auto] gap-4 items-center px-4 py-3 bg-white border border-primary/8 rounded-sm hover:border-secondary-terra/40 hover:shadow-sm transition-all cursor-pointer"
+              className="grid grid-cols-[1fr_auto] lg:grid-cols-[1fr_1fr_auto_auto_auto] gap-x-3 gap-y-0 lg:gap-4 items-start lg:items-center px-4 py-3.5 lg:py-3 bg-white border border-primary/8 rounded-lg lg:rounded-sm hover:border-secondary-terra/40 hover:shadow-sm transition-all cursor-pointer"
             >
-              <p className="text-sm font-medium text-primary truncate">
+              {/* Name — always visible */}
+              <p className="text-sm font-medium text-primary truncate min-w-0">
                 {d.firstName} {d.lastName}
               </p>
-              <p className="text-sm text-primary/70 truncate">{d.email}</p>
-              <p className="text-sm font-medium text-primary min-w-[6rem] text-right">
+
+              {/* Email — desktop column */}
+              <p className="hidden lg:block text-sm text-primary/70 truncate">{d.email}</p>
+
+              {/* Total donated — top-right on mobile, column 3 on desktop */}
+              <p className="text-[0.9375rem] lg:text-sm font-semibold lg:font-medium text-primary min-w-[6rem] text-right whitespace-nowrap">
                 ${((d.totalDonated || 0) / 100).toLocaleString()}
               </p>
-              <p className="text-sm text-primary/60 min-w-[4rem] text-center">
+
+              {/* Donations count — desktop column */}
+              <p className="hidden lg:block text-sm text-primary/60 min-w-[4rem] text-center">
                 {d.donationCount || 0}
               </p>
-              <p className="text-[0.6875rem] text-primary/50 min-w-[5rem] text-right">
+
+              {/* Joined — desktop column */}
+              <p className="hidden lg:block text-[0.6875rem] text-primary/50 min-w-[5rem] text-right">
                 {new Date(d.createdAt).toLocaleDateString("en-AU")}
               </p>
+
+              {/* Mobile meta — email + donation count + joined */}
+              <div className="col-span-2 flex lg:hidden flex-col gap-2 mt-3 pt-3 border-t border-primary/[0.07]">
+                <p className="text-[0.8125rem] text-primary/70 break-all">{d.email}</p>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="text-[0.5625rem] tracking-[0.15em] uppercase px-2 py-0.5 rounded-full bg-accent-cream text-primary/70">
+                    {d.donationCount || 0} donation{(d.donationCount || 0) === 1 ? "" : "s"}
+                  </span>
+                  <span className="text-[0.6875rem] text-primary/45 ml-auto whitespace-nowrap">
+                    Joined {new Date(d.createdAt).toLocaleDateString("en-AU")}
+                  </span>
+                </div>
+              </div>
             </motion.div>
           ))}
         </motion.div>

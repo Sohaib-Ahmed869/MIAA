@@ -372,7 +372,7 @@ export default function CampaignsAdmin() {
               placeholder={slugify(form.title || "")}
             />
           </Field>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Status">
               <Select
                 value={form.status}
@@ -390,7 +390,7 @@ export default function CampaignsAdmin() {
               />
             </Field>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <Field label="Start Date">
               <TextInput
                 type="date"
@@ -446,7 +446,7 @@ export default function CampaignsAdmin() {
               uploadImage={(file) => uploadFileToS3(file, "campaigns")}
             />
           </Field>
-          <div className="flex gap-6 pt-2">
+          <div className="flex flex-wrap gap-x-6 gap-y-3 pt-2">
             <Checkbox
               label="Published"
               checked={form.published}

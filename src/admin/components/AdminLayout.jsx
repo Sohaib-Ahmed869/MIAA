@@ -23,6 +23,8 @@ import {
   Megaphone,
   ClipboardList,
   ScanLine,
+  Menu,
+  X,
 } from "lucide-react"
 import { clearSession, getAdminUser, adminApi } from "../auth"
 import { ToastProvider } from "./Toast"
@@ -55,9 +57,9 @@ const NAV = [
   { to: "/admin/settings", label: "Site Settings", icon: Settings },
 ]
 
-function NavItem({ item, badge = 0 }) {
+function NavItem({ item, badge = 0, onNavigate }) {
   return (
-    <NavLink to={item.to} end={item.end} className="block">
+    <NavLink to={item.to} end={item.end} onClick={onNavigate} className="block">
       {({ isActive }) => (
         <div
           className={`relative flex items-center gap-3 px-4 py-2.5 rounded-sm text-[0.8125rem] transition-colors duration-200 ${
@@ -105,6 +107,27 @@ export default function AdminLayout() {
   const location = useLocation()
   const admin = getAdminUser()
   const [pendingRequests, setPendingRequests] = useState(0)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  // Close the mobile drawer whenever the route changes.
+  useEffect(() => {
+    setSidebarOpen(false)
+  }, [location.pathname])
+
+  // Lock body scroll + allow Escape-to-close while the mobile drawer is open.
+  useEffect(() => {
+    if (!sidebarOpen) return
+    const prev = document.body.style.overflow
+    document.body.style.overflow = "hidden"
+    const onKey = (e) => {
+      if (e.key === "Escape") setSidebarOpen(false)
+    }
+    window.addEventListener("keydown", onKey)
+    return () => {
+      document.body.style.overflow = prev
+      window.removeEventListener("keydown", onKey)
+    }
+  }, [sidebarOpen])
 
   // Live count of pending campaign requests for the nav badge. Refetches on
   // navigation and when the requests page signals a change.
@@ -138,14 +161,54 @@ export default function AdminLayout() {
     <ToastProvider>
       <ConfirmProvider>
       <div className="min-h-screen bg-accent-cream text-primary">
+        {/* Mobile top bar — hamburger + logo, hidden on large screens */}
+        <header className="lg:hidden fixed top-0 inset-x-0 h-14 bg-bg-deep text-accent-cream flex items-center gap-3 px-4 z-40">
+          <button
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open menu"
+            aria-expanded={sidebarOpen}
+            className="p-2 -ml-2 rounded-sm text-accent-cream/80 hover:text-accent-cream hover:bg-white/5 transition-colors"
+          >
+            <Menu strokeWidth={1.75} className="w-5 h-5" />
+          </button>
+          <Link to="/admin" className="flex items-center gap-2">
+            <img src={smallLogo} alt="MIAA" className="max-h-7 w-auto object-contain" />
+          </Link>
+        </header>
+
+        {/* Backdrop — only on mobile while the drawer is open */}
+        <AnimatePresence>
+          {sidebarOpen && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setSidebarOpen(false)}
+              className="lg:hidden fixed inset-0 bg-black/50 z-40"
+            />
+          )}
+        </AnimatePresence>
+
         <div className="flex">
-          {/* Sidebar — branded dark teal */}
-          <aside className="fixed inset-y-0 left-0 w-64 bg-bg-deep text-accent-cream flex flex-col z-30">
-            <div className="px-6 pt-7 pb-6">
+          {/* Sidebar — branded dark teal. Fixed on lg+, slide-in drawer below. */}
+          <aside
+            className={`fixed inset-y-0 left-0 w-64 max-w-[85vw] bg-bg-deep text-accent-cream flex flex-col z-50 transition-transform duration-300 ease-in-out lg:z-30 lg:translate-x-0 ${
+              sidebarOpen ? "translate-x-0" : "-translate-x-full"
+            }`}
+          >
+            <div className="px-6 pt-7 pb-6 flex items-center justify-between">
               <Link to="/admin" className="flex items-center gap-3">
                 <img src={smallLogo} alt="MIAA" className="h-8 w-auto" />
-                
               </Link>
+              {/* Close button — mobile drawer only */}
+              <button
+                onClick={() => setSidebarOpen(false)}
+                aria-label="Close menu"
+                className="lg:hidden p-2 -mr-2 rounded-sm text-accent-cream/70 hover:text-accent-cream hover:bg-white/5 transition-colors"
+              >
+                <X strokeWidth={1.75} className="w-5 h-5" />
+              </button>
             </div>
 
             {/* Dotted divider */}
@@ -169,7 +232,12 @@ export default function AdminLayout() {
                     </p>
                   </div>
                 ) : (
-                  <NavItem key={item.to} item={item} badge={badgeFor(item)} />
+                  <NavItem
+                    key={item.to}
+                    item={item}
+                    badge={badgeFor(item)}
+                    onNavigate={() => setSidebarOpen(false)}
+                  />
                 )
               )}
             </nav>
@@ -212,8 +280,8 @@ export default function AdminLayout() {
           </aside>
 
           {/* Content area */}
-          <main className="ml-64 flex-1 min-h-screen">
-            <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-6 md:px-8 lg:px-12 2xl:px-16 py-10">
+          <main className="lg:ml-64 flex-1 min-h-screen w-full min-w-0">
+            <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 pt-20 lg:pt-10 pb-10">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={location.pathname}
