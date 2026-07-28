@@ -7,6 +7,7 @@ import OffsiteEvents from "./pages/OffsiteEvents"
 import Events from "./pages/Events"
 import EventDetail from "./pages/EventDetail"
 import EventRegister from "./pages/EventRegister"
+import VolunteerCheckIn from "./pages/VolunteerCheckIn"
 import CommunityEngagement from "./pages/CommunityEngagement"
 import Timeline from "./pages/Timeline"
 import Contact from "./pages/Contact"
@@ -93,6 +94,9 @@ export default function App() {
           <Route path="audit-log" element={<AuditLogAdmin />} />
           <Route path="settings" element={<SettingsAdmin />} />
         </Route>
+
+        {/* Volunteer door check-in (public link, no site chrome) */}
+        <Route path="/volunteer-checkin/:token" element={<VolunteerCheckIn />} />
 
         {/* Donor portal */}
         <Route path="/donor/login" element={<DonorLogin />} />

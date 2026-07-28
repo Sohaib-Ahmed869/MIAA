@@ -31,6 +31,14 @@ const AVATAR_TINTS = [
   "bg-accent-sage/30 text-primary",
 ]
 
+// Who scanned the pass at the door. Older check-ins predate attribution.
+const checkedInByLabel = (r) => {
+  const by = r.checkedInBy
+  if (!by) return "—"
+  if (by.name) return by.name
+  return by.role === "volunteer" ? "Volunteer" : "MIAA staff"
+}
+
 const initials = (name) =>
   (name || "Guest")
     .split(" ")
@@ -219,13 +227,13 @@ export default function EventRegistrationsAdmin() {
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
           className="flex flex-col gap-2"
         >
-          <div className="hidden lg:grid grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_4rem_5.5rem_6rem_5rem_5.5rem] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
+          <div className="hidden lg:grid grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)_4rem_5.5rem_6rem_7.5rem_5.5rem] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
             <span>Attendee</span>
             <span>Event</span>
             <span className="text-center">Tickets</span>
             <span className="text-right">Amount</span>
             <span className="text-center">Status</span>
-            <span className="text-center">Check-in</span>
+            <span className="text-center">Checked in by</span>
             <span className="text-right">Date</span>
           </div>
           {rows.map((r, i) => (
@@ -233,7 +241,7 @@ export default function EventRegistrationsAdmin() {
               key={r._id}
               variants={{ hidden: { opacity: 0, y: 5 }, visible: { opacity: 1, y: 0 } }}
               onClick={() => setViewing(r)}
-              className="grid grid-cols-[1fr_auto] lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1.2fr)_4rem_5.5rem_6rem_5rem_5.5rem] gap-x-3 gap-y-0 lg:gap-4 items-start lg:items-center px-4 py-3.5 lg:py-3 bg-white border border-primary/8 rounded-lg lg:rounded-sm hover:border-secondary-terra/40 hover:shadow-sm hover:shadow-primary/5 transition-all cursor-pointer"
+              className="grid grid-cols-[1fr_auto] lg:grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)_4rem_5.5rem_6rem_7.5rem_5.5rem] gap-x-3 gap-y-0 lg:gap-4 items-start lg:items-center px-4 py-3.5 lg:py-3 bg-white border border-primary/8 rounded-lg lg:rounded-sm hover:border-secondary-terra/40 hover:shadow-sm hover:shadow-primary/5 transition-all cursor-pointer"
             >
               {/* Attendee — always visible (avatar shows on mobile only) */}
               <div className="min-w-0 flex items-center gap-3">
@@ -278,19 +286,28 @@ export default function EventRegistrationsAdmin() {
                 {r.paymentStatus}
               </span>
 
-              {/* Check-in — desktop column */}
+              {/* Check-in + who did it — desktop column */}
               <span
-                className="hidden lg:block justify-self-center"
+                className="hidden lg:block justify-self-center text-center min-w-0"
                 title={
-                  r.checkedIn && r.checkedInAt
-                    ? `Checked in ${new Date(r.checkedInAt).toLocaleString("en-AU")}`
+                  r.checkedIn
+                    ? `Checked in${
+                        r.checkedInAt
+                          ? ` ${new Date(r.checkedInAt).toLocaleString("en-AU")}`
+                          : ""
+                      }${r.checkedInBy?.name ? ` by ${r.checkedInBy.name}` : ""}`
                     : "Not checked in"
                 }
               >
                 {r.checkedIn ? (
-                  <span className="inline-flex items-center gap-1 text-[0.5625rem] tracking-[0.15em] uppercase text-emerald-600 font-semibold">
-                    <CheckCircle2 className="w-3.5 h-3.5" /> In
-                  </span>
+                  <>
+                    <span className="inline-flex items-center gap-1 text-[0.5625rem] tracking-[0.15em] uppercase text-emerald-600 font-semibold">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> In
+                    </span>
+                    <span className="block text-[0.625rem] text-primary/50 truncate">
+                      {checkedInByLabel(r)}
+                    </span>
+                  </>
                 ) : (
                   <span className="text-primary/25">—</span>
                 )}
@@ -320,6 +337,7 @@ export default function EventRegistrationsAdmin() {
                   {r.checkedIn && (
                     <span className="inline-flex items-center gap-1 text-[0.5625rem] tracking-[0.15em] uppercase px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-semibold ring-1 ring-inset ring-emerald-500/20">
                       <CheckCircle2 className="w-3 h-3" /> In
+                      {r.checkedInBy?.name ? ` · ${r.checkedInBy.name}` : ""}
                     </span>
                   )}
                   <span className="text-[0.6875rem] text-primary/45 ml-auto whitespace-nowrap">

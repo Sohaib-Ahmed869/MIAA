@@ -281,6 +281,65 @@ export default function EventAnalyticsDrawer({ event, open, onClose }) {
             </ChartCard>
           )}
 
+          {/* Who worked the door */}
+          {(() => {
+            const vc = data.volunteerCheckins
+            if (!vc) return null
+            const rows = vc.volunteers || []
+            if (rows.length === 0 && !vc.staff && !vc.unattributed) return null
+            const max = Math.max(
+              1,
+              vc.staff,
+              vc.unattributed,
+              ...rows.map((r) => r.checkIns)
+            )
+            const bar = (label, sub, count, color) => (
+              <div key={label + sub} className="flex items-center gap-3">
+                <span className="w-28 flex-shrink-0 min-w-0">
+                  <span className="block text-[0.75rem] text-primary truncate">{label}</span>
+                  {sub && (
+                    <span className="block text-[0.625rem] text-primary/45 truncate">
+                      {sub}
+                    </span>
+                  )}
+                </span>
+                <span className="flex-1 h-2 rounded-full bg-primary/8 overflow-hidden">
+                  <span
+                    className="block h-full rounded-full"
+                    style={{ width: `${(count / max) * 100}%`, background: color }}
+                  />
+                </span>
+                <span className="w-6 text-right text-xs font-semibold text-primary">
+                  {count}
+                </span>
+              </div>
+            )
+            return (
+              <ChartCard title="Check-ins by volunteer">
+                <div className="flex flex-col gap-2.5">
+                  {rows.map((r) =>
+                    bar(
+                      r.name,
+                      [r.organization, r.removed ? "removed" : null]
+                        .filter(Boolean)
+                        .join(" · "),
+                      r.checkIns,
+                      TERRA
+                    )
+                  )}
+                  {vc.staff > 0 && bar("MIAA staff", "admin scanner", vc.staff, TEAL)}
+                  {vc.unattributed > 0 &&
+                    bar("Unattributed", "checked in earlier", vc.unattributed, MUTED)}
+                </div>
+                {rows.length === 0 && (
+                  <p className="text-[0.6875rem] text-primary/50 mt-3">
+                    No volunteers have been added to this event yet.
+                  </p>
+                )}
+              </ChartCard>
+            )
+          })()}
+
           {/* Attendee roster */}
           {sortedAttendees.length > 0 && (
             <ChartCard title={`Attendees (${sortedAttendees.length})`}>
@@ -300,6 +359,11 @@ export default function EventAnalyticsDrawer({ event, open, onClose }) {
                     <div className="min-w-0 flex-1">
                       <p className="text-sm text-primary truncate">{a.name || "Guest"}</p>
                       <p className="text-[0.6875rem] text-primary/45 truncate">{a.email}</p>
+                      {a.checkedIn && a.checkedInBy?.name && (
+                        <p className="text-[0.625rem] text-primary/40 truncate">
+                          in by {a.checkedInBy.name}
+                        </p>
+                      )}
                     </div>
                     <span className="w-10 text-center shrink-0 text-xs text-primary/70">
                       {a.quantity || 1}

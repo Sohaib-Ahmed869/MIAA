@@ -43,6 +43,14 @@ export const api = {
     request(`/api/event-registrations`, { method: "POST", body: payload }),
   confirmEventRegistration: (payload) =>
     request(`/api/event-registrations/confirm`, { method: "POST", body: payload }),
+  // Volunteer door check-in (public, guarded by the volunteer's link token)
+  volunteerPortal: (token) =>
+    request(`/api/event-volunteers/portal/${encodeURIComponent(token)}`),
+  volunteerCheckin: (token, passCode) =>
+    request(`/api/event-volunteers/portal/${encodeURIComponent(token)}/checkin`, {
+      method: "POST",
+      body: { passCode },
+    }),
   // Direct URL to the event pass PDF (guarded by the pass code).
   eventPassUrl: (id, code) =>
     `${BASE}/api/event-registrations/${id}/pass.pdf?code=${encodeURIComponent(code)}`,

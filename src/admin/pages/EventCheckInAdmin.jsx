@@ -265,6 +265,7 @@ function ResultCard({ result }) {
           {reg.checkedInAt && (
             <p className="text-xs text-primary/50">
               {new Date(reg.checkedInAt).toLocaleString("en-AU")}
+              {already && reg.checkedInBy?.name ? ` · by ${reg.checkedInBy.name}` : ""}
             </p>
           )}
         </div>

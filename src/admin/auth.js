@@ -87,6 +87,20 @@ export const adminApi = {
       body: { passCode },
     }),
 
+  // event volunteers (door check-in helpers)
+  listEventVolunteers: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/event-volunteers${qs ? `?${qs}` : ""}`)
+  },
+  createEventVolunteer: (payload) =>
+    request("/api/event-volunteers", { method: "POST", body: payload }),
+  updateEventVolunteer: (id, payload) =>
+    request(`/api/event-volunteers/${id}`, { method: "PATCH", body: payload }),
+  sendVolunteerLink: (id) =>
+    request(`/api/event-volunteers/${id}/send-link`, { method: "POST" }),
+  deleteEventVolunteer: (id) =>
+    request(`/api/event-volunteers/${id}`, { method: "DELETE" }),
+
   // previous events
   listPreviousEvents: (params = {}) => {
     const qs = new URLSearchParams(params).toString()

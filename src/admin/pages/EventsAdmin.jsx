@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Plus, Pencil, Trash2, BarChart3 } from "lucide-react"
+import { Plus, Pencil, Trash2, BarChart3, UsersRound } from "lucide-react"
 import { adminApi } from "../auth"
 import EventAnalyticsDrawer from "./EventAnalyticsDrawer"
+import EventVolunteersDrawer from "./EventVolunteersDrawer"
 import PageHeader from "../components/PageHeader"
 import Button from "../components/Button"
 import Drawer from "../components/Drawer"
@@ -64,6 +65,7 @@ export default function EventsAdmin() {
   const [filter, setFilter] = useState("all")
   const [editing, setEditing] = useState(null)
   const [analyticsFor, setAnalyticsFor] = useState(null)
+  const [volunteersFor, setVolunteersFor] = useState(null)
   const [form, setForm] = useState(EMPTY)
   const [busy, setBusy] = useState(false)
   const [loading, setLoading] = useState(true)
@@ -244,6 +246,9 @@ export default function EventsAdmin() {
       delete payload.raisedAmount
       delete payload.donationCount
       delete payload.registeredCount
+      // Derived from the event date on read — not columns to write back.
+      delete payload.endsAt
+      delete payload.hasEnded
       if (editing === "new") {
         await adminApi.createEvent(payload)
         notify("Event created")
@@ -315,9 +320,9 @@ export default function EventsAdmin() {
             <motion.div
               key={it._id}
               variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-              className="group bg-white border border-primary/10 rounded-sm overflow-hidden hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
+              className="group h-full flex flex-col bg-white border border-primary/10 rounded-sm overflow-hidden hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
             >
-              <div className="aspect-[16/10] bg-accent-cream relative overflow-hidden">
+              <div className="aspect-[16/10] bg-accent-cream relative overflow-hidden flex-shrink-0">
                 {it.imageUrl ? (
                   <img
                     src={it.imageUrl}
@@ -342,7 +347,7 @@ export default function EventsAdmin() {
                   {it.category}
                 </span>
               </div>
-              <div className="p-4">
+              <div className="p-4 flex-1 flex flex-col">
                 <p className="text-[0.625rem] tracking-[0.2em] uppercase text-secondary-terra mb-1">
                   {it.date}
                 </p>
@@ -379,25 +384,33 @@ export default function EventsAdmin() {
                     )}
                   </div>
                 )}
-                <div className="flex gap-3 mt-4 pt-4 border-t border-primary/8">
-                  <button
-                    onClick={() => open(it)}
-                    className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
-                  >
-                    <Pencil className="w-3 h-3" /> Edit
-                  </button>
-                  <button
-                    onClick={() => setAnalyticsFor(it)}
-                    className="inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary hover:text-secondary-terra transition-colors"
-                  >
-                    <BarChart3 className="w-3 h-3" /> Analytics
-                  </button>
-                  <button
-                    onClick={() => remove(it._id)}
-                    className="ml-auto inline-flex items-center gap-1 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50 hover:text-rose-600 transition-colors"
-                  >
-                    <Trash2 className="w-3 h-3" /> Delete
-                  </button>
+                {/* Actions — pinned to the card bottom so every card lines up */}
+                <div className="grid grid-cols-4 gap-0.5 mt-auto pt-3 border-t border-primary/8">
+                  {[
+                    { label: "Edit", icon: Pencil, onClick: () => open(it) },
+                    { label: "Analytics", icon: BarChart3, onClick: () => setAnalyticsFor(it) },
+                    { label: "Volunteers", icon: UsersRound, onClick: () => setVolunteersFor(it) },
+                    {
+                      label: "Delete",
+                      icon: Trash2,
+                      onClick: () => remove(it._id),
+                      danger: true,
+                    },
+                  ].map((a) => (
+                    <button
+                      key={a.label}
+                      onClick={a.onClick}
+                      title={a.label}
+                      className={`flex flex-col items-center justify-center gap-1.5 min-w-0 py-2 rounded-sm text-[0.5rem] font-semibold tracking-[0.04em] uppercase transition-colors ${
+                        a.danger
+                          ? "text-primary/50 hover:text-rose-600 hover:bg-rose-500/8"
+                          : "text-primary/80 hover:text-secondary-terra hover:bg-accent-cream/70"
+                      }`}
+                    >
+                      <a.icon className="w-3.5 h-3.5 flex-shrink-0" strokeWidth={1.75} />
+                      <span className="whitespace-nowrap leading-none">{a.label}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
             </motion.div>
@@ -920,6 +933,12 @@ export default function EventsAdmin() {
         event={analyticsFor}
         open={analyticsFor !== null}
         onClose={() => setAnalyticsFor(null)}
+      />
+
+      <EventVolunteersDrawer
+        event={volunteersFor}
+        open={volunteersFor !== null}
+        onClose={() => setVolunteersFor(null)}
       />
     </div>
   )

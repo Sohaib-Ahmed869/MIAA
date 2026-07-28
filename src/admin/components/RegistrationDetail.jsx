@@ -26,6 +26,18 @@ export default function RegistrationDetail({ registration: r }) {
     ["Date", new Date(r.createdAt).toLocaleString("en-AU")],
   ]
 
+  if (r.checkedIn) {
+    const by = r.checkedInBy
+    rows.splice(rows.length - 1, 0, [
+      "Checked in by",
+      by?.name
+        ? `${by.name}${by.role === "volunteer" ? " (volunteer)" : " (staff)"}${
+            by.organization ? ` · ${by.organization}` : ""
+          }`
+        : "—",
+    ])
+  }
+
   return (
     <div className="flex flex-col gap-4">
       {rows.map(([label, value]) => (
