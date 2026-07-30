@@ -208,7 +208,7 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
                   key={i}
                   className={`text-base 3xl:text-xl text-primary/${
                     i === 0 ? "85" : "75"
-                  } leading-relaxed ${i === 0 ? "mt-6" : "mt-5"}`}
+                  } leading-relaxed whitespace-pre-line ${i === 0 ? "mt-6" : "mt-5"}`}
                 >
                   {p}
                 </p>

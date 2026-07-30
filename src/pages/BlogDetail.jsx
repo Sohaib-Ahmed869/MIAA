@@ -15,7 +15,16 @@ function bodyToBlocks(body) {
   if (Array.isArray(body)) return body
   if (typeof body !== "string" || !body.trim()) return undefined
 
-  const stripTags = (s) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim()
+  // Keep single newlines (and <br>s) intact — the renderer preserves them with
+  // whitespace-pre-line, so authors get the line breaks they typed. Only runs
+  // of spaces/tabs collapse.
+  const stripTags = (s) =>
+    s
+      .replace(/<br\s*\/?>/gi, "\n")
+      .replace(/<[^>]+>/g, "")
+      .replace(/[^\S\n]+/g, " ")
+      .replace(/ *\n */g, "\n")
+      .trim()
 
   const blocks = []
   const pTagMatches = [...body.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)]

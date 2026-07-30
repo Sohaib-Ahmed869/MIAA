@@ -123,7 +123,7 @@ export default function BlogDetailSection({ article }) {
               {bodyContent.map((block, i) => {
                 if (block.type === "intro") {
                   return (
-                    <p key={i} className="text-base sm:text-lg md:text-xl 3xl:text-2xl text-primary leading-relaxed font-medium">
+                    <p key={i} className="text-base sm:text-lg md:text-xl 3xl:text-2xl text-primary leading-relaxed font-medium whitespace-pre-line">
                       {block.text}
                     </p>
                   )
@@ -136,7 +136,7 @@ export default function BlogDetailSection({ article }) {
                   )
                 }
                 return (
-                  <p key={i} className="text-sm sm:text-base 3xl:text-lg text-primary leading-relaxed">
+                  <p key={i} className="text-sm sm:text-base 3xl:text-lg text-primary leading-relaxed whitespace-pre-line">
                     {block.text}
                   </p>
                 )
