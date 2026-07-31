@@ -18,6 +18,7 @@ import SupportUs from "./pages/SupportUs"
 import GalaDinner from "./pages/GalaDinner"
 import GalaDinnerTicketing from "./pages/GalaDinnerTicketing"
 import SMWF from "./pages/SMWF"
+import Donations from "./pages/Donations"
 import DonationCheckout from "./pages/DonationCheckout"
 import DonationSuccess from "./pages/DonationSuccess"
 import DonationCancelled from "./pages/DonationCancelled"
@@ -138,7 +139,7 @@ export default function App() {
           <Route path="gala-dinner" element={<GalaDinner />} />
           <Route path="gala-dinner/tickets" element={<GalaDinnerTicketing />} />
           <Route path="smwf" element={<SMWF />} />
-          <Route path="donate" element={<DonationCheckout />} />
+          <Route path="donate" element={<Donations />} />
           <Route path="donate/checkout" element={<DonationCheckout />} />
           <Route path="donate/success" element={<DonationSuccess />} />
           <Route path="donate/cancelled" element={<DonationCancelled />} />
