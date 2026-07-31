@@ -164,6 +164,7 @@ export default function DonationCheckout() {
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState("")
   const [clientSecret, setClientSecret] = useState("")
+  const [paymentMethod, setPaymentMethod] = useState("card")
 
   useEffect(() => {
     const controller = new AbortController()
@@ -285,6 +286,28 @@ export default function DonationCheckout() {
       setBusy(false)
     }
   }
+
+  // PayPal: create the order server-side and redirect to PayPal's approval
+  // page. On return, DonationSuccess captures the order (?paypal=1&token=…).
+  const handlePaypal = async () => {
+    if (!validate()) return
+    setBusy(true)
+    try {
+      const { approvalUrl } = await api.createPaypalOrder(buildPayload())
+      if (!approvalUrl) throw new Error("Could not start PayPal checkout")
+      window.location.href = approvalUrl
+    } catch (err) {
+      setError(err.message)
+      setBusy(false)
+    }
+  }
+
+  // PayPal here only supports one-time gifts — recurring falls back to card.
+  useEffect(() => {
+    if (isRecurring && paymentMethod === "paypal") setPaymentMethod("card")
+  }, [isRecurring, paymentMethod])
+
+  const paypalAvailable = Boolean(config?.paypalClientId) && !isRecurring
 
   const inputClass =
     "w-full py-3 px-4 bg-white/[0.06] text-accent-cream border border-white/10 rounded-lg text-sm placeholder:text-accent-cream/30 focus:border-secondary-terra focus:ring-2 focus:ring-secondary-terra/25 focus:outline-none transition-colors"
@@ -560,35 +583,62 @@ export default function DonationCheckout() {
             {/* Payment method */}
             <div>
               <SectionHead>Payment Method</SectionHead>
-              <button
-                type="button"
-                className="w-full flex items-center justify-center gap-2 py-3.5 rounded-lg text-sm font-medium bg-secondary-terra text-white shadow-lg shadow-secondary-terra/25 ring-2 ring-secondary-terra/40"
-              >
-                <CreditCard className="w-4 h-4" /> Card / Apple Pay
-              </button>
-
-              {/* On-page card fields (Stripe Payment Element) */}
-              <div className="mt-4">
-                {showCardForm ? (
-                  <Elements
-                    stripe={stripePromise}
-                    options={{ clientSecret, appearance: STRIPE_APPEARANCE }}
+              <div className={`grid gap-2.5 ${paypalAvailable ? "grid-cols-2" : "grid-cols-1"}`}>
+                <button
+                  type="button"
+                  onClick={() => setPaymentMethod("card")}
+                  className={`flex items-center justify-center gap-2 py-3.5 rounded-lg text-sm font-medium transition-all ${
+                    paymentMethod === "card"
+                      ? "bg-secondary-terra text-white shadow-lg shadow-secondary-terra/25 ring-2 ring-secondary-terra/40"
+                      : "bg-white/[0.06] text-accent-cream/80 border border-white/10 hover:bg-white/10 hover:border-white/25"
+                  }`}
+                >
+                  <CreditCard className="w-4 h-4" /> Card / Apple Pay
+                </button>
+                {paypalAvailable && (
+                  <button
+                    type="button"
+                    onClick={() => setPaymentMethod("paypal")}
+                    className={`flex items-center justify-center gap-2 py-3.5 rounded-lg text-sm font-medium transition-all ${
+                      paymentMethod === "paypal"
+                        ? "bg-secondary-terra text-white shadow-lg shadow-secondary-terra/25 ring-2 ring-secondary-terra/40"
+                        : "bg-white/[0.06] text-accent-cream/80 border border-white/10 hover:bg-white/10 hover:border-white/25"
+                    }`}
                   >
-                    <CardPaymentForm
-                      amountLabel={amountLabel}
-                      isRecurring={isRecurring}
-                      freqLabel={freqLabel}
-                      onSuccess={() => navigate("/donate/success")}
-                      onEdit={() => setClientSecret("")}
-                    />
-                  </Elements>
-                ) : (
-                  <p className="text-xs text-accent-cream/45 leading-relaxed">
-                    Card details are entered securely on this page. Press
-                    “Continue to secure payment” to enter your card.
-                  </p>
+                    PayPal
+                  </button>
                 )}
               </div>
+
+              {/* On-page card fields (Stripe Payment Element) */}
+              {paymentMethod === "card" ? (
+                <div className="mt-4">
+                  {showCardForm ? (
+                    <Elements
+                      stripe={stripePromise}
+                      options={{ clientSecret, appearance: STRIPE_APPEARANCE }}
+                    >
+                      <CardPaymentForm
+                        amountLabel={amountLabel}
+                        isRecurring={isRecurring}
+                        freqLabel={freqLabel}
+                        onSuccess={() => navigate("/donate/success")}
+                        onEdit={() => setClientSecret("")}
+                      />
+                    </Elements>
+                  ) : (
+                    <p className="text-xs text-accent-cream/45 leading-relaxed">
+                      Card details are entered securely on this page. Press
+                      “Continue to secure payment” to enter your card.
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="mt-4 text-xs text-accent-cream/45 leading-relaxed">
+                  You'll be redirected to PayPal to complete your donation
+                  securely, then returned here.
+                </p>
+              )}
             </div>
           </motion.div>
 
@@ -650,8 +700,18 @@ export default function DonationCheckout() {
             )}
 
             {/* Primary action. For card, this reveals the on-page card form;
-                the final "Donate" button lives with the card fields. */}
-            {showCardForm ? (
+                the final "Donate" button lives with the card fields. For
+                PayPal, it redirects to PayPal's approval page. */}
+            {paymentMethod === "paypal" ? (
+              <button
+                type="button"
+                onClick={handlePaypal}
+                disabled={busy}
+                className="w-full py-4 bg-secondary-terra hover:bg-secondary-rust text-white text-sm font-semibold tracking-wide rounded-lg transition-colors disabled:opacity-50 flex items-center justify-center gap-2 shadow-lg shadow-secondary-terra/25"
+              >
+                {busy ? "Redirecting to PayPal…" : `Donate ${amountLabel} with PayPal`}
+              </button>
+            ) : showCardForm ? (
               <p className="text-center text-xs text-accent-cream/50">
                 Complete your card details to finish your donation →
               </p>
