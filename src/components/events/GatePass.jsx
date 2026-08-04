@@ -3,11 +3,15 @@ import QRCode from "qrcode"
 import { Check, Calendar, Clock, MapPin, Ticket, ScanLine } from "lucide-react"
 import miaaLogo from "../../assets/images/Homepage/smalllogo.png"
 
-// Each ticket type on its own line (falls back to a single line for free entry).
+// Each ticket type on its own line. Free entry collapses to one line, but the
+// head count still has to show — a group RSVP admits more than one person.
 function ticketLines(reg) {
-  if (!reg?.paymentRequired || !(reg.amount > 0)) return ["Free entry"]
+  const qty = reg?.quantity || 1
+  if (!reg?.paymentRequired || !(reg.amount > 0)) {
+    return [qty > 1 ? `Free entry · ${qty} people` : "Free entry"]
+  }
   const items = Array.isArray(reg.items) ? reg.items : []
-  if (!items.length) return [`${reg.quantity || 1} ticket(s)`]
+  if (!items.length) return [`${qty} ticket(s)`]
   return items.map((i) => `${i.ticketTypeName} × ${i.quantity}`)
 }
 

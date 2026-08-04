@@ -1,6 +1,14 @@
 import { useEffect, useRef, useState } from "react"
 import { Html5Qrcode } from "html5-qrcode"
-import { Camera, CameraOff, Check, AlertTriangle, Clock, UserCheck } from "lucide-react"
+import {
+  Camera,
+  CameraOff,
+  Check,
+  AlertTriangle,
+  Clock,
+  UserCheck,
+  Users,
+} from "lucide-react"
 import { adminApi } from "../auth"
 import PageHeader from "../components/PageHeader"
 import Button from "../components/Button"
@@ -241,6 +249,9 @@ function ResultCard({ result }) {
   const tickets = Array.isArray(reg.items)
     ? reg.items.map((i) => `${i.ticketTypeName} × ${i.quantity}`).join(", ")
     : ""
+  // One pass can admit a whole family — call the number out so whoever is on
+  // the door isn't counting heads off a small ticket line.
+  const partySize = reg.quantity || 1
 
   return (
     <div
@@ -275,6 +286,15 @@ function ResultCard({ result }) {
         <p className="text-sm text-primary/60 break-all">{reg.email}</p>
         {reg.event?.title && (
           <p className="text-sm text-primary/70 mt-1">{reg.event.title}</p>
+        )}
+        {partySize > 1 && (
+          <p
+            className={`inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-sm font-semibold ${
+              already ? "bg-amber-100 text-amber-900" : "bg-emerald-100 text-emerald-900"
+            }`}
+          >
+            <Users className="w-4 h-4" /> Admits {partySize} people
+          </p>
         )}
         {tickets && <p className="text-xs text-primary/55">{tickets}</p>}
         <p className="text-xs tracking-wide text-primary/45 mt-1">{reg.passCode}</p>

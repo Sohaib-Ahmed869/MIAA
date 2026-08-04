@@ -11,6 +11,7 @@ import {
   CalendarDays,
   MapPin,
   Link2Off,
+  Users,
 } from "lucide-react"
 import { api } from "../lib/api"
 import smallLogo from "../assets/images/Homepage/smalllogo.png"
@@ -466,6 +467,9 @@ function ResultCard({ result }) {
   const tickets = Array.isArray(reg.items)
     ? reg.items.map((i) => `${i.ticketTypeName} × ${i.quantity}`).join(", ")
     : ""
+  // One pass can admit a whole family — call the number out so the volunteer
+  // isn't counting heads off a small ticket line.
+  const partySize = reg.quantity || 1
 
   return (
     <div
@@ -498,6 +502,15 @@ function ResultCard({ result }) {
           {reg.name || "Guest"}
         </p>
         {reg.email && <p className="text-sm text-primary/60 break-all">{reg.email}</p>}
+        {partySize > 1 && (
+          <p
+            className={`inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-sm font-semibold ${
+              already ? "bg-amber-100 text-amber-900" : "bg-emerald-100 text-emerald-900"
+            }`}
+          >
+            <Users className="w-4 h-4" /> Admits {partySize} people
+          </p>
+        )}
         {tickets && <p className="text-xs text-primary/55">{tickets}</p>}
         <p className="text-xs tracking-wide text-primary/45 pt-1">{reg.passCode}</p>
       </div>

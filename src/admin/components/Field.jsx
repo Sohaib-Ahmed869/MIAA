@@ -1,3 +1,6 @@
+import { useState } from "react"
+import { toNumericText } from "./numeric"
+
 export function Field({ label, hint, children, className = "" }) {
   return (
     <label className={`block ${className}`}>
@@ -17,8 +20,69 @@ export function TextInput(props) {
   return <input className={baseInput} {...props} />
 }
 
-export function NumberInput(props) {
-  return <input type="number" className={baseInput} {...props} />
+// Typed numeric field. Every number in the admin is a price, count, capacity or
+// sort order, so a negative is never a valid value — the floor is 0 unless a
+// caller raises it with `min`. Deliberately not `type="number"`: its spinner
+// arrows made it far too easy to walk a capacity below zero by accident, and
+// these are values you type rather than nudge one at a time.
+//
+// While the field has focus it keeps exactly what you typed — including empty —
+// instead of snapping back to 0 on every keystroke, which made clearing a value
+// to type a new one almost impossible.
+export function NumberInput({
+  min = 0,
+  max,
+  value,
+  onChange,
+  onFocus,
+  onBlur,
+  className = "",
+  ...props
+}) {
+  const [draft, setDraft] = useState("")
+  const [editing, setEditing] = useState(false)
+
+  const asText = (v) => (v === undefined || v === null ? "" : String(v))
+
+  const clamp = (n) => {
+    let v = n
+    if (typeof min === "number" && v < min) v = min
+    if (typeof max === "number" && v > max) v = max
+    return v
+  }
+
+  const handleChange = (e) => {
+    const text = toNumericText(e.target.value, { min, max })
+    if (text === null) return
+    setDraft(text)
+    onChange?.({ target: { value: text } })
+  }
+
+  return (
+    <input
+      {...props}
+      type="text"
+      inputMode="decimal"
+      className={`${baseInput} ${className}`}
+      value={editing ? draft : asText(value)}
+      onChange={handleChange}
+      onFocus={(e) => {
+        setDraft(asText(value))
+        setEditing(true)
+        onFocus?.(e)
+      }}
+      onBlur={(e) => {
+        setEditing(false)
+        // Settle anything left below the floor — clearing a "max people" field
+        // and tabbing away would otherwise leave a 0 sitting where 1 is the
+        // smallest legal value.
+        const n = Number(value)
+        const settled = clamp(Number.isNaN(n) ? min : n)
+        if (settled !== n) onChange?.({ target: { value: String(settled) } })
+        onBlur?.(e)
+      }}
+    />
+  )
 }
 
 export function TextArea(props) {

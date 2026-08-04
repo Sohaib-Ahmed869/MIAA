@@ -238,6 +238,7 @@ export default function EventsAdmin() {
         ticketTypes: cleanTicketTypes,
         maxQuantity: Math.max(1, Math.round(Number(form.maxQuantity) || 1)),
         capacity: Math.max(0, Math.round(Number(form.capacity) || 0)),
+        order: Math.max(0, Math.round(Number(form.order) || 0)),
         customQuestions: cleanQuestions,
       }
       // raisedAmount / donationCount / registeredCount are computed by the
@@ -796,6 +797,44 @@ export default function EventsAdmin() {
                     {form.pricingMode === "quantity" && (
                       <Field label="Max tickets per registration">
                         <NumberInput
+                          min={1}
+                          value={form.maxQuantity}
+                          onChange={(e) =>
+                            setForm({ ...form, maxQuantity: Number(e.target.value) })
+                          }
+                          placeholder="10"
+                        />
+                      </Field>
+                    )}
+                  </>
+                )}
+
+                {/* Free events have no pricing to configure, but families still
+                    need to book several places on one RSVP. */}
+                {!form.paymentRequired && (
+                  <>
+                    <div>
+                      <Checkbox
+                        label="Let people register more than one person"
+                        checked={form.pricingMode !== "fixed"}
+                        onChange={(v) =>
+                          setForm({ ...form, pricingMode: v ? "quantity" : "fixed" })
+                        }
+                      />
+                      <p className="text-[0.6875rem] text-primary/50 mt-1.5">
+                        Adds a “how many are coming” counter to the registration
+                        form, so a parent can book their children in one go. Every
+                        place counts towards capacity and the door head count.
+                      </p>
+                    </div>
+
+                    {form.pricingMode !== "fixed" && (
+                      <Field
+                        label="Max people per registration"
+                        hint="Including the person registering."
+                      >
+                        <NumberInput
+                          min={1}
                           value={form.maxQuantity}
                           onChange={(e) =>
                             setForm({ ...form, maxQuantity: Number(e.target.value) })

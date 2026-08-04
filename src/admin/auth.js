@@ -80,6 +80,8 @@ export const adminApi = {
   getEventRegistration: (id) => request(`/api/event-registrations/${id}`),
   updateEventRegistration: (id, payload) =>
     request(`/api/event-registrations/${id}`, { method: "PATCH", body: payload }),
+  deleteEventRegistration: (id) =>
+    request(`/api/event-registrations/${id}`, { method: "DELETE" }),
   eventAnalytics: (id) => request(`/api/event-registrations/analytics/${id}`),
   checkinRegistration: (passCode) =>
     request(`/api/event-registrations/checkin`, {

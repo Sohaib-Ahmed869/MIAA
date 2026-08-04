@@ -240,14 +240,24 @@ export default function EventRegister() {
   const mode = event?.pricingMode || "fixed"
   const types = useMemo(() => event?.ticketTypes || [], [event])
 
+  // Whether the registrant chooses how many people they're bringing. This is
+  // independent of payment — a free RSVP still needs a head count when families
+  // come together, otherwise capacity and the door list only ever see one seat.
+  const groupBooking = mode === "quantity" || mode === "tiers"
+
   // Build the order for display; the server re-computes authoritatively.
+  // Ticket prices only apply when the event actually charges — an event switched
+  // to free keeps its old prices on the record, so we zero them here exactly as
+  // computeOrder() does server-side.
   const order = useMemo(() => {
     if (!event) return { items: [], quantity: 0, amount: 0 }
-    if (paid && mode === "tiers") {
+    const priceOf = (t) => (paid ? t?.price || 0 : 0)
+
+    if (mode === "tiers") {
       const items = types
         .map((t) => ({
           ticketTypeName: t.name,
-          unitPrice: t.price,
+          unitPrice: priceOf(t),
           quantity: Math.max(0, Number(tierQ[t.name] || 0)),
         }))
         .filter((i) => i.quantity > 0)
@@ -258,11 +268,11 @@ export default function EventRegister() {
       }
     }
     const t = types[0] || { name: "General Admission", price: 0 }
-    const qty = paid && mode === "quantity" ? Math.max(1, Number(quantity) || 1) : 1
+    const qty = mode === "quantity" ? Math.max(1, Number(quantity) || 1) : 1
     return {
-      items: [{ ticketTypeName: t.name, unitPrice: t.price, quantity: qty }],
+      items: [{ ticketTypeName: t.name, unitPrice: priceOf(t), quantity: qty }],
       quantity: qty,
-      amount: (paid ? t.price : 0) * qty,
+      amount: priceOf(t) * qty,
     }
   }, [event, paid, mode, types, tierQ, quantity])
 
@@ -301,7 +311,10 @@ export default function EventRegister() {
   const validateDetails = () => {
     if (!name.trim()) return "Please enter your name"
     if (!email.trim()) return "Please enter your email"
-    if (paid && order.quantity < 1) return "Please select at least one ticket"
+    if (order.quantity < 1)
+      return paid
+        ? "Please select at least one ticket"
+        : "Please add at least one person"
     for (const q of event.customQuestions || []) {
       if (!q.required) continue
       const v = answers[q.id]
@@ -585,10 +598,10 @@ export default function EventRegister() {
                 </div>
               </div>
 
-              {/* Tickets — paid events only */}
-              {paid && (
+              {/* Tickets / head count — whenever there's something to choose */}
+              {(paid || groupBooking) && (
                 <div>
-                  <SectionHead>Tickets</SectionHead>
+                  <SectionHead>{paid ? "Tickets" : "Who's Coming"}</SectionHead>
                   {mode === "tiers" ? (
                     <div className="space-y-3">
                       {types.map((t) => (
@@ -601,7 +614,7 @@ export default function EventRegister() {
                               {t.name}
                             </p>
                             <p className="text-xs text-accent-cream/55">
-                              {money(t.price)}
+                              {paid ? money(t.price) : "Free"}
                               {t.description ? ` · ${t.description}` : ""}
                             </p>
                           </div>
@@ -621,7 +634,9 @@ export default function EventRegister() {
                           {types[0]?.name || "General Admission"}
                         </p>
                         <p className="text-xs text-accent-cream/55">
-                          {money(types[0]?.price || 0)} each
+                          {paid
+                            ? `${money(types[0]?.price || 0)} each`
+                            : "Include yourself and everyone you're bringing"}
                         </p>
                       </div>
                       <Stepper
@@ -737,14 +752,14 @@ export default function EventRegister() {
                       <dd className="text-accent-cream font-medium">{phone}</dd>
                     </div>
                   )}
-                  {paid &&
+                  {(paid || groupBooking) &&
                     order.items.map((i) => (
                       <div key={i.ticketTypeName} className="flex justify-between">
                         <dt className="text-accent-cream/55">
                           {i.ticketTypeName} × {i.quantity}
                         </dt>
                         <dd className="text-accent-cream font-medium">
-                          {money(i.unitPrice * i.quantity)}
+                          {paid ? money(i.unitPrice * i.quantity) : "Free"}
                         </dd>
                       </div>
                     ))}
@@ -828,9 +843,11 @@ export default function EventRegister() {
                 {event.title}
               </dd>
             </div>
-            {paid && (
+            {(paid || groupBooking) && (
               <div className="flex justify-between">
-                <dt className="text-accent-cream/55">Tickets</dt>
+                <dt className="text-accent-cream/55">
+                  {paid ? "Tickets" : "Attending"}
+                </dt>
                 <dd className="text-accent-cream font-medium">{order.quantity}</dd>
               </div>
             )}

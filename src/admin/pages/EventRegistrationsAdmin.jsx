@@ -133,6 +133,38 @@ export default function EventRegistrationsAdmin() {
     }
   }
 
+  // Deleting returns the seats to the event, so spell out how many are coming
+  // back — on a group booking that's more than the one row being removed.
+  const deleteRegistration = async (reg) => {
+    const counted = ["free", "succeeded", "refunded"].includes(reg.paymentStatus)
+    const seats = counted ? reg.quantity || 1 : 0
+    if (
+      !(await confirm({
+        title: "Delete this registration?",
+        message: `${reg.name || "This attendee"} will be removed permanently and this can't be undone.${
+          seats > 0
+            ? ` ${seats} place${seats === 1 ? "" : "s"} will be returned to the event.`
+            : ""
+        }${
+          reg.paymentStatus === "succeeded"
+            ? " This does not refund the payment — issue that in Stripe."
+            : ""
+        }`,
+        confirmLabel: "Delete",
+        danger: true,
+      }))
+    )
+      return
+    try {
+      await adminApi.deleteEventRegistration(reg._id)
+      notify("Registration deleted")
+      setViewing(null)
+      load()
+    } catch (err) {
+      notify(err.message, "error")
+    }
+  }
+
   const statCards = [
     { label: "Registrations", value: stats.registrations, icon: Users },
     { label: "Seats", value: stats.seats, icon: Ticket },
@@ -357,10 +389,17 @@ export default function EventRegistrationsAdmin() {
         title="Registration Detail"
         subtitle={viewing?.registrationNumber || ""}
         footer={
-          viewing?.paymentStatus === "succeeded" ? (
-            <Button variant="ghost" onClick={() => markRefunded(viewing)}>
-              Mark refunded
-            </Button>
+          viewing ? (
+            <div className="flex items-center gap-2">
+              {viewing.paymentStatus === "succeeded" && (
+                <Button variant="ghost" onClick={() => markRefunded(viewing)}>
+                  Mark refunded
+                </Button>
+              )}
+              <Button variant="danger" onClick={() => deleteRegistration(viewing)}>
+                Delete
+              </Button>
+            </div>
           ) : null
         }
       >
