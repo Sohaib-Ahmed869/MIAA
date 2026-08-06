@@ -7,13 +7,13 @@ import Button from "../components/Button"
 import Drawer from "../components/Drawer"
 import EmptyState from "../components/EmptyState"
 import ImageUpload from "../components/ImageUpload"
-import { Field, TextInput, NumberInput, Select, Checkbox } from "../components/Field"
+import { Field, TextInput, NumberInput, TextArea, Select, Checkbox } from "../components/Field"
 import { useToast } from "../components/Toast"
 import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonList } from "../components/Skeleton"
 import FilterTabs from "../components/FilterTabs"
 
-const EMPTY = { title: "", subtitle: "", imageKey: "", date: "", surface: "homepage", order: 0, published: true }
+const EMPTY = { title: "", subtitle: "", slug: "", description: "", imageKey: "", date: "", surface: "homepage", order: 0, published: true }
 
 const SURFACE_OPTIONS = [
   { value: "all", label: "All" },
@@ -286,7 +286,7 @@ export default function PreviousEventsAdmin() {
                 <option value="offsite">Offsite Events page</option>
               </Select>
             </Field>
-            <Field label="Order">
+            <Field label="Order" hint="Lower numbers appear first (e.g. 1 = most recent)">
               <NumberInput
                 value={form.order}
                 onChange={(e) => setForm({ ...form, order: Number(e.target.value) })}
@@ -297,6 +297,27 @@ export default function PreviousEventsAdmin() {
             <TextInput
               value={form.date}
               onChange={(e) => setForm({ ...form, date: e.target.value })}
+            />
+          </Field>
+          <Field
+            label="URL Slug"
+            hint="Auto-generated from the title if left blank. Used in the detail page link."
+          >
+            <TextInput
+              value={form.slug}
+              onChange={(e) => setForm({ ...form, slug: e.target.value })}
+              placeholder="auto from title"
+            />
+          </Field>
+          <Field
+            label="Description"
+            hint="Shown on the event's detail page. Leave a blank line between paragraphs."
+          >
+            <TextArea
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              rows={6}
+              placeholder="Write up what happened at this event…"
             />
           </Field>
           <ImageUpload

@@ -83,7 +83,10 @@ export default function Login() {
     try {
       const { token, admin } = await adminApi.login(email, password)
       setSession(token, admin)
-      navigate(from, { replace: true })
+      // Volunteers can only use the door check-in screen — send them there
+      // regardless of where they were headed.
+      const dest = admin?.role === "volunteer" ? "/admin/event-checkin" : from
+      navigate(dest, { replace: true })
     } catch (err) {
       setError(err.message || "Login failed")
     } finally {

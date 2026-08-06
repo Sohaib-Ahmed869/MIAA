@@ -58,10 +58,14 @@ export const api = {
     const qs = new URLSearchParams(params).toString()
     return request(`/api/previous-events${qs ? `?${qs}` : ""}`)
   },
+  previousEvent: (idOrSlug) =>
+    request(`/api/previous-events/${encodeURIComponent(idOrSlug)}`),
   team: () => request(`/api/team`),
 
   // public writes
   submitContact: (payload) => request(`/api/contact`, { method: "POST", body: payload }),
+  submitVolunteerApplication: (payload) =>
+    request(`/api/volunteer-applications`, { method: "POST", body: payload }),
   subscribeNewsletter: (email, source = "footer") =>
     request(`/api/newsletter`, { method: "POST", body: { email, source } }),
 

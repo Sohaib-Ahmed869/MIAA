@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { ACKNOWLEDGMENT_TEXT } from "../../lib/constants"
 import { api } from "../../lib/api"
 import { fadeInUp } from "../../lib/motion"
+import SignupConfirmationModal from "../ui/SignupConfirmationModal"
 import footerLogo from "../../assets/images/Homepage/Footer Logo.png"
 import footerPattern from "../../assets/images/Homepage/Footer Pattern.png"
 
@@ -74,6 +75,7 @@ function NewsletterForm() {
   const [email, setEmail] = useState("")
   const [status, setStatus] = useState("idle") // idle | submitting | success | error
   const [message, setMessage] = useState("")
+  const [modalOpen, setModalOpen] = useState(false)
 
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -84,6 +86,7 @@ function NewsletterForm() {
       await api.subscribeNewsletter(email, "footer")
       setStatus("success")
       setMessage("Thanks — you're on the list.")
+      setModalOpen(true)
       setEmail("")
     } catch (err) {
       setStatus("error")
@@ -93,6 +96,16 @@ function NewsletterForm() {
 
   return (
     <div className="flex flex-col gap-2">
+      {/* No confirmation email is sent for newsletter sign-ups, so that line is
+          omitted here. */}
+      <SignupConfirmationModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title="Thank you for subscribing!"
+        lines={[
+          "As part of signing up, we’ve added you to our contact list, you can unsubscribe anytime.",
+        ]}
+      />
       <form onSubmit={onSubmit} className="flex gap-0">
         <input
           type="email"

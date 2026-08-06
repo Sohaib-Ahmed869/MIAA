@@ -6,7 +6,7 @@ import ornament from "../../../assets/images/Homepage/Ornament_1.png"
 
 const REASSURANCES = [
   { icon: ShieldCheck, label: "Secure payments", sub: "Stripe" },
-  { icon: ReceiptText, label: "Tax-deductible", sub: "Instant receipts" },
+  { icon: ReceiptText, label: "Instant receipts", sub: "Emailed to you" },
   { icon: HeartHandshake, label: "Direct impact", sub: "Funds our programs" },
 ]
 

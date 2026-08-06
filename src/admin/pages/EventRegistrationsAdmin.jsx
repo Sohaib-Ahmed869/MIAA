@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react"
 import { motion } from "framer-motion"
-import { Users, Ticket, DollarSign, CheckCircle2 } from "lucide-react"
+import { Users, Ticket, DollarSign, CheckCircle2, Download } from "lucide-react"
 import { adminApi } from "../auth"
 import PageHeader from "../components/PageHeader"
 import Button from "../components/Button"
@@ -56,15 +56,44 @@ export default function EventRegistrationsAdmin() {
   const [checkin, setCheckin] = useState("all")
   const [viewing, setViewing] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [exporting, setExporting] = useState(false)
   const [error, setError] = useState("")
   const { notify } = useToast()
   const confirm = useConfirm()
 
-  const load = () => {
+  // Build the query params from the active filters — shared by the list fetch
+  // and the CSV export so the download always matches what's on screen.
+  const filterParams = () => {
     const params = {}
     if (status !== "all") params.status = status
     if (eventId) params.event = eventId
     if (checkin !== "all") params.checkedIn = checkin === "in" ? "true" : "false"
+    return params
+  }
+
+  const exportCsv = async () => {
+    if (exporting) return
+    setExporting(true)
+    try {
+      const { blob, filename } = await adminApi.exportEventRegistrations(filterParams())
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement("a")
+      a.href = url
+      a.download = filename
+      document.body.appendChild(a)
+      a.click()
+      a.remove()
+      URL.revokeObjectURL(url)
+      notify("Registrations exported")
+    } catch (err) {
+      notify(err.message || "Export failed", "error")
+    } finally {
+      setExporting(false)
+    }
+  }
+
+  const load = () => {
+    const params = filterParams()
     return adminApi
       .listEventRegistrations(params)
       .then((data) => {
@@ -177,6 +206,16 @@ export default function EventRegistrationsAdmin() {
         label="Registrations"
         title="Event Registrations"
         subtitle="Attendees who registered for events — free RSVPs and paid tickets."
+        actions={
+          <Button
+            onClick={exportCsv}
+            variant="dark"
+            disabled={exporting || rows.length === 0}
+          >
+            <Download className="w-3.5 h-3.5 mr-1.5" strokeWidth={2} />
+            {exporting ? "Exporting…" : "Export CSV"}
+          </Button>
+        }
       />
 
       {/* Stats — full-width rows on phones, 3-up tiles on larger screens */}

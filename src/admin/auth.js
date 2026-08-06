@@ -78,6 +78,21 @@ export const adminApi = {
     return request(`/api/event-registrations${qs ? `?${qs}` : ""}`)
   },
   getEventRegistration: (id) => request(`/api/event-registrations/${id}`),
+  // CSV export — mirrors the current list filters. Streams a file, so it can't
+  // go through `request` (which parses JSON); download the blob directly.
+  exportEventRegistrations: async (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    const res = await fetch(
+      `${BASE}/api/event-registrations/export.csv${qs ? `?${qs}` : ""}`,
+      { headers: { ...(getToken() ? { Authorization: `Bearer ${getToken()}` } : {}) } }
+    )
+    if (res.status === 401) clearSession()
+    if (!res.ok) throw new Error(`Export failed (${res.status})`)
+    const blob = await res.blob()
+    const disposition = res.headers.get("Content-Disposition") || ""
+    const match = disposition.match(/filename="?([^"]+)"?/)
+    return { blob, filename: match?.[1] || "event-registrations.csv" }
+  },
   updateEventRegistration: (id, payload) =>
     request(`/api/event-registrations/${id}`, { method: "PATCH", body: payload }),
   deleteEventRegistration: (id) =>
@@ -129,6 +144,16 @@ export const adminApi = {
   updateContact: (id, payload) =>
     request(`/api/contact/${id}`, { method: "PATCH", body: payload }),
   deleteContact: (id) => request(`/api/contact/${id}`, { method: "DELETE" }),
+
+  // volunteer applications
+  listVolunteerApplications: (params = {}) => {
+    const qs = new URLSearchParams(params).toString()
+    return request(`/api/volunteer-applications${qs ? `?${qs}` : ""}`)
+  },
+  updateVolunteerApplication: (id, payload) =>
+    request(`/api/volunteer-applications/${id}`, { method: "PATCH", body: payload }),
+  deleteVolunteerApplication: (id) =>
+    request(`/api/volunteer-applications/${id}`, { method: "DELETE" }),
 
   // newsletter
   listNewsletter: () => request("/api/newsletter"),
@@ -227,6 +252,12 @@ export const adminApi = {
   // tax statements
   generateTaxStatement: (donorId, year) =>
     request(`/api/tax-statements/generate/${donorId}?year=${year}`),
+
+  // staff accounts (admins + check-in volunteers)
+  listStaff: () => request("/api/staff"),
+  createStaff: (payload) => request("/api/staff", { method: "POST", body: payload }),
+  updateStaff: (id, payload) => request(`/api/staff/${id}`, { method: "PATCH", body: payload }),
+  deleteStaff: (id) => request(`/api/staff/${id}`, { method: "DELETE" }),
 
   // site settings
   getSiteSettings: () => request("/api/settings"),

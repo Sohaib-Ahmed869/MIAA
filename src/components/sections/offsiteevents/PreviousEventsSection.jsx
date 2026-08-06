@@ -1,6 +1,7 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import CTAButton from "../../ui/Button"
+import { ArrowUpRight } from "lucide-react"
 import { fadeInUp } from "../../../lib/motion"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
@@ -37,52 +38,78 @@ export default function PreviousEventsSection() {
             {/* Right — list with hover image inline */}
             <div>
               <div className="flex flex-col divide-y divide-primary/15 border-y border-primary/15">
-                {previousEvents.map((event, i) => (
-                  <div
-                    key={event._id || i}
-                    onMouseEnter={() => setHoveredPrev(i)}
-                    onMouseLeave={() => setHoveredPrev(null)}
-                    className="cursor-pointer py-4 3xl:py-5 relative"
-                  >
-                    <p
-                      className={`text-[0.9375rem] md:text-lg 3xl:text-xl font-medium transition-colors duration-200 ${
-                        hoveredPrev === i
-                          ? "text-secondary-terra"
-                          : "text-primary"
-                      }`}
-                    >
-                      {event.title}
-                    </p>
-                    {event.subtitle && (
-                      <p className="text-sm 3xl:text-base text-primary mt-0.5">
-                        {event.subtitle}
-                      </p>
-                    )}
+                {previousEvents.map((event, i) => {
+                  // Real CMS entries link to their own detail page; the seeded
+                  // fallback placeholders (no _id) stay non-clickable.
+                  const to = event._id
+                    ? `/previous-events/${event.slug || event._id}`
+                    : null
 
-                    {/* Hover image */}
-                    <AnimatePresence>
-                      {hoveredPrev === i && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.9, rotate: 0 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 3 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          transition={{ duration: 0.25 }}
-                          className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none shadow-lg"
+                  const inner = (
+                    <>
+                      <div className="flex items-center justify-between gap-3">
+                        <p
+                          className={`text-[0.9375rem] md:text-lg 3xl:text-xl font-medium transition-colors duration-200 ${
+                            hoveredPrev === i ? "text-secondary-terra" : "text-primary"
+                          }`}
                         >
-                          <img
-                            src={event.imageUrl || event.image}
-                            alt=""
-                            className="w-full h-full object-cover"
+                          {event.title}
+                        </p>
+                        {to && (
+                          <ArrowUpRight
+                            className={`w-4 h-4 3xl:w-5 3xl:h-5 flex-shrink-0 transition-all duration-200 ${
+                              hoveredPrev === i
+                                ? "text-secondary-terra opacity-100 translate-x-0"
+                                : "text-primary/40 opacity-0 -translate-x-1"
+                            }`}
                           />
-                        </motion.div>
+                        )}
+                      </div>
+                      {event.subtitle && (
+                        <p className="text-sm 3xl:text-base text-primary mt-0.5">
+                          {event.subtitle}
+                        </p>
                       )}
-                    </AnimatePresence>
-                  </div>
-                ))}
-              </div>
 
-              <div className="mt-6">
-                <CTAButton to="/offsite-events">View Now</CTAButton>
+                      {/* Hover image */}
+                      <AnimatePresence>
+                        {hoveredPrev === i && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.9, rotate: 0 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 3 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.25 }}
+                            className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none shadow-lg"
+                          >
+                            <img
+                              src={event.imageUrl || event.image}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  )
+
+                  const commonProps = {
+                    onMouseEnter: () => setHoveredPrev(i),
+                    onMouseLeave: () => setHoveredPrev(null),
+                    className: `block py-4 3xl:py-5 relative ${
+                      to ? "cursor-pointer" : ""
+                    }`,
+                  }
+
+                  return to ? (
+                    <Link key={event._id || i} to={to} {...commonProps}>
+                      {inner}
+                    </Link>
+                  ) : (
+                    <div key={event._id || i} {...commonProps}>
+                      {inner}
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </div>

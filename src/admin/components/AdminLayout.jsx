@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { NavLink, Outlet, useNavigate, Link, useLocation } from "react-router-dom"
+import { NavLink, Outlet, useNavigate, Link, useLocation, Navigate } from "react-router-dom"
 import { AnimatePresence, motion } from "framer-motion"
 import {
   LogOut,
@@ -17,6 +17,8 @@ import {
   Target,
   RefreshCw,
   UserCheck,
+  UserCog,
+  HeartHandshake,
   ScrollText,
   Settings,
   BarChart3,
@@ -42,6 +44,7 @@ const NAV = [
   { to: "/admin/blog", label: "Blog Posts", icon: FileText },
   { to: "/admin/sponsors", label: "Sponsors", icon: Award },
   { to: "/admin/contact", label: "Contact Submissions", icon: Inbox },
+  { to: "/admin/volunteer-applications", label: "Volunteer Applications", icon: HeartHandshake },
   { to: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { to: "/admin/event-lists", label: "Event Lists", icon: Ticket },
   { separator: true, label: "Donations" },
@@ -55,6 +58,7 @@ const NAV = [
   { to: "/admin/audit-log", label: "Audit Log", icon: ScrollText },
   { separator: true, label: "Settings" },
   { to: "/admin/settings", label: "Site Settings", icon: Settings },
+  { to: "/admin/staff", label: "Staff & Volunteers", icon: UserCog },
 ]
 
 function NavItem({ item, badge = 0, onNavigate }) {
@@ -106,6 +110,11 @@ export default function AdminLayout() {
   const navigate = useNavigate()
   const location = useLocation()
   const admin = getAdminUser()
+  // Volunteers get a stripped-down CMS: only the Door Check-in screen, nothing
+  // else in the nav, and any other admin URL bounces them back to check-in.
+  const isVolunteer = admin?.role === "volunteer"
+  const CHECKIN_PATH = "/admin/event-checkin"
+  const navItems = isVolunteer ? NAV.filter((i) => i.to === CHECKIN_PATH) : NAV
   const [pendingRequests, setPendingRequests] = useState(0)
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -132,6 +141,7 @@ export default function AdminLayout() {
   // Live count of pending campaign requests for the nav badge. Refetches on
   // navigation and when the requests page signals a change.
   useEffect(() => {
+    if (isVolunteer) return // volunteers can't read campaign requests
     let alive = true
     const fetchCount = () => {
       adminApi
@@ -147,7 +157,7 @@ export default function AdminLayout() {
       alive = false
       window.removeEventListener("miaa:campaign-requests-changed", fetchCount)
     }
-  }, [location.pathname])
+  }, [location.pathname, isVolunteer])
 
   const badgeFor = (item) =>
     item.badgeKey === "campaignRequests" ? pendingRequests : 0
@@ -155,6 +165,11 @@ export default function AdminLayout() {
   const onLogout = () => {
     clearSession()
     navigate("/admin/login", { replace: true })
+  }
+
+  // Keep volunteers on the check-in screen — they may not view any other page.
+  if (isVolunteer && location.pathname !== CHECKIN_PATH) {
+    return <Navigate to={CHECKIN_PATH} replace />
   }
 
   return (
@@ -224,7 +239,7 @@ export default function AdminLayout() {
             </div>
 
             <nav className="flex-1 py-5 px-3 flex flex-col gap-0.5 overflow-y-auto">
-              {NAV.map((item) =>
+              {navItems.map((item) =>
                 item.separator ? (
                   <div key={item.label} className="pt-4 pb-1.5 px-4">
                     <p className="text-[0.5625rem] tracking-[0.25em] uppercase text-accent-wheat/50">

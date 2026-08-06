@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import About from "./pages/About"
 import IslamicArt from "./pages/IslamicArt"
 import OffsiteEvents from "./pages/OffsiteEvents"
+import PreviousEventDetail from "./pages/PreviousEventDetail"
 import Events from "./pages/Events"
 import EventDetail from "./pages/EventDetail"
 import EventRegister from "./pages/EventRegister"
@@ -33,6 +34,7 @@ import EventCheckInAdmin from "./admin/pages/EventCheckInAdmin"
 import PreviousEventsAdmin from "./admin/pages/PreviousEventsAdmin"
 import TeamAdmin from "./admin/pages/TeamAdmin"
 import ContactAdmin from "./admin/pages/ContactAdmin"
+import VolunteerApplicationsAdmin from "./admin/pages/VolunteerApplicationsAdmin"
 import NewsletterAdmin from "./admin/pages/NewsletterAdmin"
 import BlogAdmin from "./admin/pages/BlogAdmin"
 import SponsorsAdmin from "./admin/pages/SponsorsAdmin"
@@ -45,6 +47,7 @@ import DonorsAdmin from "./admin/pages/DonorsAdmin"
 import SubscriptionsAdmin from "./admin/pages/SubscriptionsAdmin"
 import AuditLogAdmin from "./admin/pages/AuditLogAdmin"
 import SettingsAdmin from "./admin/pages/SettingsAdmin"
+import StaffAdmin from "./admin/pages/StaffAdmin"
 import DonationsDashboard from "./admin/pages/DonationsDashboard"
 
 import DonorProtectedRoute from "./components/donor/DonorProtectedRoute"
@@ -83,6 +86,7 @@ export default function App() {
           <Route path="blog" element={<BlogAdmin />} />
           <Route path="sponsors" element={<SponsorsAdmin />} />
           <Route path="contact" element={<ContactAdmin />} />
+          <Route path="volunteer-applications" element={<VolunteerApplicationsAdmin />} />
           <Route path="newsletter" element={<NewsletterAdmin />} />
           <Route path="event-lists" element={<EventListsAdmin />} />
           <Route path="donations-dashboard" element={<DonationsDashboard />} />
@@ -94,6 +98,7 @@ export default function App() {
           <Route path="subscriptions" element={<SubscriptionsAdmin />} />
           <Route path="audit-log" element={<AuditLogAdmin />} />
           <Route path="settings" element={<SettingsAdmin />} />
+          <Route path="staff" element={<StaffAdmin />} />
         </Route>
 
         {/* Volunteer door check-in (public link, no site chrome) */}
@@ -126,6 +131,7 @@ export default function App() {
           <Route path="about" element={<About />} />
           <Route path="islamic-art" element={<IslamicArt />} />
           <Route path="offsite-events" element={<OffsiteEvents />} />
+          <Route path="previous-events/:slug" element={<PreviousEventDetail />} />
           <Route path="events" element={<Events />} />
           <Route path="event/:id" element={<EventDetail />} />
           <Route path="event/:id/register" element={<EventRegister />} />

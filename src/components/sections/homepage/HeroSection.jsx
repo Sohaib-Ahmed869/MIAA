@@ -4,7 +4,6 @@ import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import heroVideo from "../../../assets/videos/homeVideo.mp4"
-import GalaBanner from "./GalaBanner"
 import HeroDonationWidget from "./HeroDonationWidget"
 
 gsap.registerPlugin(ScrollTrigger)
@@ -83,8 +82,9 @@ export default function HeroSection() {
         </div>
       </div>
 
-      {/* Scrolling Gala Dinner banner — bottom of hero */}
-      <GalaBanner />
+      {/* Scrolling Gala Dinner banner removed at client request (Aug 2026).
+          The <GalaBanner /> component is kept in this folder so it can be
+          re-added here for the next Gala. */}
     </section>
   )
 }

@@ -9,6 +9,7 @@ export const NAV_LINKS = [
   { label: "Timeline & Construction", path: "/timeline" },
   // { label: "Updates & Blogs", path: "/blog" },
   { label: "Donate", path: "/donate" },
+  { label: "Volunteer", path: "/volunteer" },
   { label: "Contact Us", path: "/contact" },
 ]
 
@@ -18,6 +19,7 @@ export const FOOTER_LINKS = [
   { label: "Sydney Muslim Writers Festival", path: "/smwf" },
   { label: "Community Engagement & Education", path: "/community-engagement" },
   { label: "MIAA Timeline & Construction", path: "/timeline" },
+  { label: "Volunteer", path: "/volunteer" },
   { label: "Contact Us", path: "/contact" },
 ]
 

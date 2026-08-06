@@ -13,12 +13,14 @@ import {
   Phone,
   MapPin,
   CalendarOff,
+  UserCheck,
 } from "lucide-react"
 import { adminApi } from "../auth"
 import Drawer from "../components/Drawer"
 import Button from "../components/Button"
 import EmptyState from "../components/EmptyState"
 import { Field, TextInput, TextArea, Checkbox } from "../components/Field"
+import Dropdown from "../../components/ui/Dropdown"
 import { useToast } from "../components/Toast"
 import { useConfirm } from "../../components/ui/ConfirmDialog"
 
@@ -45,6 +47,10 @@ export default function EventVolunteersDrawer({ event, open, onClose }) {
   const [editingId, setEditingId] = useState(null)
   const [busy, setBusy] = useState(false)
   const [copiedId, setCopiedId] = useState("")
+  // Approved volunteer applicants, offered as a pick-list when adding so admins
+  // don't have to re-type someone who already applied.
+  const [applicants, setApplicants] = useState([])
+  const [pickedApplicantId, setPickedApplicantId] = useState("")
   const { notify } = useToast()
   const confirm = useConfirm()
 
@@ -73,6 +79,7 @@ export default function EventVolunteersDrawer({ event, open, onClose }) {
       setEditingId(null)
       setRows([])
       setError("")
+      setPickedApplicantId("")
       setLoading(true)
       try {
         const data = await adminApi.listEventVolunteers({ event: event._id })
@@ -82,6 +89,13 @@ export default function EventVolunteersDrawer({ event, open, onClose }) {
       } finally {
         if (active) setLoading(false)
       }
+      // Approved applicants for the pick-list — best-effort, never blocks the list.
+      adminApi
+        .listVolunteerApplications({ status: "approved" })
+        .then((a) => {
+          if (active) setApplicants(Array.isArray(a) ? a : [])
+        })
+        .catch(() => {})
     }
     init()
     return () => {
@@ -92,11 +106,32 @@ export default function EventVolunteersDrawer({ event, open, onClose }) {
   const startAdd = () => {
     setEditingId(null)
     setForm({ ...EMPTY })
+    setPickedApplicantId("")
     setError("")
+  }
+
+  // Prefill the add form from an approved applicant. Their name/email/phone come
+  // across; their interests + availability seed the notes as helpful context.
+  // Everything stays editable so the admin can add more before saving.
+  const pickApplicant = (id) => {
+    setPickedApplicantId(id)
+    const a = applicants.find((x) => x._id === id)
+    if (!a) return
+    const context = []
+    if (a.areasOfInterest?.length) context.push(`Interests: ${a.areasOfInterest.join(", ")}`)
+    if (a.availability) context.push(`Availability: ${a.availability}`)
+    setForm((f) => ({
+      ...(f || EMPTY),
+      name: a.fullName || "",
+      email: a.email || "",
+      phone: a.phone || "",
+      notes: context.join(" · "),
+    }))
   }
 
   const startEdit = (v) => {
     setEditingId(v._id)
+    setPickedApplicantId("")
     setForm({
       name: v.name || "",
       email: v.email || "",
@@ -230,6 +265,31 @@ export default function EventVolunteersDrawer({ event, open, onClose }) {
 
       {form ? (
         <div className="flex flex-col gap-4">
+          {/* Pick an already-approved applicant to prefill the form. Only shown
+              when adding (not editing) and when approved applicants exist. */}
+          {!editingId && applicants.length > 0 && (
+            <div className="rounded-sm border border-primary/10 bg-accent-cream/40 p-3">
+              <div className="flex items-center gap-1.5 mb-2">
+                <UserCheck className="w-3.5 h-3.5 text-secondary-terra" />
+                <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/60">
+                  Prefill from an approved applicant
+                </p>
+              </div>
+              <Dropdown
+                value={pickedApplicantId}
+                onChange={pickApplicant}
+                fullWidth
+                placeholder="Select an approved applicant…"
+                options={applicants.map((a) => ({
+                  value: a._id,
+                  label: `${a.fullName}${a.email ? ` — ${a.email}` : ""}`,
+                }))}
+              />
+              <p className="text-[0.625rem] text-primary/45 mt-2">
+                Fills in their details below — you can edit or add more before saving.
+              </p>
+            </div>
+          )}
           <Field label="Name">
             <TextInput
               value={form.name}

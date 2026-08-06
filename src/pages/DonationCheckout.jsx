@@ -740,7 +740,7 @@ export default function DonationCheckout() {
               </p>
               <p className="flex items-center gap-2 text-xs text-accent-cream/50">
                 <Heart className="w-3.5 h-3.5 text-accent-wheat/70 flex-shrink-0" />
-                Tax-deductible — a receipt is emailed instantly
+                A receipt is emailed to you instantly
               </p>
             </div>
 

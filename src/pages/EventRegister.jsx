@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react"
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { useParams, useNavigate, useSearchParams } from "react-router-dom"
 import { motion } from "framer-motion"
 import { loadStripe } from "@stripe/stripe-js"
@@ -26,6 +26,7 @@ import { getDonorUser } from "../lib/donorAuth"
 import { fadeInUp } from "../lib/motion"
 import Dropdown from "../components/ui/Dropdown"
 import GatePass from "../components/events/GatePass"
+import SignupConfirmationModal from "../components/ui/SignupConfirmationModal"
 
 const money = (cents) => `$${((cents || 0) / 100).toFixed(2)}`
 
@@ -198,9 +199,18 @@ export default function EventRegister() {
   const [error, setError] = useState("")
   const [clientSecret, setClientSecret] = useState("")
   const [done, setDone] = useState(null) // { registration }
+  const [signupModalOpen, setSignupModalOpen] = useState(false)
   const [saving, setSaving] = useState(false)
   const confirmedRef = useRef(false)
   const passRef = useRef(null)
+
+  // Land on the success screen and pop the sign-up confirmation modal. Called
+  // from every path that completes a registration (free RSVP, on-page card, or
+  // Stripe redirect return).
+  const finishRegistration = useCallback((registration) => {
+    setDone({ registration })
+    setSignupModalOpen(true)
+  }, [])
 
   useEffect(() => {
     let active = true
@@ -231,10 +241,10 @@ export default function EventRegister() {
       confirmedRef.current = true
       api
         .confirmEventRegistration({ paymentIntentId: pi })
-        .then((res) => setDone({ registration: res?.registration || null }))
-        .catch(() => setDone({ registration: null }))
+        .then((res) => finishRegistration(res?.registration || null))
+        .catch(() => finishRegistration(null))
     }
-  }, [searchParams])
+  }, [searchParams, finishRegistration])
 
   const paid = Boolean(event?.registrationEnabled && event?.paymentRequired)
   const mode = event?.pricingMode || "fixed"
@@ -343,7 +353,7 @@ export default function EventRegister() {
     setError("")
     try {
       const res = await api.registerForEvent(buildPayload())
-      setDone({ registration: res.registration || null })
+      finishRegistration(res.registration || null)
     } catch (e) {
       setError(e.message)
     } finally {
@@ -361,7 +371,7 @@ export default function EventRegister() {
         setStep(2)
       } else {
         // Amount resolved to 0 server-side — treat as a free registration.
-        setDone({ registration: res.registration || null })
+        finishRegistration(res.registration || null)
       }
     } catch (e) {
       setError(e.message)
@@ -378,7 +388,7 @@ export default function EventRegister() {
     } catch {
       // webhook will reconcile
     }
-    setDone({ registration })
+    finishRegistration(registration)
   }
 
   const savePng = async () => {
@@ -454,6 +464,10 @@ export default function EventRegister() {
     const reg = done.registration
     return (
       <Shell>
+        <SignupConfirmationModal
+          open={signupModalOpen}
+          onClose={() => setSignupModalOpen(false)}
+        />
         <motion.div {...fadeInUp} className="max-w-[600px] mx-auto">
           <div className="text-center mb-6">
             <h1 className="text-2xl md:text-3xl font-medium text-accent-cream mb-2">
