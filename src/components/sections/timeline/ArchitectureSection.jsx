@@ -57,7 +57,7 @@ export default function ArchitectureSection() {
               Brief here.
             </p>
 
-            <CTAButton href="https://drive.google.com/file/d/1072ktfGFYxJMQHalRFTKSyhICR5ONtEo/view?usp=sharing" target="_blank" rel="noreferrer noopener">Download</CTAButton>
+            <CTAButton href="/MIAA-Architecture-Brief.pdf" download>Download</CTAButton>
           </motion.div>
 
           {/* Right — intro paragraph + 2-col sub-grid */}
