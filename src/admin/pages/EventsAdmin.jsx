@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion } from "framer-motion"
-import { Plus, Pencil, Trash2, BarChart3, UsersRound } from "lucide-react"
+import { Plus, Pencil, Trash2, BarChart3, UsersRound, Archive } from "lucide-react"
 import { adminApi } from "../auth"
 import EventAnalyticsDrawer from "./EventAnalyticsDrawer"
 import EventVolunteersDrawer from "./EventVolunteersDrawer"
@@ -273,6 +273,27 @@ export default function EventsAdmin() {
     load()
   }
 
+  // Events move into Previous Events on their own once their date passes, so
+  // this is only needed to archive one early, or to give it a write-up of its
+  // own that can be edited separately from the event page.
+  const archive = async (it) => {
+    const ok = await confirm({
+      title: "Move to Previous Events?",
+      message: it.hasEnded
+        ? `"${it.title}" already shows in the archive because its date has passed. Moving it creates an archive entry you can edit separately, and unpublishes the event.`
+        : `"${it.title}" hasn't happened yet. Moving it now unpublishes the event and adds it to the archive straight away.`,
+      confirmLabel: "Move to archive",
+    })
+    if (!ok) return
+    try {
+      const { alreadyArchived } = await adminApi.archiveEvent(it._id)
+      notify(alreadyArchived ? "Already in Previous Events" : "Moved to Previous Events")
+      load()
+    } catch (err) {
+      notify(err.message, "error")
+    }
+  }
+
   return (
     <div>
       <PageHeader
@@ -349,8 +370,14 @@ export default function EventsAdmin() {
                 </span>
               </div>
               <div className="p-4 flex-1 flex flex-col">
-                <p className="text-[0.625rem] tracking-[0.2em] uppercase text-secondary-terra mb-1">
+                <p className="text-[0.625rem] tracking-[0.2em] uppercase text-secondary-terra mb-1 flex items-center gap-2">
                   {it.date}
+                  {/* Past events drop off the public "Upcoming" sections and
+                      show in the archive instead — flagged here so that isn't
+                      a surprise. */}
+                  {it.hasEnded && (
+                    <span className="text-primary/45 tracking-[0.15em]">· Past</span>
+                  )}
                 </p>
                 <p className="text-base font-medium text-primary leading-tight mb-1">
                   {it.title}
@@ -386,11 +413,12 @@ export default function EventsAdmin() {
                   </div>
                 )}
                 {/* Actions — pinned to the card bottom so every card lines up */}
-                <div className="grid grid-cols-4 gap-0.5 mt-auto pt-3 border-t border-primary/8">
+                <div className="grid grid-cols-5 gap-0.5 mt-auto pt-3 border-t border-primary/8">
                   {[
                     { label: "Edit", icon: Pencil, onClick: () => open(it) },
                     { label: "Analytics", icon: BarChart3, onClick: () => setAnalyticsFor(it) },
                     { label: "Volunteers", icon: UsersRound, onClick: () => setVolunteersFor(it) },
+                    { label: "Archive", icon: Archive, onClick: () => archive(it) },
                     {
                       label: "Delete",
                       icon: Trash2,

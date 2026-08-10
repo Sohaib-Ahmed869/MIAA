@@ -5,6 +5,7 @@ import { ArrowUpRight } from "lucide-react"
 import { fadeInUp } from "../../../lib/motion"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
+import { formatEventDate } from "../../../lib/eventDate"
 
 import offsiteImg4 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-04.png"
 
@@ -39,11 +40,12 @@ export default function PreviousEventsSection() {
             <div>
               <div className="flex flex-col divide-y divide-primary/15 border-y border-primary/15">
                 {previousEvents.map((event, i) => {
-                  // Real CMS entries link to their own detail page; the seeded
-                  // fallback placeholders (no _id) stay non-clickable.
-                  const to = event._id
-                    ? `/previous-events/${event.slug || event._id}`
-                    : null
+                  // The API hands us the right destination per entry —
+                  // /previous-events/… for a written-up archive record, the
+                  // event's own page for one that simply ran its course. The
+                  // seeded fallback placeholders have neither and stay
+                  // non-clickable.
+                  const to = event.detailPath || null
 
                   const inner = (
                     <>
@@ -65,9 +67,11 @@ export default function PreviousEventsSection() {
                           />
                         )}
                       </div>
-                      {event.subtitle && (
+                      {(event.subtitle || event.date) && (
                         <p className="text-sm 3xl:text-base text-primary mt-0.5">
-                          {event.subtitle}
+                          {[formatEventDate(event.date), event.subtitle]
+                            .filter(Boolean)
+                            .join(" · ")}
                         </p>
                       )}
 

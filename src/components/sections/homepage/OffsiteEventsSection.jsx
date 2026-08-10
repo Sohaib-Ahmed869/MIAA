@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
+import { ArrowUpRight } from "lucide-react"
 import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
+import { formatEventDate } from "../../../lib/eventDate"
 
 function slugify(s = "") {
   return String(s)
@@ -12,17 +14,6 @@ function slugify(s = "") {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-}
-
-const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"]
-
-function formatDate(dateStr) {
-  if (!dateStr || dateStr === "TBA") return dateStr
-  const parts = dateStr.split(".")
-  if (parts.length !== 3) return dateStr
-  const [day, month, year] = parts
-  const monthName = MONTHS[parseInt(month, 10) - 1] || month
-  return `${parseInt(day, 10)} ${monthName} 20${year}`
 }
 
 import offsiteImg1 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-01.png"
@@ -67,8 +58,10 @@ const FALLBACK_PREVIOUS = [
 export default function OffsiteEventsSection() {
   const [hoveredPrev, setHoveredPrev] = useState(null)
 
+  // upcoming: true — events whose date has passed belong in the archive, not
+  // under an "Upcoming Events" heading.
   const { data: upcomingEvents } = useCMS(
-    () => api.events({ category: "offsite" }),
+    () => api.events({ category: "offsite", upcoming: true }),
     FALLBACK_EVENTS
   )
   const { data: previousEvents } = useCMS(
@@ -109,7 +102,7 @@ export default function OffsiteEventsSection() {
                   {/* Date & location */}
                   <div className="mb-4">
                     <p className="text-2xl md:text-3xl 3xl:text-[2.4rem] tracking-wide text-[#D0A270] font-medium">
-                      {formatDate(event.date)}
+                      {formatEventDate(event.date)}
                     </p>
                     <p className="text-[0.6875rem] 3xl:text-sm text-white/70 mt-1.5 tracking-wide font-medium">
                       {event.location}
@@ -162,48 +155,81 @@ export default function OffsiteEventsSection() {
             {/* Right column — list with hover image inline */}
             <div>
               <div className="flex flex-col divide-y divide-white/15 border-y border-white/15">
-                {previousEvents.map((event, i) => (
-                  <div
-                    key={event._id || i}
-                    onMouseEnter={() => setHoveredPrev(i)}
-                    onMouseLeave={() => setHoveredPrev(null)}
-                    className="cursor-pointer py-4 relative"
-                  >
-                    <p
-                      className={`text-[0.9375rem] md:text-lg 3xl:text-xl font-medium transition-colors duration-200 ${
-                        hoveredPrev === i
-                          ? "text-accent-caramel"
-                          : "text-white"
-                      }`}
-                    >
-                      {event.title}
-                    </p>
-                    {event.subtitle && (
-                      <p className="text-sm 3xl:text-base text-white/50 mt-0.5">
-                        {event.subtitle}
-                      </p>
-                    )}
+                {previousEvents.map((event, i) => {
+                  // The API hands us the right destination for each entry —
+                  // /previous-events/… for a written-up archive record, the
+                  // event's own page for one that simply ran its course. The
+                  // seeded fallback placeholders have neither, so they stay
+                  // non-clickable rather than pretending to be links.
+                  const to = event.detailPath || null
 
-                    {/* Hover image — appears on the right of the hovered item */}
-                    <AnimatePresence>
-                      {hoveredPrev === i && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.9, rotate: 0 }}
-                          animate={{ opacity: 1, scale: 1, rotate: 3 }}
-                          exit={{ opacity: 0, scale: 0.9 }}
-                          transition={{ duration: 0.25 }}
-                          className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none"
+                  const inner = (
+                    <>
+                      <div className="flex items-center justify-between gap-3">
+                        <p
+                          className={`text-[0.9375rem] md:text-lg 3xl:text-xl font-medium transition-colors duration-200 ${
+                            hoveredPrev === i
+                              ? "text-accent-caramel"
+                              : "text-white"
+                          }`}
                         >
-                          <img
-                            src={event.imageUrl || event.image}
-                            alt=""
-                            className="w-full h-full object-cover"
+                          {event.title}
+                        </p>
+                        {to && (
+                          <ArrowUpRight
+                            className={`w-4 h-4 3xl:w-5 3xl:h-5 flex-shrink-0 transition-all duration-200 ${
+                              hoveredPrev === i
+                                ? "text-accent-caramel opacity-100 translate-x-0"
+                                : "text-white/40 opacity-0 -translate-x-1"
+                            }`}
                           />
-                        </motion.div>
+                        )}
+                      </div>
+                      {(event.subtitle || event.date) && (
+                        <p className="text-sm 3xl:text-base text-white/50 mt-0.5">
+                          {[formatEventDate(event.date), event.subtitle]
+                            .filter(Boolean)
+                            .join(" · ")}
+                        </p>
                       )}
-                    </AnimatePresence>
-                  </div>
-                ))}
+
+                      {/* Hover image — appears on the right of the hovered item */}
+                      <AnimatePresence>
+                        {hoveredPrev === i && (
+                          <motion.div
+                            initial={{ opacity: 0, scale: 0.9, rotate: 0 }}
+                            animate={{ opacity: 1, scale: 1, rotate: 3 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            transition={{ duration: 0.25 }}
+                            className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none"
+                          >
+                            <img
+                              src={event.imageUrl || event.image}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </>
+                  )
+
+                  const commonProps = {
+                    onMouseEnter: () => setHoveredPrev(i),
+                    onMouseLeave: () => setHoveredPrev(null),
+                    className: `block py-4 relative ${to ? "cursor-pointer" : ""}`,
+                  }
+
+                  return to ? (
+                    <Link key={event._id || i} to={to} {...commonProps}>
+                      {inner}
+                    </Link>
+                  ) : (
+                    <div key={event._id || i} {...commonProps}>
+                      {inner}
+                    </div>
+                  )
+                })}
               </div>
 
               <div className="mt-6">

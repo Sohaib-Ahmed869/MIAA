@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
+import { fadeInUp, staggerItem } from "../../../lib/motion"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
+import { formatEventDate } from "../../../lib/eventDate"
 
 function slugify(s = "") {
   return String(s)
@@ -10,17 +11,6 @@ function slugify(s = "") {
     .trim()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-+|-+$/g, "")
-}
-
-const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"]
-
-function formatDate(dateStr) {
-  if (!dateStr || dateStr === "TBA") return dateStr
-  const parts = dateStr.split(".")
-  if (parts.length !== 3) return dateStr
-  const [day, month, year] = parts
-  const monthName = MONTHS[parseInt(month, 10) - 1] || month
-  return `${parseInt(day, 10)} ${monthName} 20${year}`
 }
 
 import offsiteImg1 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-01.png"
@@ -55,8 +45,10 @@ const FALLBACK_EVENTS = [
 ]
 
 export default function OffsiteProgramsSection() {
+  // upcoming: true — events whose date has passed belong in the archive, not
+  // under an "Upcoming Events" heading.
   const { data: upcomingEvents } = useCMS(
-    () => api.events({ category: "offsite" }),
+    () => api.events({ category: "offsite", upcoming: true }),
     FALLBACK_EVENTS
   )
 
@@ -93,7 +85,7 @@ export default function OffsiteProgramsSection() {
                   {/* Date & location — left-aligned */}
                   <div className="mb-4">
                     <p className="text-2xl md:text-3xl 3xl:text-[2.4rem] tracking-wide text-[#D0A270] font-medium">
-                      {formatDate(event.date)}
+                      {formatEventDate(event.date)}
                     </p>
                     <p className="text-[0.6875rem] 3xl:text-sm text-white/70 mt-1.5 tracking-wide font-medium">
                       {event.location}

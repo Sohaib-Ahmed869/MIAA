@@ -63,11 +63,18 @@ export const adminApi = {
       auth: false,
     }),
 
-  // events
+  // events — the admin list, which unlike the public one includes unpublished
+  // events. Without it an event would disappear from this screen the moment it
+  // was unpublished or archived.
   listEvents: (params = {}) => {
     const qs = new URLSearchParams(params).toString()
-    return request(`/api/events${qs ? `?${qs}` : ""}`, { auth: false })
+    return request(`/api/events/admin/all${qs ? `?${qs}` : ""}`)
   },
+  // Copies an event into the Previous Events archive and unpublishes it. Past
+  // events reach the archive on their own, so this is for archiving one early
+  // or giving it a different write-up.
+  archiveEvent: (id) =>
+    request(`/api/previous-events/from-event/${id}`, { method: "POST" }),
   createEvent: (payload) => request("/api/events", { method: "POST", body: payload }),
   updateEvent: (id, payload) => request(`/api/events/${id}`, { method: "PATCH", body: payload }),
   deleteEvent: (id) => request(`/api/events/${id}`, { method: "DELETE" }),
