@@ -6,6 +6,7 @@ import { fadeInUp } from "../../../lib/motion"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
+import Text from "../../../content/Text"
 
 import offsiteImg4 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-04.png"
 
@@ -32,7 +33,7 @@ export default function PreviousEventsSection() {
             {/* Left — heading */}
             <div>
               <h3 className="text-2xl md:text-[1.75rem] 3xl:text-[2.4rem] font-medium text-primary leading-tight">
-                Previous Events
+                <Text k="offsite.previous.heading" />
               </h3>
             </div>
 

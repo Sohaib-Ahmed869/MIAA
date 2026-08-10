@@ -7,38 +7,15 @@ import ic2 from "../../../assets/images/About/ic2.png"
 import ic4 from "../../../assets/images/About/ic4.png"
 import ix3 from "../../../assets/images/About/ix3.png"
 import ic5 from "../../../assets/images/About/ic5.png"
+import Text from "../../../content/Text"
 
+// Icons stay in code (assets); the card copy is editable content, keyed here.
 const PILLARS = [
-  {
-    icon: ic1,
-    title: "Galleries & Programming",
-    body:
-      "Present world-class permanent galleries, temporary and visiting exhibitions, and programming which attract tourists and other visitors to Western Sydney.",
-  },
-  {
-    icon: ic2,
-    title: "Museum Standards",
-    body:
-      "Establish and maintain permanent and temporary gallery spaces according to local and international museum standards.",
-  },
-  {
-    icon: ix3,
-    title: "Community Access",
-    body:
-      "Establish and maintain facilities within the museum premises as part of the museum Community Access Program, with a venue for cultural and educational activities.",
-  },
-  {
-    icon: ic4,
-    title: "Preservation & Collection",
-    body:
-      "Collect, preserve and display art and cultural material that reflects the diverse experiences and expressions of Islamic art and culture both here and abroad.",
-  },
-  {
-    icon: ic5,
-    title: "Education & Research",
-    body:
-      "Collect, preserve and display art and cultural material that reflects the diverse experiences and expressions of Islamic art and culture both here and abroad."
-  }
+  { icon: ic1, key: "about.strategic.pillar1" },
+  { icon: ic2, key: "about.strategic.pillar2" },
+  { icon: ix3, key: "about.strategic.pillar3" },
+  { icon: ic4, key: "about.strategic.pillar4" },
+  { icon: ic5, key: "about.strategic.pillar5" },
 ]
 
 function QuatrefoilMarker({ size = 11 }) {
@@ -96,7 +73,7 @@ export default function StrategicDirectionSection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-accent-wheat">
-            Strategic Direction
+            <Text k="about.strategic.label" />
           </span>
         </div>
         <div
@@ -117,7 +94,7 @@ export default function StrategicDirectionSection() {
           transition={{ duration: 0.6 }}
           className="text-3xl md:text-4xl lg:text-[2.625rem] 3xl:text-[3.2rem] font-medium text-accent-cream tracking-tight leading-[1.1] mb-12 md:mb-14 text-center"
         >
-          Our Strategic Direction
+          <Text k="about.strategic.heading" />
         </motion.h2>
       </div>
 
@@ -131,13 +108,13 @@ export default function StrategicDirectionSection() {
         >
           {PILLARS.map((pillar) => (
             <motion.div
-              key={pillar.title}
+              key={pillar.key}
               {...staggerItem}
               className="bg-bg-teal/25 border border-accent-wheat/15 p-6 3xl:p-8 flex flex-col gap-4 flex-shrink-0 w-[260px] md:w-[18.75rem] lg:w-0 lg:flex-1 hover:bg-bg-teal/40 transition-colors duration-300"
             >
               <img src={pillar.icon} alt="" className="w-10 h-10 3xl:w-14 3xl:h-14 object-contain" />
               <p className="text-accent-cream/75 text-[0.8125rem] 3xl:text-base leading-relaxed">
-                {pillar.body}
+                <Text k={pillar.key} />
               </p>
             </motion.div>
           ))}

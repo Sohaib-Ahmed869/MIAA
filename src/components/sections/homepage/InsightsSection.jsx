@@ -3,6 +3,8 @@ import { ArrowUpRight } from "lucide-react"
 import { Link } from "react-router-dom"
 import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 import { BLOG_POSTS } from "../../../lib/constants"
 
 import img1 from "../../../assets/images/Homepage/insightsandinspirations/Rectangle 100 (4).png"
@@ -16,6 +18,7 @@ const blogImages = {
 }
 
 export default function InsightsSection() {
+  const t = useText()
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-accent-cream">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
@@ -25,9 +28,9 @@ export default function InsightsSection() {
           className="flex flex-col md:flex-row md:items-start md:justify-between mb-10"
         >
           <h2 className="text-3xl md:text-4xl 3xl:text-[3.2rem] font-medium text-primary tracking-tight">
-            Insights and Inspiration
+            <Text k="home.insights.heading" />
           </h2>
-          <CTAButton to="/blog" className="mt-4 md:mt-0 px-4 py-2">Visit Blog</CTAButton>
+          <CTAButton to="/blog" className="mt-4 md:mt-0 px-4 py-2">{t("home.insights.cta")}</CTAButton>
         </motion.div>
 
         {/* Blog cards - flat, no card wrapper */}

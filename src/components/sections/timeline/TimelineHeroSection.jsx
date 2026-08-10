@@ -4,8 +4,12 @@ import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import renderImg from "../../../assets/images/Timeline/buildingfuture.jpg"
 import float1 from "../../../assets/images/About/float1.png"
+import Text from "../../../content/Text"
+import { splitParagraphs } from "../../../content/format"
+import { useText } from "../../../content/context"
 
 export default function TimelineHeroSection() {
+  const t = useText()
   return (
     <section className="relative z-20 bg-bg-deep">
       {/* Top — Title + intro split */}
@@ -14,12 +18,10 @@ export default function TimelineHeroSection() {
           {/* Left — Title + Donate CTA */}
           <motion.div {...fadeInLeft}>
             <h1 className="text-3xl md:text-4xl lg:text-[2.6rem] 3xl:text-[4.5rem] font-medium text-accent-cream tracking-tight leading-tight">
-              The Journey Toward
-              <br />
-              Completion
+              <Text k="timeline.hero.title" />
             </h1>
             <div className="mt-6">
-              <CTAButton href="#architecture" icon={ArrowDownRight}>Learn More</CTAButton>
+              <CTAButton href="#architecture" icon={ArrowDownRight}>{t("timeline.hero.cta")}</CTAButton>
             </div>
           </motion.div>
 
@@ -28,16 +30,9 @@ export default function TimelineHeroSection() {
             {...fadeInRight}
             className="flex flex-col gap-3 text-sm md:text-[0.9375rem] 3xl:text-xl text-accent-cream/85 leading-relaxed"
           >
-            <p>
-              MIAA is a significant community-led cultural project based in the
-              heart of Western Sydney. We are excited to share the groundwork
-              underpinning the MIAA project as we are fast approaching our
-              build.
-            </p>
-            <p>
-              Learn more about the architecture and construction of the museum
-              and our project timeline.
-            </p>
+            {splitParagraphs(t("timeline.hero.intro")).map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
           </motion.div>
         </div>
       </div>

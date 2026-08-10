@@ -3,6 +3,8 @@ import { motion } from "framer-motion"
 import { fadeInUp } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import dotMark from "../../../assets/images/Timeline/dot.png"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 const TIMELINE_DATA = {
   2022: [
@@ -139,7 +141,6 @@ const YEARS = [
 
 const COLS_PER_ROW = 4
 const TERRA = "#C15C45"
-const WHEAT = "#D7B893"
 const WHEAT_LINE = "rgba(215,184,147,0.85)"
 
 function QuatrefoilMarker({ size = 11 }) {
@@ -215,6 +216,7 @@ function SnakeConnector({ isEvenRow }) {
 
 export default function ProjectTimelineSection() {
   const [active, setActive] = useState(2025)
+  const t = useText()
 
   const rows = useMemo(() => chunk(TIMELINE_DATA[active] || [], COLS_PER_ROW), [active])
 
@@ -225,7 +227,7 @@ export default function ProjectTimelineSection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-secondary-terra">
-            MIAA Project Timeline
+            <Text k="timeline.project.label" />
           </span>
         </div>
         <div
@@ -244,9 +246,7 @@ export default function ProjectTimelineSection() {
           {...fadeInUp}
           className="text-3xl md:text-4xl lg:text-[2.625rem] 3xl:text-[3.2rem] font-medium text-accent-cream tracking-tight leading-[1.1] text-center mb-8"
         >
-          Museum of Islamic Art Australia
-          <br />
-          Project Timeline
+          <Text k="timeline.project.heading" />
         </motion.h2>
 
         {/* Year tabs — pill (horizontally scrollable on mobile if it overflows) */}
@@ -420,7 +420,7 @@ export default function ProjectTimelineSection() {
 
         {/* CTA */}
         <motion.div {...fadeInUp} className="flex justify-center mt-12 md:mt-16">
-          <CTAButton href="https://www.youtube.com/@MuseumofIslamicArtAustralia" target="_blank" rel="noreferrer noopener" className="px-6 py-3">Watch Our First Steps</CTAButton>
+          <CTAButton href="https://www.youtube.com/@MuseumofIslamicArtAustralia" target="_blank" rel="noreferrer noopener" className="px-6 py-3">{t("timeline.project.cta")}</CTAButton>
         </motion.div>
       </div>
     </section>

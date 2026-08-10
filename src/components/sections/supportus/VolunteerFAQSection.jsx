@@ -1,33 +1,20 @@
 import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Minus } from "lucide-react"
-import { fadeInUp, fadeInLeft, fadeInRight } from "../../../lib/motion"
-
-const FAQS = [
-  {
-    q: "I have submitted my form, when will I hear back from MIAA?",
-    a: "We endeavour to respond to all applicants in due course. We responsibly engage our volunteers and will only contact you if/when meaningful volunteering opportunities become available in the area/s of interest you have selected.",
-  },
-  {
-    q: "Working With Children Check",
-    a: "All volunteers working with children or in child-related roles are required to hold a valid Working With Children Check (WWC).",
-  },
-  {
-    q: "I really want to volunteer but I don\u2019t have a WWC, what should I do?",
-    a: "You can apply for a WWC through your state or territory government. Once approved, you\u2019ll be eligible for volunteer roles that involve working with children.",
-  },
-  {
-    q: "Rewards and Benefits",
-    a: "MIAA volunteers enjoy exclusive access to events, behind-the-scenes tours, training opportunities, and recognition for their contributions to the museum.",
-  },
-  {
-    q: "Volunteer Policy",
-    a: "All volunteers are expected to adhere to MIAA\u2019s volunteer policy, which outlines responsibilities, code of conduct, and safety requirements.",
-  },
-]
+import { fadeInLeft, fadeInRight } from "../../../lib/motion"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 export default function VolunteerFAQSection() {
   const [openIndex, setOpenIndex] = useState(0)
+  const t = useText()
+  const FAQS = [
+    { q: t("support.faq.q1"), a: t("support.faq.a1") },
+    { q: t("support.faq.q2"), a: t("support.faq.a2") },
+    { q: t("support.faq.q3"), a: t("support.faq.a3") },
+    { q: t("support.faq.q4"), a: t("support.faq.a4") },
+    { q: t("support.faq.q5"), a: t("support.faq.a5") },
+  ]
 
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-bg">
@@ -36,12 +23,12 @@ export default function VolunteerFAQSection() {
           {/* Left — heading + minimum age badge */}
           <motion.div {...fadeInLeft} className="flex flex-col justify-between">
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-snug max-w-md 3xl:max-w-xl">
-              General Information for Volunteers
+              <Text k="support.faq.heading" />
             </h2>
 
             <div className="mt-10 inline-flex flex-col items-center justify-center w-40 h-28 3xl:w-48 3xl:h-32 bg-accent-cream rounded-2xl">
-              <span className="text-3xl 3xl:text-4xl font-medium text-primary">18</span>
-              <span className="text-sm 3xl:text-base font-medium text-primary mt-1">Minimum Age</span>
+              <span className="text-3xl 3xl:text-4xl font-medium text-primary"><Text k="support.faq.ageNumber" /></span>
+              <span className="text-sm 3xl:text-base font-medium text-primary mt-1"><Text k="support.faq.ageLabel" /></span>
             </div>
           </motion.div>
 

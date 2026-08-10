@@ -3,22 +3,16 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Minus } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import educatingImg from "../../../assets/images/Homepage/educatingnextgen.png"
-
-const accordionItems = [
-  {
-    title: "Teachers, Educators and Students",
-    content:
-      "The Museum of Islamic Art Australia (MIAA) is developing meaningful education programs aligned with national and NSW curricula. Through workshops, tours, and resources, we aim to inspire learning, cultural understanding, and creative exploration among school-aged students.",
-  },
-  {
-    title: "Children and Families",
-    content:
-      "The Museum will feature a Children's Gallery — the first dedicated Islamic arts focused children's gallery in the Southern hemisphere. It will feature hands-on interactive displays, accessible contemporary and decorative Islamic art for young children, and curated educational programs for kinder and primary aged children.",
-  },
-]
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 export default function EducationSection() {
   const [openIndex, setOpenIndex] = useState(0)
+  const t = useText()
+  const accordionItems = [
+    { title: t("home.education.item1.title"), content: t("home.education.item1.body") },
+    { title: t("home.education.item2.title"), content: t("home.education.item2.body") },
+  ]
 
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-bg">
@@ -39,7 +33,7 @@ export default function EducationSection() {
           {/* Right - Content with accordion */}
           <motion.div {...fadeInRight}>
             <h2 className="text-3xl md:text-4xl 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-snug">
-              Educating the Next<br />Generation of Thinkers
+              <Text k="home.education.heading" />
             </h2>
 
             {/* Accordion */}

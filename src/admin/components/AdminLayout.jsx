@@ -27,6 +27,7 @@ import {
   ScanLine,
   Menu,
   X,
+  Type,
 } from "lucide-react"
 import { clearSession, getAdminUser, adminApi } from "../auth"
 import { ToastProvider } from "./Toast"
@@ -57,6 +58,7 @@ const NAV = [
   { to: "/admin/subscriptions", label: "Subscriptions", icon: RefreshCw },
   { to: "/admin/audit-log", label: "Audit Log", icon: ScrollText },
   { separator: true, label: "Settings" },
+  { to: "/admin/content", label: "Site Content", icon: Type },
   { to: "/admin/settings", label: "Site Settings", icon: Settings },
   { to: "/admin/staff", label: "Staff & Volunteers", icon: UserCog },
 ]

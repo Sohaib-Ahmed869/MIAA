@@ -117,4 +117,7 @@ export const api = {
 
   // Site settings (public)
   siteSettings: () => request(`/api/settings`),
+
+  // Editable site copy (public) — overrides merged over registry defaults.
+  siteContent: () => request(`/api/site-content`),
 }

@@ -1,8 +1,11 @@
 import { motion } from "framer-motion"
-import { fadeInLeft, fadeInRight, fadeInUp } from "../../../lib/motion"
+import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import audienceImg from "../../../assets/images/Community Engagement/community-audience.png"
 import workshopImg from "../../../assets/images/Community Engagement/workshop-program.png"
 import float1 from "../../../assets/images/About/float1.png"
+import Text from "../../../content/Text"
+import { splitParagraphs } from "../../../content/format"
+import { useText } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -23,6 +26,7 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function CommunityCultureSection() {
+  const t = useText()
   return (
     <section className="relative bg-bg py-12 md:py-16 overflow-hidden">
       {/* Section label + dotted divider */}
@@ -30,7 +34,7 @@ export default function CommunityCultureSection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-secondary-terra">
-            Community Engagement
+            <Text k="community.culture.label" />
           </span>
         </div>
         <div
@@ -48,44 +52,21 @@ export default function CommunityCultureSection() {
           {/* Left — heading + intro + 2-col paragraphs + full-width paragraph */}
           <motion.div {...fadeInLeft}>
             <h2 className="text-3xl md:text-4xl lg:text-[2.625rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-tight mb-5">
-              At the Heart of Community and Culture
+              <Text k="community.culture.heading" />
             </h2>
 
             <p className="text-base md:text-[1.0625rem] 3xl:text-xl text-primary leading-relaxed mb-10 max-w-2xl 3xl:max-w-3xl">
-              Community engagement is at the heart of MIAA. The team behind the
-              establishment of the Museum has welcomed thousands of community
-              members over the course of more than 15 years.
+              <Text k="community.culture.intro" />
             </p>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 text-[0.8125rem] md:text-sm 3xl:text-base text-primary leading-relaxed mb-8">
-              <p>
-                ISRA was established in 2009 as a product of community dialogue
-                and service, quickly becoming a prime organisation for Muslim
-                communities for integration into Australian society. ISRA has
-                established itself as an institution renowned for its academic
-                and Islamic education, diversified community work and
-                interfaith engagement.
-              </p>
-              <p>
-                ISRA continues to engage Muslims, Islamic organisations and
-                communities from different orientations as well as other faith
-                and cultural groups, schools, and faith-based organisations and
-                institutions. We envision the Museum as a hub for community
-                activities and engagement through the arts and education.
-              </p>
+              {splitParagraphs(t("community.culture.body")).map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
 
             <p className="text-[0.8125rem] md:text-sm 3xl:text-base text-primary leading-relaxed max-w-3xl">
-              MIAA is committed to enhancing audience experience through a
-              thoughtfully curated selection of community engagement
-              activities, public programs, events and community networking
-              opportunities. Local communities will also enjoy the benefits of
-              the Museum program which includes access to our facilities to
-              hold events, meetings and celebrations. As MIAA&apos;s capacity
-              grows, community based special interest groups such as art clubs
-              and other creative groups will be supported to facilitate
-              gatherings onsite at the museum through our Community Access
-              Program (CAP).
+              <Text k="community.culture.body2" />
             </p>
           </motion.div>
 

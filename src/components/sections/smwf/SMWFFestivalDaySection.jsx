@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { fadeInLeft } from "../../../lib/motion"
+import Text from "../../../content/Text"
 
 import iconCalendar from "../../../assets/images/Homepage/SMWF/icon-calendar.svg"
 import iconClock from "../../../assets/images/Homepage/SMWF/icon-clock.svg"
@@ -150,7 +151,7 @@ export default function SMWFFestivalDaySection() {
           {/* COLUMN 1 — Festival Day info */}
           <motion.div {...fadeInLeft}>
             <h2 className="font-aeonik text-white text-4xl md:text-5xl lg:text-6xl 3xl:text-[5rem] font-medium tracking-tight mb-10 md:mb-14 3xl:mb-20">
-              Festival Day
+              <Text k="smwf.festival.heading" />
             </h2>
 
             <ul className="space-y-6 md:space-y-7 3xl:space-y-10 mb-10 md:mb-12 3xl:mb-16">

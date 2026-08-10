@@ -5,6 +5,8 @@ import { fadeInLeft, fadeInRight } from "../lib/motion"
 import CTAButton from "../components/ui/Button"
 import SignupConfirmationModal from "../components/ui/SignupConfirmationModal"
 import { api } from "../lib/api"
+import Text from "../content/Text"
+import { useText } from "../content/context"
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""
 
@@ -33,6 +35,7 @@ export default function Volunteer() {
   const [error, setError] = useState("")
   const [areas, setAreas] = useState([])
   const recaptchaRef = useRef(null)
+  const t = useText()
 
   const toggleArea = (area) =>
     setAreas((prev) =>
@@ -83,20 +86,17 @@ export default function Volunteer() {
       <SignupConfirmationModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Thank you for applying!"
+        title={t("volunteer.modalTitle")}
       />
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
           {/* Left — intro */}
           <motion.div {...fadeInLeft}>
             <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] 3xl:text-[4.5rem] font-medium text-accent-cream tracking-tight leading-tight">
-              Volunteer With Us
+              <Text k="volunteer.heading" />
             </h1>
             <p className="mt-5 text-sm md:text-[0.9375rem] 3xl:text-lg text-accent-cream/85 leading-relaxed max-w-md 3xl:max-w-xl">
-              The Museum of Islamic Art Australia is built by its community. Whether
-              you can spare a few hours at an event or lend an ongoing hand, we&apos;d
-              love to have you on the team. Tell us a little about yourself and how
-              you&apos;d like to help.
+              <Text k="volunteer.intro" />
             </p>
           </motion.div>
 
@@ -109,10 +109,11 @@ export default function Volunteer() {
                 className="flex items-center justify-center h-full min-h-[320px]"
               >
                 <div className="text-center">
-                  <p className="text-xl 3xl:text-2xl font-semibold text-white">Thank you!</p>
+                  <p className="text-xl 3xl:text-2xl font-semibold text-white">
+                    <Text k="volunteer.successTitle" />
+                  </p>
                   <p className="text-sm 3xl:text-base text-white/60 mt-2 max-w-sm">
-                    Your volunteer application has been received. Our team will be in
-                    touch soon.
+                    <Text k="volunteer.successBody" />
                   </p>
                 </div>
               </motion.div>
@@ -232,7 +233,7 @@ export default function Volunteer() {
                     disabled={submitting}
                     className="px-6 py-3 disabled:opacity-60"
                   >
-                    {submitting ? "Sending…" : "Submit Application"}
+                    {submitting ? "Sending…" : t("volunteer.cta")}
                   </CTAButton>
                 </div>
               </form>

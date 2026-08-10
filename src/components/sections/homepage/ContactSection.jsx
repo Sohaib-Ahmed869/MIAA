@@ -4,6 +4,8 @@ import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import { api } from "../../../lib/api"
 import connectImg from "../../../assets/images/About/connect.png"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 const TOPICS = [
   "General Inquiry",
@@ -18,6 +20,7 @@ export default function ContactSection() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState("")
+  const t = useText()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -52,12 +55,10 @@ export default function ContactSection() {
           {/* Left - Content */}
           <motion.div {...fadeInLeft}>
             <h2 className="text-3xl md:text-4xl 3xl:text-[3.2rem] font-medium text-white tracking-tight leading-snug">
-              Connect With the Museum
+              <Text k="shared.contact.heading" />
             </h2>
             <p className="mt-5 text-sm 3xl:text-lg text-white leading-relaxed max-w-md 3xl:max-w-xl">
-              We&apos;d love to hear from you. Whether you&apos;d like to learn
-              more about the Museum of Islamic Art Australia, explore partnership
-              opportunities, or support our journey, our team is here to connect.
+              <Text k="shared.contact.intro" />
             </p>
 
             {/* Geometric ornament — lower-left */}
@@ -79,9 +80,11 @@ export default function ContactSection() {
                 className="flex items-center justify-center h-full"
               >
                 <div className="text-center">
-                  <p className="text-xl 3xl:text-2xl font-semibold text-white">Thank you!</p>
+                  <p className="text-xl 3xl:text-2xl font-semibold text-white">
+                    <Text k="shared.contact.successTitle" />
+                  </p>
                   <p className="text-sm 3xl:text-base text-white/50 mt-2">
-                    Your submission has been received!
+                    <Text k="shared.contact.successBody" />
                   </p>
                 </div>
               </motion.div>
@@ -157,7 +160,7 @@ export default function ContactSection() {
                 {/* Submit */}
                 <div className="flex justify-end">
                   <CTAButton type="submit" disabled={submitting} className="px-6 py-3 disabled:opacity-60">
-                    {submitting ? "Sending…" : "Send Message"}
+                    {submitting ? "Sending…" : t("shared.contact.cta")}
                   </CTAButton>
                 </div>
               </form>

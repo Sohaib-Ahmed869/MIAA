@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import { HandHeart, ChevronDown } from "lucide-react"
 import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
 
 // `initialCount` caps how many cards show at first; the rest reveal via a
 // "View more" button. Omit it to render every cause at once.
@@ -21,21 +22,19 @@ export default function DonationProductsGrid({ products = [], initialCount }) {
           {...fadeInUp}
           className="text-[0.6875rem] md:text-xs tracking-[0.25em] uppercase text-secondary-terra font-semibold mb-2"
         >
-          Choose a Cause
+          <Text k="donate.grid.eyebrow" />
         </motion.p>
         <motion.h2
           {...fadeInUp}
           className="text-2xl md:text-3xl lg:text-4xl 3xl:text-5xl font-medium text-primary tracking-tight leading-tight"
         >
-          Where Your Donation Goes
+          <Text k="donate.grid.heading" />
         </motion.h2>
         <motion.p
           {...fadeInUp}
           className="text-base 3xl:text-lg text-primary/70 leading-relaxed mt-4 mb-10 md:mb-14 max-w-xl"
         >
-          Every gift is directed to a specific programme — from safeguarding
-          collections to educating the next generation. Choose where your support
-          makes the greatest difference.
+          <Text k="donate.grid.intro" />
         </motion.p>
 
         <motion.div
@@ -122,7 +121,7 @@ export default function DonationProductsGrid({ products = [], initialCount }) {
               onClick={() => setExpanded(true)}
               className="group inline-flex items-center gap-2 px-6 py-3 rounded-sm border border-primary/25 text-primary text-[0.6875rem] 3xl:text-sm font-semibold tracking-[0.15em] uppercase hover:border-secondary-terra hover:text-secondary-terra transition-colors"
             >
-              View more causes
+              <Text k="donate.grid.viewMore" />
               <ChevronDown className="w-4 h-4 transition-transform group-hover:translate-y-0.5" />
             </button>
           </motion.div>

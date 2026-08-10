@@ -4,6 +4,8 @@ import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 import heroImg from "../../../assets/images/GalaDinner/hero.jpg"
 import heroBgPattern from "../../../assets/images/GalaDinner/herobgpattern.png"
@@ -13,6 +15,7 @@ gsap.registerPlugin(ScrollTrigger)
 export default function GalaHeroSection() {
   const sectionRef = useRef(null)
   const imgRef = useRef(null)
+  const t = useText()
 
   useGSAP(() => {
     gsap.fromTo(
@@ -49,7 +52,7 @@ export default function GalaHeroSection() {
             className="font-display text-xs sm:text-sm md:text-lg 3xl:text-2xl tracking-[0.35em] uppercase mb-1"
             style={{ color: "#F3EFEB" }}
           >
-            Inaugural
+            <Text k="gala.hero.eyebrow" />
           </motion.p>
 
           <motion.h1
@@ -58,7 +61,7 @@ export default function GalaHeroSection() {
             transition={{ duration: 0.8, delay: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
             className="font-display text-4xl sm:text-5xl md:text-7xl lg:text-8xl 3xl:text-9xl font-medium tracking-tight leading-none gala-heading"
           >
-            GALA DINNER
+            <Text k="gala.hero.title" />
           </motion.h1>
 
           <motion.p
@@ -68,7 +71,7 @@ export default function GalaHeroSection() {
             className="font-display text-base sm:text-lg md:text-2xl 3xl:text-3xl tracking-tight uppercase mt-2"
             style={{ color: "#F3EFEB" }}
           >
-            Museum of Islamic Art Australia
+            <Text k="gala.hero.subtitle" />
           </motion.p>
 
           <motion.div
@@ -83,7 +86,7 @@ export default function GalaHeroSection() {
               rel="noopener noreferrer"
               className="px-6"
             >
-              Buy Ticket
+              {t("gala.hero.cta")}
             </CTAButton>
           </motion.div>
         </div>

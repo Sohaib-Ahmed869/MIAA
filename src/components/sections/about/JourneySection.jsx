@@ -2,6 +2,9 @@ import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight, fadeInUp } from "../../../lib/motion"
 import panelImg from "../../../assets/images/About/western-sydney-photo.png"
 import designOrnament from "../../../assets/images/About/design.png"
+import Text from "../../../content/Text"
+import { splitParagraphs } from "../../../content/format"
+import { useText } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -22,6 +25,7 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function JourneySection() {
+  const t = useText()
   return (
     <section className="bg-accent-cream pt-12 md:pt-16 pb-12 md:pb-16">
       {/* Section label + dotted divider */}
@@ -29,7 +33,7 @@ export default function JourneySection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-secondary-terra">
-            Project Background
+            <Text k="about.journey.label" />
           </span>
         </div>
         <div
@@ -49,26 +53,14 @@ export default function JourneySection() {
             {...fadeInUp}
             className="text-3xl md:text-4xl lg:text-[2.625rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-[1.1]"
           >
-            How the MIAA Journey
-            <br />
-            Started
+            <Text k="about.journey.heading" />
           </motion.h2>
 
           <motion.p
             {...fadeInUp}
             className="text-base md:text-[1.0625rem] 3xl:text-xl text-primary leading-relaxed font-medium"
           >
-            The Museum of Islamic Art Australia is a groundbreaking
-            community-led initiative with the vision of establishing a
-            dedicated museum to showcase and nurture local Islamic art and
-            artists in Australia. Spearheaded by ISRA and supported by its
-            diverse partners, the project gained significant momentum in 2022
-            when ISRA presented an ambitious proposal for a world-class museum
-            to the NSW government. This proposal met with strong support,
-            culminating in successful acquisition of a generous grant ($26.3m)
-            through the WestInvest Community Project Grants initiative, a NSW
-            State Government program aimed at funding transformative projects
-            across Western Sydney, where the Museum will be proudly located.
+            <Text k="about.journey.intro" />
           </motion.p>
         </div>
 
@@ -95,19 +87,9 @@ export default function JourneySection() {
             </div>
 
             <div className="flex flex-col gap-5 text-sm md:text-[0.875rem] 3xl:text-base text-primary leading-relaxed max-w-md 3xl:max-w-xl self-end font-medium">
-              <p>
-                Since securing the WestInvest grant, the MIAA has commenced
-                phase one of its operations, focusing on preparatory work for
-                the Museum&apos;s building and design, as well as delivering
-                satellite events and partnerships aimed at fostering arts
-                engagement and community involvement.
-              </p>
-              <p>
-                These efforts highlight the MIAA&apos;s commitment to becoming
-                a dynamic cultural institution that not only preserves and
-                promotes Islamic art but also strengthens social cohesion and
-                enriches Australia&apos;s cultural landscape.
-              </p>
+              {splitParagraphs(t("about.journey.body")).map((para, i) => (
+                <p key={i}>{para}</p>
+              ))}
             </div>
           </motion.div>
         </div>

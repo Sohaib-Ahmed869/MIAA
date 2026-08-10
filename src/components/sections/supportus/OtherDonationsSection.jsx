@@ -1,35 +1,21 @@
 import { motion } from "framer-motion"
 import { Check } from "lucide-react"
 import CTAButton from "../../ui/Button"
-import { fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "../../../lib/motion"
-
-const DONATION_OPTIONS = [
-  {
-    text: "Artwork acquisition fund",
-  },
-  {
-    label: "Construction material and labour (variable):",
-    text: "business logo displayed and listed as founding sponsor.",
-  },
-  {
-    label: "Community Business Partnerships:",
-    text: "business logo/name displayed and listed as founding member.",
-  },
-  {
-    label: "Any ongoing donation of professional services (such as gardening or maintenance):",
-    text: "business logo/name displayed and listed as supporting partner as founding member.",
-  },
-  {
-    label: "Ongoing discounted goods, such as cleaning or maintenance supplies:",
-    text: "business logo/name displayed and listed as supporting partner",
-  },
-  {
-    label: "Exclusive offers for museum patrons (eg. food, beverages, toiletries etc.):",
-    text: "business logo/name displayed and listed as supporting partner",
-  },
-]
+import { fadeInLeft, staggerContainer, staggerItem } from "../../../lib/motion"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 export default function OtherDonationsSection() {
+  const t = useText()
+  const DONATION_OPTIONS = [
+    { text: t("support.other.opt1.text") },
+    { label: t("support.other.opt2.label"), text: t("support.other.opt2.text") },
+    { label: t("support.other.opt3.label"), text: t("support.other.opt3.text") },
+    { label: t("support.other.opt4.label"), text: t("support.other.opt4.text") },
+    { label: t("support.other.opt5.label"), text: t("support.other.opt5.text") },
+    { label: t("support.other.opt6.label"), text: t("support.other.opt6.text") },
+  ]
+
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-bg">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
@@ -37,10 +23,10 @@ export default function OtherDonationsSection() {
           {/* Left — heading + button at bottom */}
           <motion.div {...fadeInLeft} className="flex flex-col justify-between">
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-snug max-w-sm 3xl:max-w-lg">
-              Other Individual Donations Arranged Through Our Team
+              <Text k="support.other.heading" />
             </h2>
 
-            <CTAButton to="/donate" className="mt-8 lg:mt-10 self-start">Donate Now</CTAButton>
+            <CTAButton to="/donate" className="mt-8 lg:mt-10 self-start">{t("support.other.cta")}</CTAButton>
           </motion.div>
 
           {/* Right — checklist */}

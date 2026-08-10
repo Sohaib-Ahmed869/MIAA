@@ -1,42 +1,42 @@
 import { motion } from "framer-motion"
 import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 import artConnectionImg from "../../../assets/images/MIAEvents/families-art-connection.png"
 import behindVisionImg from "../../../assets/images/MIAEvents/families-behind-vision.png"
 import heritageDesignImg from "../../../assets/images/MIAEvents/families-heritage-design.png"
 
-const FAMILY_EVENTS = [
-  {
-    date: "07.02.26",
-    title: "The Art of Connection",
-    description:
-      "How Islamic art continues to inspire creativity and unity across Australia's diverse communities.",
-    image: artConnectionImg,
-  },
-  {
-    date: "07.02.26",
-    title: "Behind the Vision",
-    description:
-      "Meet the people and ideas shaping the Museum of Islamic Art Australia's journey.",
-    image: behindVisionImg,
-  },
-  {
-    date: "07.02.26",
-    title: "Heritage and Design",
-    description:
-      "Exploring how tradition and innovation come together in MIAA's creative process.",
-    image: heritageDesignImg,
-  },
-]
-
 export default function FamiliesDiscoverSection() {
+  const t = useText()
+  const FAMILY_EVENTS = [
+    {
+      date: "07.02.26",
+      title: t("offsite.families.card1.title"),
+      description: t("offsite.families.card1.body"),
+      image: artConnectionImg,
+    },
+    {
+      date: "07.02.26",
+      title: t("offsite.families.card2.title"),
+      description: t("offsite.families.card2.body"),
+      image: behindVisionImg,
+    },
+    {
+      date: "07.02.26",
+      title: t("offsite.families.card3.title"),
+      description: t("offsite.families.card3.body"),
+      image: heritageDesignImg,
+    },
+  ]
+
   return (
     <section className="relative py-16 md:py-24 3xl:py-32 bg-accent-cream">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
         <motion.div {...fadeInUp} className="mb-12 md:mb-14 max-w-3xl 3xl:max-w-4xl">
      
           <h2 className="text-3xl md:text-[2.625rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-tight">
-            Where Families Discover Art Together
+            <Text k="offsite.families.heading" />
           </h2>
         </motion.div>
 
@@ -74,7 +74,7 @@ export default function FamiliesDiscoverSection() {
                   {event.date}
                 </p>
                 <p className="text-[0.6875rem] 3xl:text-sm text-primary/60 italic mt-1">
-                  At Gallery A, MIAA
+                  <Text k="offsite.families.location" />
                 </p>
               </div>
             </motion.article>

@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 import heroImg from "../../../assets/images/About/about-hero.png"
 import floatingOrnament from "../../../assets/images/About/float1.png"
+import Text from "../../../content/Text"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -49,9 +50,7 @@ export default function AboutHeroSection() {
           transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-[2.2rem] md:text-[2.8rem] lg:text-[3.4rem] 3xl:text-[4.5rem] font-medium text-accent-cream leading-[1.1] tracking-tight max-w-4xl 3xl:max-w-5xl"
         >
-          Shaping The Future Of Islamic
-          <br />
-          Art In Australia
+          <Text k="about.hero.title" />
         </motion.h1>
       </div>
 

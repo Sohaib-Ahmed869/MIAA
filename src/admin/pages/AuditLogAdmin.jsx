@@ -13,6 +13,8 @@ const ACTION_COLORS = {
   "donation.refunded": "text-amber-600",
   "subscription.created": "text-blue-600",
   "subscription.cancelled": "text-rose-500",
+  "content.updated": "text-secondary-terra",
+  "content.reset": "text-amber-600",
   "webhook.received": "text-primary/50",
 }
 

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion"
+import Text from "../../../content/Text"
 
 import hero1 from "../../../assets/images/MIAEvents/events-hero-1.png"
 import hero2 from "../../../assets/images/MIAEvents/events-hero-2.png"
@@ -23,7 +24,7 @@ export default function EventsHeroSection() {
           transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-3xl md:text-4xl lg:text-[2.6rem] 3xl:text-[4.5rem] font-medium text-accent-cream tracking-tight leading-tight"
         >
-          Events at MIAA
+          <Text k="offsite.hero.title" />
         </motion.h1>
       </div>
 

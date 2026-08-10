@@ -1,6 +1,8 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight, fadeInUp } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 import venueImg from "../../../assets/images/Ticketing/agnsw-exterior.jpg"
 import bgPattern from "../../../assets/images/Ticketing/bgpatternticket.png"
 
@@ -17,6 +19,7 @@ function QuatrefoilIcon() {
 }
 
 export default function LocationSection() {
+  const t = useText()
   return (
     <section className="relative bg-accent-cream overflow-hidden rounded-t-3xl">
       {/* Background pattern */}
@@ -38,7 +41,7 @@ export default function LocationSection() {
               <QuatrefoilIcon />
             </span>
             <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase" style={{ color: "#7A3A42" }}>
-              Location
+              <Text k="gala.location.label" />
             </span>
           </div>
           <div
@@ -71,7 +74,7 @@ export default function LocationSection() {
             {/* Right — directions */}
             <motion.div {...fadeInRight}>
               <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] 3xl:text-[3.2rem] font-normal text-primary tracking-tight leading-snug mb-6 uppercase">
-                How to Get Here
+                <Text k="gala.location.heading" />
               </h2>
               <p className="text-base sm:text-lg md:text-xl 3xl:text-2xl text-primary leading-relaxed mb-6">
                 Travel information via the{" "}
@@ -103,19 +106,19 @@ export default function LocationSection() {
             style={{ columnGap: "1rem", rowGap: "1.5rem" }}
           >
             <h3 className="font-display text-lg md:text-xl 3xl:text-2xl font-normal text-primary tracking-tight uppercase whitespace-nowrap">
-              Where to Find Us
+              <Text k="gala.location.findHeading" />
             </h3>
 
             <div className="max-w-xl">
               <p className="text-base sm:text-lg md:text-xl 3xl:text-2xl font-medium text-primary leading-snug mb-2">
-                Art Gallery Road, The Domain, Sydney NSW 2000, Australia
+                <Text k="gala.location.address" />
               </p>
               <p className="text-sm sm:text-base 3xl:text-lg text-primary leading-relaxed">
-                On the eastern side of Sydney&rsquo;s CBD, next to the Royal Botanic Gardens and the Domain, just down the road from St Mary&rsquo;s Cathedral. About 5-minute walk from Macquarie Street, across the Domain, or from Hyde Park.
+                <Text k="gala.location.addressBody" />
               </p>
             </div>
 
-            <CTAButton href="https://maps.google.com/?q=Art+Gallery+of+New+South+Wales" target="_blank" rel="noopener noreferrer" className="whitespace-nowrap self-start">Open Maps</CTAButton>
+            <CTAButton href="https://maps.google.com/?q=Art+Gallery+of+New+South+Wales" target="_blank" rel="noopener noreferrer" className="whitespace-nowrap self-start">{t("gala.location.mapsCta")}</CTAButton>
           </motion.div>
         </div>
       </div>

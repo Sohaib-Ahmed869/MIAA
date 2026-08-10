@@ -3,6 +3,8 @@ import { motion } from "framer-motion"
 import ReCAPTCHA from "react-google-recaptcha"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || ""
 
@@ -63,6 +65,7 @@ export default function ContactPageSection() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState("")
   const recaptchaRef = useRef(null)
+  const t = useText()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -105,24 +108,19 @@ export default function ContactPageSection() {
           {/* Left — Heading + intro + connect */}
           <motion.div {...fadeInLeft}>
             <h1 className="text-3xl md:text-4xl lg:text-[2.75rem] 3xl:text-[4.5rem] font-medium text-accent-cream tracking-tight leading-tight">
-              Connect With the Museum
+              <Text k="contact.page.heading" />
             </h1>
             <p className="mt-5 text-sm md:text-[0.9375rem] 3xl:text-lg text-accent-cream/85 leading-relaxed max-w-md 3xl:max-w-xl">
-              We&apos;d love to hear from you. Whether you&apos;d like to learn
-              more about the Museum of Islamic Art Australia, explore
-              partnership opportunities, or support our journey, our team is
-              here to connect.
+              <Text k="contact.page.intro" />
             </p>
 
             {/* Connect / socials */}
             <div className="mt-10 md:mt-14">
               <p className="text-sm 3xl:text-base font-medium text-accent-wheat mb-2">
-                Connect
+                <Text k="contact.page.connectLabel" />
               </p>
               <p className="text-sm 3xl:text-base text-accent-cream/75 leading-relaxed">
-                Stay connected with MIAA via our socials
-                <br />
-                Instagram Facebook and YouTube
+                <Text k="contact.page.connectText" />
               </p>
               <div className="flex gap-2 mt-4">
                 {SOCIALS.map(({ Icon, label, url }) => (
@@ -150,9 +148,11 @@ export default function ContactPageSection() {
                 className="flex items-center justify-center h-full min-h-[320px]"
               >
                 <div className="text-center">
-                  <p className="text-xl 3xl:text-2xl font-semibold text-white">Thank you!</p>
+                  <p className="text-xl 3xl:text-2xl font-semibold text-white">
+                    <Text k="contact.page.successTitle" />
+                  </p>
                   <p className="text-sm 3xl:text-base text-white/60 mt-2">
-                    Your submission has been received.
+                    <Text k="contact.page.successBody" />
                   </p>
                 </div>
               </motion.div>
@@ -237,7 +237,7 @@ export default function ContactPageSection() {
                   <p className="text-sm 3xl:text-base text-secondary-terra" role="alert">{error}</p>
                 )}
                 <div>
-                  <CTAButton type="submit" disabled={submitting} className="px-6 py-3 disabled:opacity-60">{submitting ? "Sending…" : "Send Message"}</CTAButton>
+                  <CTAButton type="submit" disabled={submitting} className="px-6 py-3 disabled:opacity-60">{submitting ? "Sending…" : t("contact.page.cta")}</CTAButton>
                 </div>
               </form>
             )}

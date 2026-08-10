@@ -4,11 +4,10 @@ import { X } from "lucide-react"
 import { staggerContainer, staggerItem } from "../../../lib/motion"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
+import Text from "../../../content/Text"
 import directorPortrait from "../../../assets/images/About/team-potrait-director.png"
 import malePortrait from "../../../assets/images/About/team-portrait-male.png"
 import femalePortrait from "../../../assets/images/About/team-portrait-female.png"
-import float1 from "../../../assets/images/About/float1.png"
-import float2 from "../../../assets/images/About/float2.png"
 
 const FALLBACK_PEOPLE = [
   { name: "Prof Mehmet Ozalp", role: "Director", description: "", img: directorPortrait },
@@ -83,7 +82,7 @@ function QuatrefoilPortrait({ src, alt, hovered }) {
   )
 }
 
-function PersonCard({ person, index, onSelect }) {
+function PersonCard({ person, onSelect }) {
   const [hovered, setHovered] = useState(false)
   return (
     <motion.div
@@ -121,7 +120,7 @@ export default function PeopleSection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-secondary-terra">
-            Teams
+            <Text k="about.people.label" />
           </span>
         </div>
         <div
@@ -142,7 +141,7 @@ export default function PeopleSection() {
           transition={{ duration: 0.6 }}
           className="text-3xl md:text-4xl lg:text-[2.625rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-[1.1] mb-12 md:mb-16"
         >
-          The People Behind MIAA
+          <Text k="about.people.heading" />
         </motion.h2>
 
         <motion.div
@@ -153,7 +152,6 @@ export default function PeopleSection() {
             <PersonCard
               key={person._id || `${person.name}-${i}`}
               person={person}
-              index={i}
               onSelect={() => setSelected(person)}
             />
           ))}
@@ -232,7 +230,7 @@ export default function PeopleSection() {
 
                   {!selected.description && (
                     <p className="mt-8 text-base text-primary/40 italic">
-                      No biography available yet.
+                      <Text k="about.people.emptyBio" />
                     </p>
                   )}
                 </div>

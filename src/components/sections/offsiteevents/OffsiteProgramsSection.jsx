@@ -4,6 +4,7 @@ import { fadeInUp, staggerItem } from "../../../lib/motion"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
+import Text from "../../../content/Text"
 
 function slugify(s = "") {
   return String(s)
@@ -59,7 +60,7 @@ export default function OffsiteProgramsSection() {
           {...fadeInUp}
           className="text-3xl md:text-[2.625rem] 3xl:text-[3.2rem] font-medium text-white tracking-tight leading-tight mb-12 md:mb-14"
         >
-          Offsite Programs and Events
+          <Text k="offsite.programs.heading" />
         </motion.h2>
 
         <motion.div

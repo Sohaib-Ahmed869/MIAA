@@ -14,18 +14,11 @@ import art2 from "../../../assets/images/Homepage/Art in Aus-1.png"
 import art3 from "../../../assets/images/Homepage/Art in Aus-2.png"
 import art4 from "../../../assets/images/Homepage/Art in Aus-3.png"
 import art5 from "../../../assets/images/Homepage/Art in Aus-4.png"
+import Text from "../../../content/Text"
+import { splitParagraphs } from "../../../content/format"
+import { useText } from "../../../content/context"
 
 gsap.registerPlugin(ScrollTrigger)
-
-const PARAGRAPHS = [
-  "Over the last few decades, diverse Muslim communities across Australia have grown and flourished, they have professionalised, established schools, mosques, community centres and organisations. As part of that extraordinary growth, there has been the steady development of a vibrant, tenacious and dedicated creative community, with many established artists and arts workers contributing to the cultural landscape and thriving arts sector both here and abroad.",
-  "In fact, this growth is so significant that we are now able to dedicate a museum, right here in Australia, to Islamic art. This is truly an incredible achievement and indication of the growing cultural significance of Islam in Australia.",
-  "The influence of Islamic art on artisans and makers across the globe, is in of itself a great study in cross-cultural exchange, of trade routes and expeditions of the past.",
-  "For centuries, Islamic art has been celebrated, even coveted by private collectors and museums alike. However, with that has come the modern day challenge of re/defining and understanding Islamic art in the contemporary era.",
-  "In recent years there has been significant traction in the research of modern and contemporary art globally. We endeavor to not only contribute to the broader narrative of Islamic art, right here from Western Sydney, but to become important voices in that conversation.",
-  "MIAA is proud to be part of this historical development, and aims to work alongside artists and other creative practitioners to enrich and educate our communities through art and creativity.",
-  "As the Artistic Director of MIAA I look forward to the many conversations and collaborations ahead.",
-]
 
 const FRAMES = [
   { src: art5, alt: "(2011). 99 channel SD video sculpture installation, audio, and 98 paintings: acrylic, watercolour and gouache on dye diffusion thermal transfer prints. Installation view (detail) for Destiny Disrupted, Griffith University Art Museum. Courtesy the artist and Milani Gallery, Brisbane. Photograph by Carl Warner.", credit: "99 \u2014", creditAuthor: "Khaled Sabsabi", top: "3%", left: "4%", size: "w-28 md:w-36 lg:w-44 3xl:w-[14vw]", parallaxFactor: 1.2, hoverWidth: "w-[14rem] lg:w-[16rem] 3xl:w-[18rem] relative left-1/2 -translate-x-1/2" },
@@ -106,6 +99,8 @@ export default function IslamicArtPageSection() {
   const [drag, setDrag] = useState({ x: 0, y: 0 })
   const [dragging, setDragging] = useState(false)
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 })
+  const t = useText()
+  const PARAGRAPHS = splitParagraphs(t("islamicart.body"))
 
   const openLightbox = (i) => {
     setZoom(1)
@@ -162,7 +157,8 @@ export default function IslamicArtPageSection() {
       })
     })
     return tokens
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [PARAGRAPHS.length])
 
   useGSAP(
     () => {
@@ -251,7 +247,7 @@ export default function IslamicArtPageSection() {
               transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
               className="text-3xl md:text-4xl lg:text-[2.4rem] 3xl:text-[4.5rem] font-medium text-accent-cream tracking-tight leading-tight mb-6"
             >
-              Islamic Art in Australia
+              <Text k="islamicart.title" />
             </motion.h1>
 
             {/* Scrollable text viewport — like Director Message panel */}

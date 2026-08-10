@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import heroImg from "../../../assets/images/Support/support-hero.jpg"
 import supportElement from "../../../assets/images/Support/supportuselement.png"
+import Text from "../../../content/Text"
 
 export default function SupportHeroSection() {
   return (
@@ -13,7 +14,7 @@ export default function SupportHeroSection() {
           transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-[0.6875rem] md:text-xs 3xl:text-sm tracking-[0.25em] uppercase text-accent-wheat font-semibold mb-3"
         >
-          Building MIAA
+          <Text k="support.hero.eyebrow" />
         </motion.p>
         <motion.h1
           initial={{ opacity: 0, y: 20 }}
@@ -21,7 +22,7 @@ export default function SupportHeroSection() {
           transition={{ duration: 0.7, delay: 0.1, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-3xl md:text-4xl lg:text-[2.6rem] 3xl:text-[4.5rem] font-medium text-accent-cream tracking-tight leading-tight"
         >
-          How Can I Get Involved?
+          <Text k="support.hero.title" />
         </motion.h1>
         <motion.p
           initial={{ opacity: 0, y: 15 }}
@@ -29,7 +30,7 @@ export default function SupportHeroSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="text-base md:text-lg 3xl:text-xl text-accent-cream/75 mt-5 md:mt-6 max-w-2xl mx-auto font-medium"
         >
-          Legacy donors, sadaqa jariyah &amp; major gift giving.
+          <Text k="support.hero.subtitle" />
         </motion.p>
       </div>
 

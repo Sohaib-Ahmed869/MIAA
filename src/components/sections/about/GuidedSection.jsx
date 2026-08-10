@@ -3,19 +3,8 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Minus } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import missionImg from "../../../assets/images/About/journey-photo.png"
-
-const ITEMS = [
-  {
-    title: "Mission Statement",
-    body:
-      "The mission of the Museum of Islamic Art Australia (MIAA) aims to promote a deeper understanding and appreciation of Islamic art, culture, and civilisation — both within Australian society and globally. As a community-led initiative, MIAA is committed to creating a platform that highlights and supports local Islamic art and artists. Through this effort, the museum seeks to contribute to the development of a distinct Australian Muslim identity, expressed creatively through the arts.",
-  },
-  {
-    title: "Vision",
-    body:
-      "The Museum of Islamic Art Australia is a community-led initiative with the vision of establishing a museum to showcase and develop local Islamic art and artists in Australia.",
-  },
-]
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -37,6 +26,11 @@ function QuatrefoilMarker({ size = 11 }) {
 
 export default function GuidedSection() {
   const [openIndex, setOpenIndex] = useState(0)
+  const t = useText()
+  const ITEMS = [
+    { title: t("about.guided.mission.title"), body: t("about.guided.mission.body") },
+    { title: t("about.guided.vision.title"), body: t("about.guided.vision.body") },
+  ]
 
   return (
     <section className="bg-bg-deep pt-12 md:pt-16 pb-12 md:pb-16">
@@ -45,7 +39,7 @@ export default function GuidedSection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-accent-wheat">
-            Museum Mission
+            <Text k="about.guided.label" />
           </span>
         </div>
         <div
@@ -63,15 +57,13 @@ export default function GuidedSection() {
           {/* Left — heading + accordion */}
           <motion.div {...fadeInLeft}>
             <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] 3xl:text-[3.2rem] font-medium text-accent-cream tracking-tight leading-[1.1] mb-10 md:mb-12">
-              Guided by Meaning and
-              <br />
-              Connection
+              <Text k="about.guided.heading" />
             </h2>
 
             <div className="flex flex-col">
               {ITEMS.map((item, i) => (
                 <div
-                  key={item.title}
+                  key={i}
                   className="border-b border-accent-wheat/20 last:border-b-0"
                 >
                   <button

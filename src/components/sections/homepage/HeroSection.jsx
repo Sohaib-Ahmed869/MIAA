@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import heroVideo from "../../../assets/videos/homeVideo.mp4"
 import HeroDonationWidget from "./HeroDonationWidget"
+import Text from "../../../content/Text"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -57,9 +58,7 @@ export default function HeroSection() {
               transition={{ duration: 0.8, delay: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
               className="text-[2.2rem] md:text-[2.8rem] lg:text-[3.2rem] 3xl:text-[4.5rem] font-medium text-accent-cream leading-[1.15] tracking-tight"
             >
-              A Space for Art, Culture
-              <br />
-              and Community
+              <Text k="home.hero.title" />
             </motion.h1>
 
             <motion.p
@@ -68,10 +67,7 @@ export default function HeroSection() {
               transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
               className="text-sm md:text-[0.9375rem] text-accent-cream leading-relaxed max-w-md 3xl:max-w-lg font-medium mt-4 md:mt-6"
             >
-              Explore our website to discover information about Australia&apos;s
-              first Islamic Museum dedicated to the arts. We invite you to join
-              us on this unique journey as we navigate the various stages and
-              milestones of this exciting museum project.
+              <Text k="home.hero.description" />
             </motion.p>
           </div>
 

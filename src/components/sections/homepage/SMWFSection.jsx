@@ -1,6 +1,8 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 import smwf1 from "../../../assets/images/Homepage/SMWF/SMWF-02.jpg"
 import smwf2 from "../../../assets/images/Homepage/SMWF/SMWF-03.jpg"
@@ -42,6 +44,7 @@ function BannerStrip({ text, count = 30 }) {
 }
 
 export default function SMWFSection() {
+  const t = useText()
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-bg overflow-hidden">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
@@ -57,24 +60,16 @@ export default function SMWFSection() {
             </div>
 
             <h2 className="text-3xl md:text-4xl 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-snug">
-              MIAA is home of the Sydney<br />Muslim Writer&apos;s Festival (SMWF)
+              <Text k="home.smwf.heading" />
             </h2>
             <p className="italic text-secondary-wine mt-4 text-base 3xl:text-xl font-medium">
-              Our Story Our Words
+              <Text k="home.smwf.tagline" />
             </p>
             <p className="mt-2 text-sm 3xl:text-lg text-primary leading-normal ">
-              The Sydney Muslim Writers Festival is a unique platform that
-              celebrates the diverse voices of Muslim writers, poets, and
-              thinkers. Founded with the vision of showcasing authentic
-              storytelling, SMWF offers a space for both emerging and established
-              authors to share their narratives and explore various themes in
-              literature. While the full festival will return in 2026, the journey
-              continues with a series of smaller events, workshops, and discussions
-              throughout the year. Join us as we celebrate the power of words,
-              foster dialogue, and build connections across communities
+              <Text k="home.smwf.body" />
             </p>
             <div className="mt-8">
-              <CTAButton to="/events">Explore</CTAButton>
+              <CTAButton to="/events">{t("home.smwf.cta")}</CTAButton>
             </div>
           </motion.div>
 

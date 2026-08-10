@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Layout from "./components/layout/Layout"
+import { ContentProvider } from "./content/ContentContext"
 import Home from "./pages/Home"
 import About from "./pages/About"
 import IslamicArt from "./pages/IslamicArt"
@@ -47,6 +48,7 @@ import DonorsAdmin from "./admin/pages/DonorsAdmin"
 import SubscriptionsAdmin from "./admin/pages/SubscriptionsAdmin"
 import AuditLogAdmin from "./admin/pages/AuditLogAdmin"
 import SettingsAdmin from "./admin/pages/SettingsAdmin"
+import ContentAdmin from "./admin/pages/ContentAdmin"
 import StaffAdmin from "./admin/pages/StaffAdmin"
 import DonationsDashboard from "./admin/pages/DonationsDashboard"
 
@@ -98,6 +100,7 @@ export default function App() {
           <Route path="subscriptions" element={<SubscriptionsAdmin />} />
           <Route path="audit-log" element={<AuditLogAdmin />} />
           <Route path="settings" element={<SettingsAdmin />} />
+          <Route path="content" element={<ContentAdmin />} />
           <Route path="staff" element={<StaffAdmin />} />
         </Route>
 
@@ -125,8 +128,15 @@ export default function App() {
           <Route path="profile" element={<DonorProfile />} />
         </Route>
 
-        {/* Public site */}
-        <Route element={<Layout />}>
+        {/* Public site — wrapped so every page can read editable copy and
+            respond to the admin's live-preview messages. */}
+        <Route
+          element={
+            <ContentProvider>
+              <Layout />
+            </ContentProvider>
+          }
+        >
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
           <Route path="islamic-art" element={<IslamicArt />} />

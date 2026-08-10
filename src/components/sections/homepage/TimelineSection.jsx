@@ -1,6 +1,8 @@
 import { motion } from "framer-motion"
 import { fadeInUp, fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 import { TIMELINE_MILESTONES } from "../../../lib/constants"
 import buildingImg from "../../../assets/images/Homepage/buildingfuture.jpg"
 
@@ -12,6 +14,7 @@ import sydneyArches from "../../../assets/images/Homepage/Miatimeline/sydney-arc
 const timelineImages = [sydneyView, sydneyWater, sydneyPasture, sydneyArches]
 
 export default function TimelineSection() {
+  const t = useText()
   return (
     <section className="pt-16 md:pt-24 3xl:pt-32 bg-accent-cream">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
@@ -20,16 +23,13 @@ export default function TimelineSection() {
           {/* Left - Text */}
           <motion.div {...fadeInLeft}>
             <h2 className="text-3xl md:text-[2.5rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-tight">
-              Building the Future Home of<br />Islamic Art
+              <Text k="home.timeline.heading" />
             </h2>
             <p className="mt-4 text-sm 3xl:text-lg text-primary leading-normal max-w-md 3xl:max-w-xl">
-              The Museum of Islamic Art Australia is now entering its design and
-              construction phase, bringing a world-class vision to life in Western
-              Sydney. Each detail reflects the harmony between tradition,
-              innovation, and community.
+              <Text k="home.timeline.body" />
             </p>
             <div className="mt-8">
-              <CTAButton to="/timeline">Follow Our Journey</CTAButton>
+              <CTAButton to="/timeline">{t("home.timeline.cta")}</CTAButton>
             </div>
           </motion.div>
 
@@ -46,7 +46,7 @@ export default function TimelineSection() {
         {/* MIAA Timeline heading */}
         <motion.div {...fadeInUp}>
           <h3 className="text-2xl md:text-3xl 3xl:text-4xl font-medium text-primary mb-8">
-            MIAA Timeline
+            <Text k="home.timeline.subheading" />
           </h3>
         </motion.div>
 

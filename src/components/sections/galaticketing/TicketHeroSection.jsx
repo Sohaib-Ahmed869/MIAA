@@ -4,6 +4,8 @@ import { ChevronDown, Check } from "lucide-react"
 import CTAButton from "../../ui/Button"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import { api } from "../../../lib/api"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 import heroBgPattern from "../../../assets/images/GalaDinner/herobgpattern.png"
 import bgMask from "../../../assets/images/Ticketing/bgmask.png"
@@ -37,9 +39,10 @@ const INITIAL_FORM = {
 export default function TicketHeroSection() {
   const [form, setForm] = useState(INITIAL_FORM)
   const [submitting, setSubmitting] = useState(false)
-  const [submitted, setSubmitted] = useState(false)
+  const [submitted] = useState(false)
   const [error, setError] = useState(null)
   const [showConfirm, setShowConfirm] = useState(false)
+  const t = useText()
 
   const update = (field, value) => setForm((prev) => ({ ...prev, [field]: value }))
 
@@ -117,17 +120,15 @@ export default function TicketHeroSection() {
           {/* Left — heading + pricing */}
           <motion.div {...fadeInLeft}>
             <h1 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-[2.5rem] 3xl:text-[4.5rem] font-normal text-accent-cream tracking-tight leading-snug mb-5 uppercase">
-              Secure Your Seat
+              <Text k="galatickets.heading" />
             </h1>
             <p className="text-base 3xl:text-xl text-accent-cream leading-relaxed max-w-md 3xl:max-w-lg mb-10">
-              Book your tickets to join us for an unforgettable evening celebrating the
-              architectural reveal of Australia&rsquo;s first Museum of Islamic Art. Your attendance
-              directly supports the building of MIAA.
+              <Text k="galatickets.intro" />
             </p>
 
             <div className="border-t border-accent-wheat/25 pt-6">
               <p className="text-sm md:text-base 3xl:text-lg tracking-[0.25em] uppercase text-white font-medium mb-2">
-                Ticket Pricing
+                <Text k="galatickets.pricingLabel" />
               </p>
               <div className="flex items-baseline gap-1">
                 <p className="text-4xl md:text-5xl 3xl:text-6xl font-medium text-accent-wheat tracking-tight leading-none">
@@ -143,10 +144,10 @@ export default function TicketHeroSection() {
             {submitted ? (
               <div className="py-12 text-center">
                 <p className="text-xl 3xl:text-2xl font-semibold text-white">
-                  Booking received
+                  <Text k="galatickets.successTitle" />
                 </p>
                 <p className="text-sm 3xl:text-base text-white mt-2">
-                  We&apos;ll be in touch with your confirmation shortly.
+                  <Text k="galatickets.successBody" />
                 </p>
               </div>
             ) : (
@@ -435,7 +436,7 @@ export default function TicketHeroSection() {
                 )}
 
                 <div className="flex justify-start mt-2">
-                  <CTAButton type="submit" disabled={submitting} showArrow={!submitting} className="px-6 py-3 disabled:opacity-50">{submitting ? "Processing..." : "Buy Ticket"}</CTAButton>
+                  <CTAButton type="submit" disabled={submitting} showArrow={!submitting} className="px-6 py-3 disabled:opacity-50">{submitting ? "Processing..." : t("galatickets.cta")}</CTAButton>
                 </div>
               </form>
             )}

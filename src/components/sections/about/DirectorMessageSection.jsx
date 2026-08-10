@@ -6,16 +6,11 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import directorImg from "../../../assets/images/About/director-mehmet-ozalp.png"
 import float2 from "../../../assets/images/About/float2.png"
+import Text from "../../../content/Text"
+import { splitParagraphs } from "../../../content/format"
+import { useText } from "../../../content/context"
 
 gsap.registerPlugin(ScrollTrigger)
-
-const MESSAGE_PARAGRAPHS = [
-  "It is with great excitement and purpose that I welcome you to the online home for the Museum of Islamic Art Australia (MIAA). As the Executive Director of the Islamic Sciences and Research Academy (ISRA), I am honoured to introduce this visionary project, which will be in Western Sydney and serve as a cultural landmark for all of Sydney and Australia.",
-  "Our vision is clear and unwavering: to be a leading institution for the advancement of Islamic awareness, spiritual growth and community wellbeing in Australia. MIAA is a natural extension of this vision \u2013 a space that celebrates beauty, fosters understanding and inspires connection.",
-  "The role of the Museum will be multifaceted. It will be a centre for cultural education, a repository for historical and contemporary Islamic art, and a place of encounter where Australians of all backgrounds can explore the artistic and intellectual contributions of Muslims throughout history and today. Through its exhibitions, programs and design, the museum will tell a story that is global and local \u2013 reflecting the heritage of Islamic art while capturing the Australian Muslim experience.",
-  "Our aspirations for the museum are bold and ambitious. We aim to create a space that reflects excellence in architectural design, environmental harmony and spiritual symbolism. It will be an inclusive, engaging and contemporary institution \u2013 accessible to all, deeply rooted in authenticity and connected to the future. The museum will be a place of inspiration for young minds, a resource for educators and researchers, and a cultural beacon that contributes to a more cohesive and confident Australian society.",
-  "On behalf of the MIAA team, I invite you to follow our journey, share in our excitement, and help us build a place that will inspire generations to come.",
-]
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -39,6 +34,8 @@ export default function DirectorMessageSection() {
   const sectionRef = useRef(null)
   const trackRef = useRef(null)
   const viewportRef = useRef(null)
+  const t = useText()
+  const paragraphs = splitParagraphs(t("about.director.body"))
   useGSAP(
     () => {
       const track = trackRef.current
@@ -112,7 +109,7 @@ export default function DirectorMessageSection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-secondary-terra">
-            Message
+            <Text k="about.director.label" />
           </span>
         </div>
         <div
@@ -130,9 +127,7 @@ export default function DirectorMessageSection() {
           {/* Left — heading at top, director card aligned with panel bottom */}
           <motion.div {...fadeInLeft} className="flex flex-col">
             <h2 className="text-3xl md:text-4xl lg:text-[2.75rem] 3xl:text-[3.2rem] font-medium text-accent-cream tracking-tight leading-[1.1]">
-              A Message from
-              <br />
-              MIAA&apos;s Director
+              <Text k="about.director.heading" />
             </h2>
 
             <div className="mt-auto pt-6 md:pt-16">
@@ -148,7 +143,7 @@ export default function DirectorMessageSection() {
                 className="text-3xl md:text-4xl 3xl:text-5xl text-accent-cream leading-tight mb-2 md:mb-5"
                 style={{ fontFamily: "var(--font-script)" }}
               >
-                Professor Mehmet Ozalp
+                <Text k="about.director.name" />
               </p>
 
               <ul className="flex flex-col gap-2">
@@ -157,8 +152,7 @@ export default function DirectorMessageSection() {
                     <QuatrefoilMarker size={8} />
                   </span>
                   <span className="text-[0.8125rem] 3xl:text-base text-accent-cream/85 leading-snug">
-                    Executive Director, ISRA (Islamic Sciences and Research
-                    Academy)
+                    <Text k="about.director.role1" />
                   </span>
                 </li>
                 <li className="flex items-start gap-2.5">
@@ -166,7 +160,7 @@ export default function DirectorMessageSection() {
                     <QuatrefoilMarker size={8} />
                   </span>
                   <span className="text-[0.8125rem] 3xl:text-base text-accent-cream/85 leading-snug">
-                    Director, Museum of Islamic Art Australia
+                    <Text k="about.director.role2" />
                   </span>
                 </li>
               </ul>
@@ -190,7 +184,7 @@ export default function DirectorMessageSection() {
 
               <div ref={trackRef} className="will-change-transform pt-8">
                 <div className="flex flex-col gap-5 text-sm md:text-[0.9375rem] 3xl:text-lg text-primary leading-relaxed">
-                  {MESSAGE_PARAGRAPHS.map((para, i) => (
+                  {paragraphs.map((para, i) => (
                     <p key={i}>{para}</p>
                   ))}
                 </div>

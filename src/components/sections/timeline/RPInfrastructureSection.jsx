@@ -1,6 +1,9 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import teamImg from "../../../assets/images/Timeline/rp-infrastructure-team.png"
+import Text from "../../../content/Text"
+import { splitParagraphs } from "../../../content/format"
+import { useText } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -21,6 +24,7 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function RPInfrastructureSection() {
+  const t = useText()
   return (
     <section className="bg-bg pt-16 md:pt-20 3xl:pt-28 pb-16 md:pb-24 3xl:pb-32">
       {/* Section label + dotted divider */}
@@ -28,7 +32,7 @@ export default function RPInfrastructureSection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-secondary-terra">
-            Project Management
+            <Text k="timeline.rp.label" />
           </span>
         </div>
         <div
@@ -57,30 +61,14 @@ export default function RPInfrastructureSection() {
           {/* Right — heading + body paragraphs */}
           <motion.div {...fadeInRight} className="flex flex-col gap-5">
             <h2 className="text-3xl md:text-4xl lg:text-[2.25rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-[1.1] mb-2">
-              About RP Infrastructure
+              <Text k="timeline.rp.heading" />
             </h2>
 
-            <p className="text-[0.8125rem] md:text-sm 3xl:text-lg text-primary leading-relaxed">
-              After a rigorous selection process, the project management
-              contract was awarded to RP Infrastructure, a highly reputable
-              and experienced project management team with a history of
-              managing major cultural infrastructure projects.
-            </p>
-
-            <p className="text-[0.8125rem] md:text-sm 3xl:text-lg text-primary leading-relaxed">
-              RP Infrastructure specialises in delivering total solutions
-              through effective planning and project management methodologies.
-              This way we help our clients minimise risk and deliver the right
-              outcomes for each and every project.
-            </p>
-
-            <p className="text-[0.8125rem] md:text-sm 3xl:text-lg text-primary leading-relaxed">
-              RPI, in collaboration with our working committees, will manage
-              the construction of the museum. Led by RPI Executive Director
-              Chris Crick, with team members Paul van der Plaat (Project
-              Director), Russell Kosko (Senior Project Manager), and Salma
-              Malik (Assistant Project Manager).
-            </p>
+            {splitParagraphs(t("timeline.rp.body")).map((para, i) => (
+              <p key={i} className="text-[0.8125rem] md:text-sm 3xl:text-lg text-primary leading-relaxed">
+                {para}
+              </p>
+            ))}
           </motion.div>
         </div>
       </div>

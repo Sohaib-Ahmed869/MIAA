@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { fadeInUp } from "../../../lib/motion"
+import Text from "../../../content/Text"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -26,7 +27,7 @@ export default function TimelineVideoSection() {
         <div className="flex items-center gap-2 mb-2">
           <QuatrefoilMarker />
           <span className="text-[0.625rem] 3xl:text-sm font-normal tracking-[0.2em] uppercase text-secondary-terra">
-            Watch The Story
+            <Text k="timeline.video.label" />
           </span>
         </div>
         <div

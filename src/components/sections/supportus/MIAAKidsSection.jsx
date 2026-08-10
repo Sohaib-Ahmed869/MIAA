@@ -2,17 +2,19 @@ import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import kidsImg from "../../../assets/images/Support/donor-event.png"
-
-const BENEFITS = [
-  "Free Museum entry all year round*",
-  "Members only previews and exclusive guided tours",
-  "Early release tickets for Museum events",
-  "Early release tickets for the MIAA Annual Gala Dinner",
-  "Enjoy discounts in the gift shop and cafe",
-  "Memberships directly support the museum operations",
-]
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 export default function MIAAKidsSection() {
+  const t = useText()
+  const BENEFITS = [
+    t("support.kids.benefit1"),
+    t("support.kids.benefit2"),
+    t("support.kids.benefit3"),
+    t("support.kids.benefit4"),
+    t("support.kids.benefit5"),
+    t("support.kids.benefit6"),
+  ]
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-primary">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
@@ -20,18 +22,16 @@ export default function MIAAKidsSection() {
           {/* Left — heading + checklist + button */}
           <motion.div {...fadeInLeft}>
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2rem] 3xl:text-[3.2rem] font-medium text-accent-cream tracking-tight leading-snug mb-6">
-              My MIAA and MIAA Kids 2029
+              <Text k="support.kids.heading" />
             </h2>
             <p className="text-base 3xl:text-lg text-accent-cream leading-relaxed mb-6 max-w-md 3xl:max-w-xl">
-              Stay in touch and be the first to join My MIAA and MIAA Kids prior
-              to the Museum&rsquo;s grand opening in early 2029. Benefits of
-              becoming a MIAA Member:
+              <Text k="support.kids.intro" />
             </p>
 
             <motion.ul {...staggerContainer} className="flex flex-col gap-2.5 mb-6">
-              {BENEFITS.map((b) => (
+              {BENEFITS.map((b, i) => (
                 <motion.li
-                  key={b}
+                  key={i}
                   {...staggerItem}
                   className="flex items-start gap-3"
                 >
@@ -44,10 +44,10 @@ export default function MIAAKidsSection() {
             </motion.ul>
 
             <p className="text-sm md:text-[0.9375rem] 3xl:text-base text-accent-wheat italic mb-8">
-              *Excludes ticketed events
+              <Text k="support.kids.note" />
             </p>
 
-            <CTAButton to="/contact">Join Membership</CTAButton>
+            <CTAButton to="/contact">{t("support.kids.cta")}</CTAButton>
           </motion.div>
 
           {/* Right — image */}

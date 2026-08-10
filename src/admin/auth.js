@@ -271,6 +271,13 @@ export const adminApi = {
   updateSiteSettings: (payload) =>
     request("/api/settings", { method: "PATCH", body: payload }),
 
+  // site content (editable public copy)
+  getSiteContent: () => request("/api/site-content"),
+  updateSiteContent: (values) =>
+    request("/api/site-content", { method: "PATCH", body: { values } }),
+  resetSiteContentKey: (key) =>
+    request(`/api/site-content/${encodeURIComponent(key)}`, { method: "DELETE" }),
+
   // uploads
   presign: ({ filename, contentType, folder }) =>
     request("/api/uploads/presign", {

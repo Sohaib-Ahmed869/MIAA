@@ -3,12 +3,8 @@ import { motion } from "framer-motion"
 import { ShieldCheck, ReceiptText, HeartHandshake } from "lucide-react"
 import CTAButton from "../../ui/Button"
 import ornament from "../../../assets/images/Homepage/Ornament_1.png"
-
-const REASSURANCES = [
-  { icon: ShieldCheck, label: "Secure payments", sub: "Stripe" },
-  { icon: ReceiptText, label: "Instant receipts", sub: "Emailed to you" },
-  { icon: HeartHandshake, label: "Direct impact", sub: "Funds our programs" },
-]
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 // Donation-themed imagery (Unsplash). ?auto=format keeps payloads small.
 const IMG = (id) =>
@@ -26,6 +22,12 @@ const ease = [0.25, 0.1, 0.25, 1]
 
 export default function DonationsHeroSection() {
   const [active, setActive] = useState(0)
+  const t = useText()
+  const REASSURANCES = [
+    { icon: ShieldCheck, label: t("donate.hero.badge1.label"), sub: t("donate.hero.badge1.sub") },
+    { icon: ReceiptText, label: t("donate.hero.badge2.label"), sub: t("donate.hero.badge2.sub") },
+    { icon: HeartHandshake, label: t("donate.hero.badge3.label"), sub: t("donate.hero.badge3.sub") },
+  ]
 
   useEffect(() => {
     // Respect users who prefer reduced motion — no auto-rotation.
@@ -67,7 +69,7 @@ export default function DonationsHeroSection() {
               transition={{ duration: 0.6, ease }}
               className="text-[0.6875rem] md:text-xs 3xl:text-sm tracking-[0.25em] uppercase text-accent-wheat font-semibold mb-3"
             >
-              Support MIAA
+              <Text k="donate.hero.eyebrow" />
             </motion.p>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -75,7 +77,7 @@ export default function DonationsHeroSection() {
               transition={{ duration: 0.7, delay: 0.1, ease }}
               className="text-4xl md:text-5xl lg:text-[3.4rem] 3xl:text-[5rem] font-medium text-accent-cream tracking-tight leading-[1.05]"
             >
-              Make a Donation
+              <Text k="donate.hero.title" />
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 15 }}
@@ -83,8 +85,7 @@ export default function DonationsHeroSection() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-base md:text-lg 3xl:text-xl text-accent-cream/75 mt-5 md:mt-6 max-w-xl mx-auto lg:mx-0 font-medium leading-relaxed"
             >
-              Your generous contribution helps preserve and celebrate Islamic art
-              and culture in Australia.
+              <Text k="donate.hero.subtitle" />
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 15 }}
@@ -92,12 +93,12 @@ export default function DonationsHeroSection() {
               transition={{ duration: 0.6, delay: 0.35 }}
               className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-4"
             >
-              <CTAButton to="/donate/checkout">Donate Now</CTAButton>
+              <CTAButton to="/donate/checkout">{t("donate.hero.cta")}</CTAButton>
               <a
                 href="#choose-a-cause"
                 className="text-[0.6875rem] 3xl:text-sm tracking-[0.15em] uppercase font-semibold text-accent-cream/70 hover:text-accent-cream transition-colors"
               >
-                Choose a cause →
+                <Text k="donate.hero.chooseLink" />
               </a>
             </motion.div>
 
@@ -160,7 +161,7 @@ export default function DonationsHeroSection() {
               <div className="absolute bottom-4 left-4 right-16 flex items-center gap-2 text-accent-cream">
                 <span className="w-2 h-2 rounded-full bg-secondary-terra flex-none" />
                 <span className="text-[0.6875rem] 3xl:text-sm tracking-wide font-medium">
-                  Building Australia&rsquo;s home for Islamic art, together.
+                  <Text k="donate.hero.caption" />
                 </span>
               </div>
               {/* Carousel dots */}

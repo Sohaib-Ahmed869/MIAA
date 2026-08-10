@@ -6,6 +6,8 @@ import { useGSAP } from "@gsap/react"
 import { ZoomIn, ZoomOut, X } from "lucide-react"
 import { fadeInUp } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 import art1 from "../../../assets/images/Homepage/Art in Aus.png"
 import art2 from "../../../assets/images/Homepage/Art in Aus-1.png"
@@ -78,6 +80,7 @@ export default function IslamicArtSection() {
   const containerRef = useRef(null)
   const sectionRef = useRef(null)
   const frameRefs = useRef([])
+  const t = useText()
 
   const openLightbox = (i) => {
     setZoom(1)
@@ -185,18 +188,13 @@ export default function IslamicArtSection() {
 
           <motion.div {...fadeInUp} className="px-2 py-4">
             <h2 className="text-3xl font-medium text-primary tracking-tight leading-snug">
-              Celebrating Islamic
-              <br />
-              Art in Australia
+              <Text k="home.art.heading" />
             </h2>
             <p className="mt-5 text-sm text-primary leading-relaxed font-medium">
-              Across Australia, Islamic art continues to flourish — shaped by
-              diverse artists, cultures, and stories. The Museum of Islamic Art
-              Australia proudly supports this creative movement, celebrating its
-              heritage and future through art, learning, and community.
+              <Text k="home.art.body" />
             </p>
             <div className="mt-6">
-              <CTAButton to="/islamic-art">Explore</CTAButton>
+              <CTAButton to="/islamic-art">{t("home.art.cta")}</CTAButton>
             </div>
           </motion.div>
 
@@ -246,7 +244,7 @@ export default function IslamicArtSection() {
                 heritage and future through art, learning, and community.
               </p>
               <div className="pointer-events-auto mt-6">
-                <CTAButton to="/islamic-art">Explore</CTAButton>
+                <CTAButton to="/islamic-art">{t("home.art.cta")}</CTAButton>
               </div>
             </motion.div>
 
@@ -350,7 +348,7 @@ export default function IslamicArtSection() {
 import { forwardRef } from "react"
 
 const ArtFrame = forwardRef(function ArtFrame(
-  { piece, index, isHovered, onHover, onLeave, onClick, springX, springY },
+  { piece, isHovered, onHover, onLeave, onClick, springX, springY },
   ref,
 ) {
   const factor = piece.parallaxFactor

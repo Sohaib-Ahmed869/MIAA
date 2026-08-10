@@ -2,31 +2,24 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ZoomIn, ZoomOut, X } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 import mapImg from "../../../assets/images/Ticketing/area-map.png"
 import bgPattern from "../../../assets/images/GalaDinner/herobgpattern.png"
 
-const PARKING_INFO = [
-  {
-    title: "Meter Parking",
-    body: "On Mrs Macquarie\u2019s Road and other streets around the Art Gallery.",
-  },
-  {
-    title: "Parking Stations",
-    body: "There are several car parks near the Art Gallery. The closest are the Domain Car Park and The Wharf, Woolloomooloo Car Park, both of which can be booked in advance online.",
-    noteLabel: "Note changes to access from the Domain Car Park:",
-    note: " The lift closest to the Art Gallery is not operational as it is being replaced by Wilson Parking. There are stairs, and the car park\u2019s south lift remains operational.",
-  },
-  {
-    title: "Bicycles",
-    body: "Bike parking is available along Art Gallery Road for both buildings. Bike racks are located at the front of the Naala Nura building and outside the Naala Badu building, opposite the Woolloomooloo Gate entrance to the Royal Botanic Garden.",
-  },
-  {
-    title: "Buses",
-    body: "Drop-off and pick-up zone on Art Gallery Road near the front of the Art Gallery but no dedicated parking spaces.",
-  },
-]
-
 export default function ParkingSection() {
+  const t = useText()
+  const PARKING_INFO = [
+    { title: t("gala.parking.meterTitle"), body: t("gala.parking.meterBody") },
+    {
+      title: t("gala.parking.stationsTitle"),
+      body: t("gala.parking.stationsBody"),
+      noteLabel: t("gala.parking.stationsNoteLabel"),
+      note: t("gala.parking.stationsNote"),
+    },
+    { title: t("gala.parking.bicyclesTitle"), body: t("gala.parking.bicyclesBody") },
+    { title: t("gala.parking.busesTitle"), body: t("gala.parking.busesBody") },
+  ]
   const [mapOpen, setMapOpen] = useState(false)
   const [zoom, setZoom] = useState(1)
   const [drag, setDrag] = useState({ x: 0, y: 0 })
@@ -67,11 +60,11 @@ export default function ParkingSection() {
           {/* Left — heading + parking info */}
           <motion.div {...fadeInLeft}>
             <h2 className="font-display text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] 3xl:text-[3.2rem] font-normal text-accent-cream tracking-tight leading-snug mb-10 md:mb-14 uppercase">
-              Parking
+              <Text k="gala.parking.heading" />
             </h2>
             <div className="flex flex-col divide-y divide-accent-cream/15">
-            {PARKING_INFO.map((item) => (
-              <div key={item.title} className="py-6 first:pt-0 last:pb-0">
+            {PARKING_INFO.map((item, i) => (
+              <div key={i} className="py-6 first:pt-0 last:pb-0">
                 <h3 className="font-display text-xl md:text-2xl 3xl:text-3xl font-normal text-accent-wheat mb-2">
                   {item.title}
                 </h3>
@@ -126,7 +119,7 @@ export default function ParkingSection() {
             {/* Top bar */}
             <div className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-accent-wheat/15">
               <h3 className="font-display text-lg md:text-xl 3xl:text-2xl text-accent-cream uppercase tracking-wide">
-                Venue Map
+                <Text k="gala.parking.mapTitle" />
               </h3>
               <div className="flex items-center gap-3">
                 <span className="text-xs 3xl:text-sm text-accent-cream/50 mr-2">{Math.round(zoom * 100)}%</span>

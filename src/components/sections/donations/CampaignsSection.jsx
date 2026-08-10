@@ -7,8 +7,11 @@ import "swiper/css/pagination"
 import "swiper/css/navigation"
 import { fadeInUp } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 export default function CampaignsSection({ campaigns = [] }) {
+  const t = useText()
   if (campaigns.length === 0) return null
 
   return (
@@ -20,13 +23,13 @@ export default function CampaignsSection({ campaigns = [] }) {
             {...fadeInUp}
             className="text-[0.6875rem] md:text-xs tracking-[0.25em] uppercase text-secondary-terra font-semibold mb-2"
           >
-            Active Campaigns
+            <Text k="donate.campaigns.eyebrow" />
           </motion.p>
           <motion.h2
             {...fadeInUp}
             className="text-2xl md:text-3xl lg:text-4xl 3xl:text-5xl font-medium text-primary tracking-tight leading-tight"
           >
-            Current Appeals
+            <Text k="donate.campaigns.heading" />
           </motion.h2>
         </div>
 
@@ -83,7 +86,7 @@ export default function CampaignsSection({ campaigns = [] }) {
                           className="max-w-xl 3xl:max-w-3xl"
                         >
                           <p className="text-[0.625rem] md:text-[0.6875rem] tracking-[0.25em] uppercase text-accent-wheat font-semibold mb-3">
-                            Campaign
+                            <Text k="donate.campaigns.itemLabel" />
                           </p>
                           <h3 className="text-2xl md:text-4xl lg:text-5xl 3xl:text-6xl font-medium text-white tracking-tight leading-[1.05] mb-3">
                             {c.title}
@@ -115,7 +118,7 @@ export default function CampaignsSection({ campaigns = [] }) {
                           )}
 
                           <CTAButton to={`/campaign/${c.slug || c._id}`}>
-                            Support this Campaign
+                            {t("donate.campaigns.cta")}
                           </CTAButton>
                         </motion.div>
                       </div>

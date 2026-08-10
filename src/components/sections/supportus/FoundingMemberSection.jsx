@@ -4,20 +4,22 @@ import { fadeInLeft, fadeInRight, fadeInUp } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import founderImg from "../../../assets/images/Support/founder-portrait.jpg"
 import donorEventImg from "../../../assets/images/Support/donor-event.png"
-
-const SPONSORSHIP_ITEMS = [
-  { title: "Faith Gallery & Prayer Hall", image: donorEventImg },
-  { title: "Children's Gallery", image: founderImg },
-  { title: "Entry Foyer", image: donorEventImg },
-  { title: "Temporary/Touring Gallery", image: founderImg },
-  { title: "Function Room Sponsorship", image: donorEventImg },
-  { title: "Library and Resource Centre", image: founderImg },
-  { title: "Gallery Sponsorship", image: donorEventImg },
-  { title: "Central Courtyard/Internal Garden", image: founderImg },
-]
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 export default function FoundingMemberSection() {
   const [hoveredIdx, setHoveredIdx] = useState(null)
+  const t = useText()
+  const SPONSORSHIP_ITEMS = [
+    { title: t("support.founding.item1"), image: donorEventImg },
+    { title: t("support.founding.item2"), image: founderImg },
+    { title: t("support.founding.item3"), image: donorEventImg },
+    { title: t("support.founding.item4"), image: founderImg },
+    { title: t("support.founding.item5"), image: donorEventImg },
+    { title: t("support.founding.item6"), image: founderImg },
+    { title: t("support.founding.item7"), image: donorEventImg },
+    { title: t("support.founding.item8"), image: founderImg },
+  ]
 
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-accent-cream">
@@ -38,26 +40,21 @@ export default function FoundingMemberSection() {
           {/* Right — heading, text, CTA */}
           <motion.div {...fadeInRight} className="flex flex-col gap-6">
             <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] 3xl:text-[3.2rem] font-medium text-primary tracking-tight leading-snug lg:max-w-lg 3xl:max-w-2xl">
-              Become a founding member of the Museum of Islamic Art Australia
+              <Text k="support.founding.heading" />
             </h2>
 
             <p className="text-base sm:text-lg md:text-xl 3xl:text-2xl text-primary leading-relaxed lg:max-w-lg 3xl:max-w-2xl">
-              Founding members of the museum will be listed on our dedicated
-              donor&rsquo;s wall and museum archive. Donations can be made on
-              behalf of an individual (named or anonymous) or a family. Founding
-              members donations start from $5,000
+              <Text k="support.founding.body1" />
             </p>
 
             <p className="text-sm sm:text-base 3xl:text-lg text-primary leading-relaxed lg:max-w-lg 3xl:max-w-2xl">
-              Donate and sponsor an entire gallery, facility or hall. Contact
-              MIAA directly for more details.
+              <Text k="support.founding.body2" />
             </p>
 
             <div className="flex flex-wrap items-center gap-6 mt-2">
-              <CTAButton to="/donate" className="px-5 sm:px-7 py-3 sm:py-3.5 rounded-lg">Donate Now</CTAButton>
+              <CTAButton to="/donate" className="px-5 sm:px-7 py-3 sm:py-3.5 rounded-lg">{t("support.founding.cta")}</CTAButton>
               <p className="text-sm md:text-[0.9375rem] 3xl:text-lg text-primary font-semibold italic leading-snug max-w-[260px] 3xl:max-w-[16rem]">
-                Stay in touch and be the first to hear about our upcoming
-                campaign
+                <Text k="support.founding.note" />
               </p>
             </div>
           </motion.div>
@@ -70,16 +67,14 @@ export default function FoundingMemberSection() {
         >
           {/* Left label */}
           <p className="text-lg md:text-xl 3xl:text-2xl font-semibold text-primary leading-relaxed">
-            Founding individuals and businesses (includes naming rights for 10
-            years and permanent founding member status) available for the
-            following:
+            <Text k="support.founding.listIntro" />
           </p>
 
           {/* Right grid of items — 2 columns with hover effect */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {SPONSORSHIP_ITEMS.map((item, i) => (
               <div
-                key={item.title}
+                key={i}
                 onMouseEnter={() => setHoveredIdx(i)}
                 onMouseLeave={() => setHoveredIdx(null)}
                 className={`relative px-5 py-4 3xl:px-6 3xl:py-5 text-sm md:text-[0.9375rem] 3xl:text-base text-primary cursor-pointer rounded-lg transition-colors duration-200 ${

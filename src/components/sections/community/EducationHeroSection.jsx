@@ -4,22 +4,16 @@ import { Plus, Minus } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import heroImg from "../../../assets/images/Community Engagement/education-hero.png"
 import float2 from "../../../assets/images/About/float2.png"
-
-const accordionItems = [
-  {
-    title: "Teachers, Educators and Students",
-    content:
-      "The Museum of Islamic Art Australia (MIAA) will deliver substantial education links for school-aged visitors through a bespoke education matrix which engages with both the Australian National curriculum and NSW curriculum. Dr Eeqbal Hassim, an education consultant specialising in intercultural education, international education, and global competencies development is currently working in collaboration with MIAA to deliver a dedicated suite of education programs. The museum education program will ensure meaningful engagement, tours, and specialised programs for school-aged visitors.",
-  },
-  {
-    title: "Children and Families",
-    content:
-      "As part of our aim to enhance engagement with young people, the Museum will feature a Children's Gallery — the first dedicated Islamic arts focussed children's gallery in the Southern hemisphere. It will include hands-on and interactive displays, accessible contemporary and decorative Islamic art and literature for young children, and a curated series of educational programs with a focus on kinder and primary aged children. The space will also offer parents and bubs' reading groups and other age-appropriate art focussed activities.",
-  },
-]
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 export default function EducationHeroSection() {
   const [openIndex, setOpenIndex] = useState(0)
+  const t = useText()
+  const accordionItems = [
+    { title: t("community.hero.item1.title"), content: t("community.hero.item1.body") },
+    { title: t("community.hero.item2.title"), content: t("community.hero.item2.body") },
+  ]
 
   return (
     <section className="relative z-20 bg-bg">
@@ -31,7 +25,7 @@ export default function EducationHeroSection() {
           transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
           className="text-3xl md:text-4xl lg:text-[2.4rem] 3xl:text-[4.5rem] font-medium text-accent-cream tracking-tight leading-tight"
         >
-          Education &amp; Community Engagement
+          <Text k="community.hero.title" />
         </motion.h1>
       </div>
 
@@ -52,9 +46,7 @@ export default function EducationHeroSection() {
           className="bg-bg-deep px-6 md:px-10 lg:px-16 3xl:px-24 lg:pl-12 pt-8 md:pt-10 pb-20 md:pb-32 lg:pb-40 self-stretch"
         >
           <h2 className="text-2xl md:text-3xl lg:text-[2.125rem] 3xl:text-[3.2rem] font-medium text-accent-cream tracking-tight leading-snug">
-            Educating the Next
-            <br />
-            Generation of Thinkers
+            <Text k="community.hero.heading" />
           </h2>
 
           <div className="mt-8 flex flex-col">

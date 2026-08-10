@@ -3,6 +3,8 @@ import { fadeInUp } from "../../../lib/motion"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import SectionDivider from "../../ui/SectionDivider"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 import hikmaLegal from "../../../assets/images/Sponsor Logos/Hikma Legal - Silver (1).png"
 import metroStrata from "../../../assets/images/Sponsor Logos/Metro Strata Levy Header.png"
 import taxFactor from "../../../assets/images/Sponsor Logos/The Tax Factor.svg"
@@ -76,6 +78,7 @@ export default function GalaSponsorsSection() {
     () => api.sponsors({ surface: "gala" }),
     FALLBACK_SPONSORS
   )
+  const t = useText()
 
   // Nothing to show and no fallback — render nothing rather than an empty band.
   if (!sponsors || sponsors.length === 0) return null
@@ -100,12 +103,12 @@ export default function GalaSponsorsSection() {
 
         {/* Section divider — sits on top of the band */}
         <div className="relative z-20 max-w-[1400px] 3xl:max-w-[3200px] mx-auto">
-          <SectionDivider label="Our Sponsors" bg="bg-transparent" variant="light" />
+          <SectionDivider label={t("gala.sponsors.label")} bg="bg-transparent" variant="light" />
         </div>
 
         {/* Heading — sits on top of the band */}
         <h2 className="relative z-20 font-display text-3xl md:text-[2.625rem] 3xl:text-[3.2rem] font-medium leading-none tracking-tight mt-8 md:mt-10 mb-8 md:mb-12 3xl:mb-16 uppercase text-center gala-heading">
-          Sponsored By
+          <Text k="gala.sponsors.heading" />
         </h2>
 
         {/* Edge fades so cards slide in/out softly */}

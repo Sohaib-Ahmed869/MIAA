@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { fadeInUp, fadeInLeft, fadeInRight } from "../../../lib/motion"
 import { ArrowUpRight } from "lucide-react"
+import Text from "../../../content/Text"
 
 
 import visionPhoto from "../../../assets/images/Homepage/SMWF/vision-photo.jpg"
@@ -109,12 +110,10 @@ export default function SMWFAboutSection() {
             {/* Our Vision heading + body */}
             <div className="relative z-10 pt-0 xl:pt-14 2xl:pt-32 3xl:pt-44">
               <h3 className="font-aeonik text-white text-2xl md:text-3xl 2xl:text-4xl 3xl:text-5xl font-medium tracking-tight mb-3 md:mb-4 2xl:mb-5 3xl:mb-6">
-                Our Vision
+                <Text k="smwf.about.visionHeading" />
               </h3>
               <p className="font-barlow text-white/90 text-sm md:text-base 2xl:text-lg 3xl:text-xl leading-relaxed max-w-md 2xl:max-w-lg 3xl:max-w-2xl">
-                To cultivate and foster a deeper understanding and appreciation
-                of literature written by Muslims across diverse genres, for
-                local and international audiences.
+                <Text k="smwf.about.visionBody" />
               </p>
             </div>
 

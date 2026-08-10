@@ -1,5 +1,4 @@
 import bannerIcon from "../../../assets/images/Homepage/SMWF/banner-icon.svg"
-import patternKufic from "../../../assets/images/Homepage/SMWF/pattern-kufic.png"
 
 const TEXT = "Sydney Muslim Writers Festival"
 const REPEAT = 10

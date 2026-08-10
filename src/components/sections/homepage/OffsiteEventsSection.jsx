@@ -7,6 +7,8 @@ import CTAButton from "../../ui/Button"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
+import Text from "../../../content/Text"
+import { useText } from "../../../content/context"
 
 function slugify(s = "") {
   return String(s)
@@ -57,6 +59,7 @@ const FALLBACK_PREVIOUS = [
 
 export default function OffsiteEventsSection() {
   const [hoveredPrev, setHoveredPrev] = useState(null)
+  const t = useText()
 
   // upcoming: true — events whose date has passed belong in the archive, not
   // under an "Upcoming Events" heading.
@@ -78,9 +81,9 @@ export default function OffsiteEventsSection() {
           className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between mb-14"
         >
           <h2 className="text-3xl md:text-[2.625rem] 3xl:text-[3.2rem] font-medium text-white tracking-tight leading-tight">
-            Offsite Programs and Events
+            <Text k="home.offsite.heading" />
           </h2>
-          <CTAButton to="/offsite-events" className="self-start md:mt-1 whitespace-nowrap">View All Events</CTAButton>
+          <CTAButton to="/offsite-events" className="self-start md:mt-1 whitespace-nowrap">{t("home.offsite.cta")}</CTAButton>
         </motion.div>
 
         {/* Upcoming event cards */}
@@ -148,7 +151,7 @@ export default function OffsiteEventsSection() {
             {/* Left column — heading */}
             <div>
               <h3 className="text-2xl 3xl:text-3xl font-medium text-white leading-tight">
-                Previous Events
+                <Text k="home.offsite.previousHeading" />
               </h3>
             </div>
 
