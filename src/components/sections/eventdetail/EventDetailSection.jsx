@@ -55,6 +55,10 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
 
   // Registration — admin enables this per event. Sends the visitor to the
   // registration wizard (which handles the free RSVP or the paid flow).
+  // Computed by the API from the event's date — undated ("TBA") events are
+  // never treated as passed.
+  const hasEnded = Boolean(event.hasEnded)
+
   const registrationEnabled = Boolean(event.registrationEnabled)
   const registerTarget = event.slug || event._id
   const registerUrl = `/event/${encodeURIComponent(registerTarget || "")}/register`
@@ -215,7 +219,13 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
               ))}
 
               <div className="mt-10 flex flex-wrap gap-4 items-center">
-                {registrationEnabled ? (
+                {/* Nothing to sign up for once the day has passed — the page
+                    stays readable as a record, but stops inviting an RSVP. */}
+                {hasEnded ? (
+                  <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-full bg-primary/8 text-primary/60 text-[0.6875rem] 3xl:text-sm tracking-[0.15em] uppercase">
+                    This event has passed
+                  </span>
+                ) : registrationEnabled ? (
                   <CTAButton to={registerUrl}>{registerLabel}</CTAButton>
                 ) : rsvpIsExternal ? (
                   <CTAButton href={rsvpUrl}>{rsvpLabel}</CTAButton>
@@ -228,14 +238,17 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
                 >
                   View All Events
                 </Link>
-                {acceptsDonations && (
+                {acceptsDonations && !hasEnded && (
                   <CTAButton to={donateUrl} icon={Heart}>
                     Donate to this Event
                   </CTAButton>
                 )}
               </div>
 
-              {acceptsDonations && (
+              {/* Gated on `hasEnded` alongside the donate button above: without
+                  it this would still ask for contributions to a finished event
+                  while offering no way to give. */}
+              {acceptsDonations && !hasEnded && (
                 <div className="mt-8 rounded-xl border border-secondary-terra/25 bg-secondary-terra/5 p-5 md:p-6">
                   <p className="text-[0.6875rem] 3xl:text-sm tracking-[0.25em] uppercase text-secondary-terra font-semibold">
                     Support this event

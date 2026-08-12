@@ -439,15 +439,20 @@ export default function EventRegister() {
     )
   }
 
-  if (!event.registrationEnabled) {
+  // Past events are closed regardless of the admin's registration toggle. The
+  // server rejects them too — this just explains it instead of letting someone
+  // fill in the whole form from an old link and fail on submit.
+  if (!event.registrationEnabled || event.hasEnded) {
     return (
       <Shell>
         <div className="max-w-md mx-auto text-center">
           <h1 className="text-2xl font-medium text-accent-cream mb-3">
-            Registration isn’t open
+            {event.hasEnded ? "This event has passed" : "Registration isn’t open"}
           </h1>
           <p className="text-accent-cream/60 text-sm mb-6">
-            Registration for “{event.title}” isn’t available right now.
+            {event.hasEnded
+              ? `“${event.title}” has already taken place.`
+              : `Registration for “${event.title}” isn’t available right now.`}
           </p>
           <button
             onClick={() => navigate(`/event/${event.slug || event._id}`)}
