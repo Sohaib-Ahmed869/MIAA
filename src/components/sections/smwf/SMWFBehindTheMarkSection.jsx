@@ -1,5 +1,6 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
+import { useEmbed } from "../../../content/context"
 
 import smwfLogo from "../../../assets/images/Homepage/SMWF/smwf-green.svg"
 
@@ -8,10 +9,11 @@ const INK         = "#124039"
 
 // Vimeo embed URL — scraped from miaaustralia.org/smwf "Behind the Mark" section.
 // Native Vimeo player handles play/pause/timeline/3-dot menu/Vimeo branding.
-const VIMEO_SRC =
-  "https://player.vimeo.com/video/1153891644?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0"
-
 export default function SMWFBehindTheMarkSection() {
+  // Editable in admin → Site Content. The native player keeps play/pause,
+  // the timeline scrubber and Vimeo branding.
+  const videoUrl = useEmbed("smwf.mark.videoUrl")
+
   return (
     <section
       id="smwf-mark"
@@ -26,7 +28,7 @@ export default function SMWFBehindTheMarkSection() {
               {/* 264:432 aspect from the original iframe — set via padding-bottom so the iframe fills it */}
               <div className="relative w-full" style={{ paddingBottom: "163.6%" /* 432/264 */ }}>
                 <iframe
-                  src={VIMEO_SRC}
+                  src={videoUrl}
                   className="absolute inset-0 w-full h-full"
                   frameBorder="0"
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share"

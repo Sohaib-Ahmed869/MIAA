@@ -2,9 +2,9 @@ import { motion } from "framer-motion"
 import { fadeInUp, fadeInLeft, fadeInRight } from "../../../lib/motion"
 import { ArrowUpRight } from "lucide-react"
 import Text from "../../../content/Text"
+import { useMedia } from "../../../content/context"
 
 
-import visionPhoto from "../../../assets/images/Homepage/SMWF/vision-photo.jpg"
 
 const INNER_MARQUEE_WORDS = ["Our Words", "Our Story"]
 
@@ -46,6 +46,7 @@ function InnerMarqueeRow() {
 }
 
 export default function SMWFAboutSection() {
+  const image = useMedia("smwf.about.image")
   return (
     <section
       id="smwf-festival"
@@ -91,8 +92,8 @@ export default function SMWFAboutSection() {
           <motion.div {...fadeInLeft} className="h-full min-h-[20rem] md:min-h-[24rem] lg:min-h-[26rem] 2xl:min-h-[32rem] 3xl:min-h-[36rem]">
             <div className="overflow-hidden h-full w-full">
               <img
-                src={visionPhoto}
-                alt="Sydney Muslim Writers Festival community"
+                src={image.src}
+                alt={image.alt}
                 className="block w-full h-full object-cover"
               />
             </div>

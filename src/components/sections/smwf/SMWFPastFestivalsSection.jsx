@@ -1,27 +1,20 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
+import { useMemo } from "react"
+import { useEmbed, useMediaResolver } from "../../../content/context"
 
-import g1 from "../../../assets/images/Homepage/SMWF/gallery/g1.jpg"
-import g2 from "../../../assets/images/Homepage/SMWF/gallery/g2.jpg"
-import g3 from "../../../assets/images/Homepage/SMWF/gallery/g3.jpg"
-import g4 from "../../../assets/images/Homepage/SMWF/gallery/g4.jpg"
-import g5 from "../../../assets/images/Homepage/SMWF/gallery/g5.jpg"
-import g6 from "../../../assets/images/Homepage/SMWF/gallery/g6.jpg"
-import g7 from "../../../assets/images/Homepage/SMWF/gallery/g7.jpg"
-import g8 from "../../../assets/images/Homepage/SMWF/gallery/g8.jpg"
-import g9 from "../../../assets/images/Homepage/SMWF/gallery/g9.jpg"
-import g10 from "../../../assets/images/Homepage/SMWF/gallery/g10.jpg"
-import g11 from "../../../assets/images/Homepage/SMWF/gallery/g11.jpg"
-import g12 from "../../../assets/images/Homepage/SMWF/gallery/g12.jpg"
 
 const SECTION_BG = "#FFFFFF"
 const INK         = "#124039"
 
-const VIMEO_EMBED = "https://player.vimeo.com/video/1156048878?badge=0&autopause=0&player_id=0&app_id=58479&title=0&byline=0&portrait=0"
 
-const GALLERY_IMAGES = [g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12]
+const GALLERY_KEYS = Array.from({ length: 12 }, (_, i) => `smwf.past.image${i + 1}`)
 
 export default function SMWFPastFestivalsSection() {
+  const videoUrl = useEmbed("smwf.past.videoUrl")
+  const media = useMediaResolver()
+  const GALLERY_IMAGES = useMemo(() => GALLERY_KEYS.map(media), [media])
+
   return (
     <section
       id="smwf-past-festivals"
@@ -44,7 +37,7 @@ export default function SMWFPastFestivalsSection() {
           className="w-full aspect-video overflow-hidden rounded-lg shadow-lg bg-black"
         >
           <iframe
-            src={VIMEO_EMBED}
+            src={videoUrl}
             title="Sydney Muslim Writers Festival highlights"
             allow="autoplay; fullscreen; picture-in-picture; clipboard-write"
             allowFullScreen

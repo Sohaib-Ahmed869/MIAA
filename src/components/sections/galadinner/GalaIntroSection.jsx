@@ -3,13 +3,13 @@ import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import SectionDivider from "../../ui/SectionDivider"
 import Text from "../../../content/Text"
 import { splitParagraphs } from "../../../content/format"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
-import artHorse from "../../../assets/images/GalaDinner/art-01-horse.png"
-import artGrill from "../../../assets/images/GalaDinner/art-02-grill.png"
 import section2bg from "../../../assets/images/GalaDinner/section2bg.png"
 
 export default function GalaIntroSection() {
+  const artwork1 = useMedia("gala.intro.image1")
+  const artwork2 = useMedia("gala.intro.image2")
   const t = useText()
   const caption = (
     <>
@@ -48,8 +48,8 @@ export default function GalaIntroSection() {
             <div className="flex flex-col items-start">
               <div className="border border-white bg-white p-1 shadow-lg w-full max-w-[13.75rem]">
                 <img
-                  src={artHorse}
-                  alt="Islamic art — horse painting"
+                  src={artwork1.src}
+                  alt={artwork1.alt}
                   className="w-full h-auto object-cover"
                 />
               </div>
@@ -65,8 +65,8 @@ export default function GalaIntroSection() {
               </p>
               <div className="border border-white bg-white p-1 shadow-lg w-full max-w-[18.75rem] flex-shrink-0">
                 <img
-                  src={artGrill}
-                  alt="Islamic architectural detail"
+                  src={artwork2.src}
+                  alt={artwork2.alt}
                   className="w-full h-auto object-cover"
                 />
               </div>

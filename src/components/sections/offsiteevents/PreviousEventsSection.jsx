@@ -8,17 +8,19 @@ import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
 import Text from "../../../content/Text"
 
-import offsiteImg4 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-04.png"
 
 const FALLBACK_PREVIOUS = [
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
 ]
 
+import { useMediaResolver } from "../../../content/context"
+
 export default function PreviousEventsSection() {
+  const media = useMediaResolver()
   const [hoveredPrev, setHoveredPrev] = useState(null)
   const { data: previousEvents } = useCMS(
     () => api.previousEvents({ surface: "offsite" }),
@@ -87,7 +89,7 @@ export default function PreviousEventsSection() {
                             className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none shadow-lg"
                           >
                             <img
-                              src={event.imageUrl || event.image}
+                              src={event.imageUrl || media(event.mediaKey)}
                               alt=""
                               className="w-full h-full object-cover"
                             />

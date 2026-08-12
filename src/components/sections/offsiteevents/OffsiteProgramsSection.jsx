@@ -14,9 +14,6 @@ function slugify(s = "") {
     .replace(/^-+|-+$/g, "")
 }
 
-import offsiteImg1 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-01.png"
-import offsiteImg2 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-02.png"
-import offsiteImg3 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-03.png"
 
 const FALLBACK_EVENTS = [
   {
@@ -25,7 +22,7 @@ const FALLBACK_EVENTS = [
     title: "Islamic Art Showcase",
     description:
       "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    image: offsiteImg1,
+    mediaKey: "offsite.programs.image1",
   },
   {
     date: "07.02.26",
@@ -33,7 +30,7 @@ const FALLBACK_EVENTS = [
     title: "Islamic Art Showcase",
     description:
       "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    image: offsiteImg2,
+    mediaKey: "offsite.programs.image2",
   },
   {
     date: "TBA",
@@ -41,11 +38,14 @@ const FALLBACK_EVENTS = [
     title: "Islamic Art Showcase",
     description:
       "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    image: offsiteImg3,
+    mediaKey: "offsite.programs.image3",
   },
 ]
 
+import { useMediaResolver } from "../../../content/context"
+
 export default function OffsiteProgramsSection() {
+  const media = useMediaResolver()
   // upcoming: true — events whose date has passed belong in the archive, not
   // under an "Upcoming Events" heading.
   const { data: upcomingEvents } = useCMS(
@@ -94,10 +94,10 @@ export default function OffsiteProgramsSection() {
                   </div>
 
                   {/* Image */}
-                  {(event.imageUrl || event.image) ? (
+                  {(event.imageUrl || media(event.mediaKey)) ? (
                     <div className="h-48 md:h-56 3xl:h-72 overflow-hidden rounded-xl mb-5 isolate">
                       <img
-                        src={event.imageUrl || event.image}
+                        src={event.imageUrl || media(event.mediaKey)}
                         alt={event.title}
                         className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
                       />

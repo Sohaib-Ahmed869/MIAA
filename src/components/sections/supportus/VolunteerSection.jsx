@@ -1,11 +1,11 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
-import volunteerImg from "../../../assets/images/Support/volunteer-group.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 export default function VolunteerSection() {
+  const image = useMedia("support.volunteer.image")
   const t = useText()
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-bg">
@@ -15,8 +15,8 @@ export default function VolunteerSection() {
           <motion.div {...fadeInLeft}>
             <div className="overflow-hidden">
               <img
-                src={volunteerImg}
-                alt="MIAA volunteers"
+                src={image.src}
+                alt={image.alt}
                 className="w-full h-auto object-cover"
               />
             </div>

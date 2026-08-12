@@ -8,7 +8,7 @@ import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMediaResolver } from "../../../content/context"
 
 function slugify(s = "") {
   return String(s)
@@ -18,10 +18,6 @@ function slugify(s = "") {
     .replace(/^-+|-+$/g, "")
 }
 
-import offsiteImg1 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-01.png"
-import offsiteImg2 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-02.png"
-import offsiteImg3 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-03.png"
-import offsiteImg4 from "../../../assets/images/Homepage/Offsite program images/offsiteimg-04.png"
 
 const FALLBACK_EVENTS = [
   {
@@ -30,7 +26,7 @@ const FALLBACK_EVENTS = [
     title: "Islamic Art Showcase",
     description:
       "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    image: offsiteImg1,
+    mediaKey: "offsite.programs.image1",
   },
   {
     date: "07.02.26",
@@ -38,7 +34,7 @@ const FALLBACK_EVENTS = [
     title: "Islamic Art Showcase",
     description:
       "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    image: offsiteImg2,
+    mediaKey: "offsite.programs.image2",
   },
   {
     date: "TBA",
@@ -46,20 +42,24 @@ const FALLBACK_EVENTS = [
     title: "Islamic Art Showcase",
     description:
       "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    image: offsiteImg3,
+    mediaKey: "offsite.programs.image3",
   },
 ]
 
 const FALLBACK_PREVIOUS = [
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", image: offsiteImg4 },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
+  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
 ]
 
 export default function OffsiteEventsSection() {
   const [hoveredPrev, setHoveredPrev] = useState(null)
   const t = useText()
+  // Placeholder imagery for when the Events CMS is empty — editable in
+  // admin → Site Content, resolved at render so a saved override applies as
+  // soon as the content overrides land.
+  const media = useMediaResolver()
 
   // upcoming: true — events whose date has passed belong in the archive, not
   // under an "Upcoming Events" heading.
@@ -113,10 +113,10 @@ export default function OffsiteEventsSection() {
                   </div>
 
                   {/* Image */}
-                  {(event.imageUrl || event.image) ? (
+                  {(event.imageUrl || media(event.mediaKey)) ? (
                     <div className="h-48 md:h-56 3xl:h-72 overflow-hidden rounded-xl mb-5 isolate">
                       <img
-                        src={event.imageUrl || event.image}
+                        src={event.imageUrl || media(event.mediaKey)}
                         alt={event.title}
                         className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
                       />
@@ -207,7 +207,7 @@ export default function OffsiteEventsSection() {
                             className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none"
                           >
                             <img
-                              src={event.imageUrl || event.image}
+                              src={event.imageUrl || media(event.mediaKey)}
                               alt=""
                               className="w-full h-full object-cover"
                             />

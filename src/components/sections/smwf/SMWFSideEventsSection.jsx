@@ -1,11 +1,8 @@
 import { motion } from "framer-motion"
 import { staggerContainer, staggerItem } from "../../../lib/motion"
 import { ArrowUpRight } from "lucide-react"
+import { useMediaResolver } from "../../../content/context"
 
-import rect128 from "../../../assets/images/Homepage/SMWF/gallery/Rectangle 128.png"
-import rect129 from "../../../assets/images/Homepage/SMWF/gallery/Rectangle 129.png"
-import rect130 from "../../../assets/images/Homepage/SMWF/gallery/Rectangle 130.jpg"
-import rect131 from "../../../assets/images/Homepage/SMWF/gallery/Rectangle 131.jpg"
 
 const SECTION_BG = "#F3EFEB"
 const INK         = "#124039"
@@ -45,7 +42,7 @@ const SIDE_EVENTS = [
     venue: "Parramatta Town Hall",
     venueMap: "Parramatta Town Hall, 182 Church St, Parramatta NSW 2150",
     price: "$10",
-    photos: [rect129, rect128],
+    photoKeys: ["smwf.side.image1", "smwf.side.image2"],
   },
   {
     title: "Workshop Day",
@@ -54,7 +51,7 @@ const SIDE_EVENTS = [
     venue: "ISRA Centre Sydney",
     venueMap: "ISRA Centre Sydney, 9 Cary St, Lidcombe NSW 2141",
     price: "$45",
-    photos: [rect130, rect131],
+    photoKeys: ["smwf.side.image3", "smwf.side.image4"],
   },
 ]
 
@@ -115,6 +112,7 @@ function DottedVerticalLine() {
 }
 
 function TicketCard({ event }) {
+  const media = useMediaResolver()
   return (
     <motion.div
       {...staggerItem}
@@ -150,13 +148,13 @@ function TicketCard({ event }) {
 
           {/* Circular photos — separated, no overlap */}
           <div className="flex items-center justify-center gap-3 md:gap-5 2xl:gap-6 3xl:gap-8 flex-shrink-0">
-            {event.photos.map((src, i) => (
+            {event.photoKeys.map((photoKey, i) => (
               <div
                 key={i}
                 className="aspect-square w-24 md:w-32 lg:w-40 2xl:w-48 3xl:w-56 rounded-full overflow-hidden shrink-0"
               >
                 <img
-                  src={src}
+                  src={media(photoKey)}
                   alt=""
                   aria-hidden="true"
                   className="block w-full h-full object-cover"

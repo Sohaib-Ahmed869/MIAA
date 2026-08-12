@@ -3,13 +3,14 @@ import { motion } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
-import heroImg from "../../../assets/images/About/about-hero.png"
 import floatingOrnament from "../../../assets/images/About/float1.png"
 import Text from "../../../content/Text"
+import { useMedia } from "../../../content/context"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function AboutHeroSection() {
+  const image = useMedia("about.hero.image")
   const sectionRef = useRef(null)
   const imgRef = useRef(null)
 
@@ -65,8 +66,8 @@ export default function AboutHeroSection() {
           <div className="w-full h-[70vh] sm:h-[65vh] md:h-[26.25rem] lg:h-[32.5rem] 3xl:h-full overflow-hidden">
             <img
               ref={imgRef}
-              src={heroImg}
-              alt="Audience at MIAA event"
+              src={image.src}
+              alt={image.alt}
               className="w-full object-cover object-center scale-150 md:scale-[1.2] block will-change-transform"
               style={{ height: "120%" }}
             />

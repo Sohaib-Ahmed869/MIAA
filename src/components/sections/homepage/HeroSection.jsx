@@ -3,14 +3,15 @@ import { motion } from "framer-motion"
 import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
-import heroVideo from "../../../assets/videos/homeVideo.mp4"
 import HeroDonationWidget from "./HeroDonationWidget"
 import Text from "../../../content/Text"
+import { useMedia } from "../../../content/context"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function HeroSection() {
   const sectionRef = useRef(null)
+  const heroVideo = useMedia("home.hero.video")
 
   useGSAP(
     () => {
@@ -36,7 +37,8 @@ export default function HeroSection() {
         className="absolute inset-0 z-0"
       >
         <video
-          src={heroVideo}
+          key={heroVideo.src}
+          src={heroVideo.src}
           autoPlay
           loop
           muted

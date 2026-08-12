@@ -4,12 +4,12 @@ import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import SectionDivider from "../../ui/SectionDivider"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
-import maskImage from "../../../assets/images/GalaDinner/maskimage.png"
 import heroBgPattern from "../../../assets/images/GalaDinner/herobgpattern.png"
 
 export default function GalaEventDetailsSection() {
+  const image = useMedia("gala.details.image")
   const t = useText()
   return (
     <section className="relative bg-primary overflow-hidden">
@@ -73,7 +73,7 @@ export default function GalaEventDetailsSection() {
           <motion.div {...fadeInLeft} className="relative rounded-lg overflow-hidden min-h-[16.25rem]">
             {/* Mask image background */}
             <div className="absolute inset-0">
-              <img src={maskImage} alt="Kaldor Hall" className="w-full h-full object-cover" />
+              <img src={image.src} alt={image.alt} className="w-full h-full object-cover" />
             </div>
 
             {/* Venue text overlay — top aligned */}

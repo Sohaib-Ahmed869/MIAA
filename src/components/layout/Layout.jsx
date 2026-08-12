@@ -5,9 +5,10 @@ import Navbar from "./Navbar"
 import Footer from "./Footer"
 import Loader from "../loader/Loader"
 import ScrollToTop from "./ScrollToTop"
-import smallLogo from "../../assets/images/Homepage/smalllogo.png"
+import { useMedia } from "../../content/context"
 
 export default function Layout() {
+  const logo = useMedia("brand.logo.image")
   const [loading, setLoading] = useState(true)
   const location = useLocation()
   const isHome = location.pathname === "/"
@@ -38,8 +39,8 @@ export default function Layout() {
             className="absolute left-4 sm:left-6 md:left-10 lg:left-16 3xl:left-24 z-50 h-20 md:h-24 3xl:h-28 flex items-center"
           >
             <img
-              src={smallLogo}
-              alt="MIAA"
+              src={logo.src}
+              alt={logo.alt}
               className="h-auto miaa-logo"
             />
           </Link>

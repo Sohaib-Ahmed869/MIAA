@@ -284,6 +284,14 @@ export const adminApi = {
       method: "POST",
       body: { filename, contentType, folder },
     }),
+
+  // public site media (Site Content images/video) — permanent public URLs
+  presignMedia: ({ filename, contentType, folder }) =>
+    request("/api/uploads/media/presign", {
+      method: "POST",
+      body: { filename, contentType, folder },
+    }),
+  deleteMedia: (url) => request("/api/uploads/media", { method: "DELETE", body: { url } }),
 }
 
 /** Upload a File to S3 via a presigned PUT. Returns the S3 key to persist. */
@@ -300,4 +308,39 @@ export async function uploadFileToS3(file, folder = "uploads") {
   })
   if (!res.ok) throw new Error(`S3 upload failed (${res.status})`)
   return key
+}
+
+/**
+ * Upload a File to the PUBLIC media bucket. Returns the permanent URL to store
+ * as a Site Content override — unlike `uploadFileToS3`, which returns a key that
+ * has to be signed for every read.
+ *
+ * `onProgress` receives 0–1. XHR is used rather than fetch because fetch gives
+ * no upload progress, and site video runs to tens of megabytes.
+ */
+export function uploadMediaToS3(file, folder = "general", onProgress) {
+  const contentType = file.type || "application/octet-stream"
+  return adminApi
+    .presignMedia({ filename: file.name, contentType, folder })
+    .then(
+      ({ uploadUrl, url, cacheControl }) =>
+        new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest()
+          xhr.open("PUT", uploadUrl)
+          xhr.setRequestHeader("Content-Type", contentType)
+          // S3 only records Cache-Control if the uploader sends it; the server
+          // hands back the exact value it signed.
+          if (cacheControl) xhr.setRequestHeader("Cache-Control", cacheControl)
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) onProgress?.(e.loaded / e.total)
+          }
+          xhr.onload = () =>
+            xhr.status >= 200 && xhr.status < 300
+              ? resolve(url)
+              : reject(new Error(`Upload failed (${xhr.status})`))
+          xhr.onerror = () =>
+            reject(new Error("Upload failed — check the bucket's CORS policy"))
+          xhr.send(file)
+        })
+    )
 }

@@ -1,10 +1,9 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight, fadeInUp } from "../../../lib/motion"
-import panelImg from "../../../assets/images/About/western-sydney-photo.png"
 import designOrnament from "../../../assets/images/About/design.png"
 import Text from "../../../content/Text"
 import { splitParagraphs } from "../../../content/format"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -25,6 +24,7 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function JourneySection() {
+  const image = useMedia("about.journey.image")
   const t = useText()
   return (
     <section className="bg-accent-cream pt-12 md:pt-16 pb-12 md:pb-16">
@@ -69,8 +69,8 @@ export default function JourneySection() {
           <motion.div {...fadeInLeft}>
             <div className="overflow-hidden">
               <img
-                src={panelImg}
-                alt="MIAA leadership panel"
+                src={image.src}
+                alt={image.alt}
                 className="w-full h-auto object-cover"
               />
             </div>

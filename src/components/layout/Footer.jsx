@@ -4,8 +4,8 @@ import { motion } from "framer-motion"
 import { ACKNOWLEDGMENT_TEXT } from "../../lib/constants"
 import { api } from "../../lib/api"
 import { fadeInUp } from "../../lib/motion"
+import { useMedia } from "../../content/context"
 import SignupConfirmationModal from "../ui/SignupConfirmationModal"
-import footerLogo from "../../assets/images/Homepage/Footer Logo.png"
 import footerPattern from "../../assets/images/Homepage/Footer Pattern.png"
 
 function TikTokIcon() {
@@ -140,12 +140,13 @@ function NewsletterForm() {
 }
 
 export default function Footer() {
+  const logo = useMedia("brand.logo.footer")
   return (
     <footer className="relative bg-accent-cream overflow-hidden">
       {/* Large MIAA logo watermark — flush bottom-left, hidden on mobile */}
       <div className="absolute bottom-0 left-0 pointer-events-none z-20 hidden md:block">
         <img
-          src={footerLogo}
+          src={logo.src}
           alt=""
           className="md:w-[31.25rem] lg:w-[40.625rem] 3xl:w-[28vw] h-auto block"
         />
@@ -294,7 +295,7 @@ export default function Footer() {
       {/* Mobile footer logo — bottom left */}
       <div className="relative z-10 md:hidden mt-6 pb-0">
         <img
-          src={footerLogo}
+          src={logo.src}
           alt=""
           className="w-[250px] h-auto block"
         />

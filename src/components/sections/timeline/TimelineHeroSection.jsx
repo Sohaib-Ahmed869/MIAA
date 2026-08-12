@@ -2,13 +2,13 @@ import { motion } from "framer-motion"
 import { ArrowDownRight } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
-import renderImg from "../../../assets/images/Timeline/buildingfuture.jpg"
 import float1 from "../../../assets/images/About/float1.png"
 import Text from "../../../content/Text"
 import { splitParagraphs } from "../../../content/format"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 export default function TimelineHeroSection() {
+  const image = useMedia("timeline.hero.image")
   const t = useText()
   return (
     <section className="relative z-20 bg-bg-deep">
@@ -46,8 +46,8 @@ export default function TimelineHeroSection() {
       >
         <div className="w-full h-[55vh] md:h-[28.75rem] lg:h-[35rem] 3xl:h-[45vh] overflow-hidden">
           <img
-            src={renderImg}
-            alt="MIAA architectural render"
+            src={image.src}
+            alt={image.alt}
             className="w-full object-cover object-center block"
             style={{ height: "100%" }}
           />

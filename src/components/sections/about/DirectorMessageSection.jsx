@@ -4,11 +4,10 @@ import gsap from "gsap"
 import { useGSAP } from "@gsap/react"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
-import directorImg from "../../../assets/images/About/director-mehmet-ozalp.png"
 import float2 from "../../../assets/images/About/float2.png"
 import Text from "../../../content/Text"
 import { splitParagraphs } from "../../../content/format"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -31,6 +30,7 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function DirectorMessageSection() {
+  const image = useMedia("about.director.image")
   const sectionRef = useRef(null)
   const trackRef = useRef(null)
   const viewportRef = useRef(null)
@@ -133,8 +133,8 @@ export default function DirectorMessageSection() {
             <div className="mt-auto pt-6 md:pt-16">
               <div className="w-24 h-24 md:w-28 md:h-28 3xl:w-36 3xl:h-36 rounded-full overflow-hidden border-2 border-accent-wheat/30 mb-5">
                 <img
-                  src={directorImg}
-                  alt="Professor Mehmet Ozalp"
+                  src={image.src}
+                  alt={image.alt}
                   className="w-full h-full object-cover"
                 />
               </div>

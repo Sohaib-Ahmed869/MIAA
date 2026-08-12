@@ -98,9 +98,14 @@ html {
 }
 
 /* Base resets */
+/* `clip` rather than `hidden`: both stop sideways scrolling from full-bleed
+   art, but `hidden` turns the element into a scroll container, which silently
+   breaks every `position: sticky` descendant in the app (the admin editor's
+   toolbar and live-preview panel among them). `clip` leaves the viewport as the
+   scroll container, so sticky keeps working. */
 html,
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 html {

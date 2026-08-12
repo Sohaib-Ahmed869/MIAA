@@ -2,13 +2,13 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Minus } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
-import educatingImg from "../../../assets/images/Homepage/educatingnextgen.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 export default function EducationSection() {
   const [openIndex, setOpenIndex] = useState(0)
   const t = useText()
+  const image = useMedia("home.education.image")
   const accordionItems = [
     { title: t("home.education.item1.title"), content: t("home.education.item1.body") },
     { title: t("home.education.item2.title"), content: t("home.education.item2.body") },
@@ -21,8 +21,8 @@ export default function EducationSection() {
           {/* Left - Image */}
           <motion.div {...fadeInLeft} className="rounded-xl overflow-hidden">
             <img
-              src={educatingImg}
-              alt="Man viewing art gallery"
+              src={image.src}
+              alt={image.alt}
               className="w-full h-[300px] md:h-[26.25rem] 3xl:h-[35vh] object-cover"
             />
           </motion.div>

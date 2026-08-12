@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import { fadeInUp } from "../../../lib/motion"
 import Text from "../../../content/Text"
+import { useEmbed } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -21,6 +22,8 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function TimelineVideoSection() {
+  const videoUrl = useEmbed("timeline.video.url")
+
   return (
     <section className="bg-bg-deep pt-16 md:pt-20 3xl:pt-28 pb-8 md:pb-12 3xl:pb-16">
       <div className="px-6 md:px-10 lg:px-16 3xl:px-24 mb-10 md:mb-12">
@@ -46,7 +49,7 @@ export default function TimelineVideoSection() {
           className="relative w-full aspect-video overflow-hidden rounded-sm border border-white/10 shadow-2xl"
         >
           <iframe
-            src="https://www.youtube.com/embed/Wkqt0JoStac?rel=0"
+            src={videoUrl}
             title="MIAA Project Video"
             allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen

@@ -1,4 +1,6 @@
 import { motion } from "framer-motion"
+import { useMemo } from "react"
+import { useMediaResolver } from "../../../content/context"
 import { fadeInLeft } from "../../../lib/motion"
 import Text from "../../../content/Text"
 
@@ -6,9 +8,6 @@ import iconCalendar from "../../../assets/images/Homepage/SMWF/icon-calendar.svg
 import iconClock from "../../../assets/images/Homepage/SMWF/icon-clock.svg"
 import iconLocation from "../../../assets/images/Homepage/SMWF/icon-location.svg"
 import patternKufic from "../../../assets/images/Homepage/SMWF/pattern-kufic.png"
-import g1 from "../../../assets/images/Homepage/SMWF/gallery/g1.jpg"
-import g4 from "../../../assets/images/Homepage/SMWF/gallery/g4.jpg"
-import g7 from "../../../assets/images/Homepage/SMWF/gallery/g7.jpg"
 
 const DETAILS = [
   { label: "18th April 2026",                       icon: iconCalendar },
@@ -21,8 +20,9 @@ const DETAILS = [
   },
 ]
 
-const BASE_IMAGES = [g1, g4, g7]
-const MARQUEE_IMAGES = [...BASE_IMAGES, ...BASE_IMAGES]
+// Teaser for the Past Festivals gallery — same three files, same keys.
+const BASE_KEYS = ["smwf.past.image1", "smwf.past.image4", "smwf.past.image7"]
+
 
 function Quatrefoil({ color = "#FFFFFF", className = "w-4 h-4" }) {
   return (
@@ -109,6 +109,11 @@ function VerticalMarquee({ images, duration = 30 }) {
 }
 
 export default function SMWFFestivalDaySection() {
+  const media = useMediaResolver()
+  const MARQUEE_IMAGES = useMemo(() => {
+    const base = BASE_KEYS.map(media)
+    return [...base, ...base]
+  }, [media])
   return (
     <section
       id="smwf-festival-day"

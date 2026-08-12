@@ -2,12 +2,12 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Minus } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
-import heroImg from "../../../assets/images/Community Engagement/education-hero.png"
 import float2 from "../../../assets/images/About/float2.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 export default function EducationHeroSection() {
+  const image = useMedia("community.hero.image")
   const [openIndex, setOpenIndex] = useState(0)
   const t = useText()
   const accordionItems = [
@@ -34,8 +34,8 @@ export default function EducationHeroSection() {
         {/* Left — image flush to LEFT edge, no bg behind. Below the image is the section's white bg. */}
         <motion.div {...fadeInLeft}>
           <img
-            src={heroImg}
-            alt="Educator at MIAA community event"
+            src={image.src}
+            alt={image.alt}
             className="w-full h-auto block"
           />
         </motion.div>

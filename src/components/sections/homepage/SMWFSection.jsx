@@ -2,18 +2,18 @@ import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useMemo } from "react"
+import { useText, useMediaResolver } from "../../../content/context"
 
-import smwf1 from "../../../assets/images/Homepage/SMWF/SMWF-02.jpg"
-import smwf2 from "../../../assets/images/Homepage/SMWF/SMWF-03.jpg"
-import smwf3 from "../../../assets/images/Homepage/SMWF/SMWF-04.jpg"
-import smwf4 from "../../../assets/images/Homepage/SMWF/SMWF-05.jpg"
 import bgPattern from "../../../assets/images/Homepage/SMWF/SMWF-BGPATTERN.png"
 import smwfLogo from "../../../assets/images/Homepage/SMWF/smwflogo.png"
 
-// Base images repeated enough times for seamless infinite scroll (no flicker on reset)
-const baseImages = [smwf1, smwf2, smwf3, smwf4]
-const carouselImages = [...baseImages, ...baseImages, ...baseImages, ...baseImages]
+const CAROUSEL_KEYS = [
+  "home.smwf.image1",
+  "home.smwf.image2",
+  "home.smwf.image3",
+  "home.smwf.image4",
+]
 
 function QuatrefoilIcon() {
   return (
@@ -44,6 +44,13 @@ function BannerStrip({ text, count = 30 }) {
 }
 
 export default function SMWFSection() {
+  const media = useMediaResolver()
+  // Repeated enough times for a seamless infinite scroll (no flicker on reset)
+  const carouselImages = useMemo(() => {
+    const base = CAROUSEL_KEYS.map(media)
+    return [...base, ...base, ...base, ...base]
+  }, [media])
+
   const t = useText()
   return (
     <section className="py-16 md:py-24 3xl:py-32 bg-bg overflow-hidden">

@@ -2,23 +2,25 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { fadeInLeft, fadeInRight, fadeInUp } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
-import founderImg from "../../../assets/images/Support/founder-portrait.jpg"
-import donorEventImg from "../../../assets/images/Support/donor-event.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 export default function FoundingMemberSection() {
+  const image = useMedia("support.founding.image")
+  // The hover thumbnails alternate between this section's photo and the
+  // MIAA Kids one — both managed in admin → Site Content.
+  const altImage = useMedia("support.kids.image")
   const [hoveredIdx, setHoveredIdx] = useState(null)
   const t = useText()
   const SPONSORSHIP_ITEMS = [
-    { title: t("support.founding.item1"), image: donorEventImg },
-    { title: t("support.founding.item2"), image: founderImg },
-    { title: t("support.founding.item3"), image: donorEventImg },
-    { title: t("support.founding.item4"), image: founderImg },
-    { title: t("support.founding.item5"), image: donorEventImg },
-    { title: t("support.founding.item6"), image: founderImg },
-    { title: t("support.founding.item7"), image: donorEventImg },
-    { title: t("support.founding.item8"), image: founderImg },
+    { title: t("support.founding.item1"), image: altImage.src },
+    { title: t("support.founding.item2"), image: image.src },
+    { title: t("support.founding.item3"), image: altImage.src },
+    { title: t("support.founding.item4"), image: image.src },
+    { title: t("support.founding.item5"), image: altImage.src },
+    { title: t("support.founding.item6"), image: image.src },
+    { title: t("support.founding.item7"), image: altImage.src },
+    { title: t("support.founding.item8"), image: image.src },
   ]
 
   return (
@@ -30,8 +32,8 @@ export default function FoundingMemberSection() {
           <motion.div {...fadeInLeft}>
             <div className="overflow-hidden">
               <img
-                src={founderImg}
-                alt="MIAA member visiting a gallery"
+                src={image.src}
+                alt={image.alt}
                 className="w-full h-auto object-cover"
               />
             </div>

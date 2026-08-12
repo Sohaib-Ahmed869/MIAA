@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react"
+import { useState, useRef, useEffect, useMemo } from "react"
 import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion"
 import gsap from "gsap"
 import { ScrollTrigger } from "gsap/ScrollTrigger"
@@ -7,19 +7,14 @@ import { ZoomIn, ZoomOut, X } from "lucide-react"
 import { fadeInUp } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMediaResolver } from "../../../content/context"
 
-import art1 from "../../../assets/images/Homepage/Art in Aus.png"
-import art2 from "../../../assets/images/Homepage/Art in Aus-1.png"
-import art3 from "../../../assets/images/Homepage/Art in Aus-2.png"
-import art4 from "../../../assets/images/Homepage/Art in Aus-3.png"
-import art5 from "../../../assets/images/Homepage/Art in Aus-4.png"
 
 gsap.registerPlugin(ScrollTrigger)
 
-const artPieces = [
+const ART_PIECES = [
   {
-    src: art5,
+    mediaKey: "islamicart.gallery.image5",
     alt: "(2011). 99 channel SD video sculpture installation, audio, and 98 paintings: acrylic, watercolour and gouache on dye diffusion thermal transfer prints. Installation view (detail) for Destiny Disrupted, Griffith University Art Museum. Courtesy the artist and Milani Gallery, Brisbane. Photograph by Carl Warner.",
     credit: "99 —",
     creditAuthor: "Khaled Sabsabi",
@@ -29,7 +24,7 @@ const artPieces = [
     parallaxFactor: 1.2,
   },
   {
-    src: art2,
+    mediaKey: "islamicart.gallery.image2",
     alt: "(2025). Clay, cardamom, size variable. Installation view at Liverpool Powerhouse. Courtesy the artist. Photograph by Kamil Abdullahi.",
     credit: "Udub-Core —",
     creditAuthor: "Idil Abdullahi",
@@ -39,7 +34,7 @@ const artPieces = [
     parallaxFactor: 0.8,
   },
   {
-    src: art3,
+    mediaKey: "islamicart.gallery.image3",
     alt: "(2008), Borderlands series surfboard: digital decal fibreglass, polystyrene and carbon fibre, wire stand, vinyl, 194 x 45 x 8cm. Courtesy the artist. Artist acknowledgment Mark Rabbidge for production. Photograph by Phillip George.",
     credit: "Inshalla —",
     creditAuthor: "Phillip George",
@@ -49,7 +44,7 @@ const artPieces = [
     parallaxFactor: 1.5,
   },
   {
-    src: art1,
+    mediaKey: "islamicart.gallery.image1",
     alt: "(2014-). Hand-stitched white prayer caps (topi), Perspex dome and light, 107 (Dia.) x 60 cm. Image courtesy the artist and Gallery Sally Dan Cuthbert, \u00a9the artist. In Private Collection. Photograph by Abdullah M. I. Syed.",
     credit: "Aura II —",
     creditAuthor: "Abdullah M. I. Syed",
@@ -59,7 +54,7 @@ const artPieces = [
     parallaxFactor: 1.0,
   },
   {
-    src: art4,
+    mediaKey: "islamicart.gallery.image4",
     alt: "(2008\u20132021), Folded US$ Bills and staple pins. Image courtesy the artist. Photograph by Mahmood Ali.",
     credit: "Flying Rug —",
     creditAuthor: "Abdullah M. I. Syed",
@@ -81,6 +76,14 @@ export default function IslamicArtSection() {
   const sectionRef = useRef(null)
   const frameRefs = useRef([])
   const t = useText()
+  const media = useMediaResolver()
+
+  // Artwork files are editable in admin → Site Content; positions, credits and
+  // captions stay here as layout/structured data.
+  const artPieces = useMemo(
+    () => ART_PIECES.map((piece) => ({ ...piece, src: media(piece.mediaKey) })),
+    [media]
+  )
 
   const openLightbox = (i) => {
     setZoom(1)

@@ -1,11 +1,11 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
-import kidsImg from "../../../assets/images/Support/donor-event.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 export default function MIAAKidsSection() {
+  const image = useMedia("support.kids.image")
   const t = useText()
   const BENEFITS = [
     t("support.kids.benefit1"),
@@ -54,8 +54,8 @@ export default function MIAAKidsSection() {
           <motion.div {...fadeInRight}>
             <div className="overflow-hidden">
               <img
-                src={kidsImg}
-                alt="MIAA community audience at an event"
+                src={image.src}
+                alt={image.alt}
                 className="w-full h-auto object-cover"
               />
             </div>

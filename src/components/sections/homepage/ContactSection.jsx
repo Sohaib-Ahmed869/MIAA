@@ -3,9 +3,8 @@ import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import { api } from "../../../lib/api"
-import connectImg from "../../../assets/images/About/connect.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 const TOPICS = [
   "General Inquiry",
@@ -21,6 +20,7 @@ export default function ContactSection() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState("")
   const t = useText()
+  const image = useMedia("home.contact.image")
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -64,7 +64,7 @@ export default function ContactSection() {
             {/* Geometric ornament — lower-left */}
             <div className="mt-12 md:mt-16 w-32 md:w-40 3xl:w-52 h-auto">
               <img
-                src={connectImg}
+                src={image.src}
                 alt=""
                 className="w-full h-auto object-contain"
               />

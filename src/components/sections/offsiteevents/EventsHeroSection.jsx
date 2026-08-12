@@ -1,18 +1,25 @@
 import { motion } from "framer-motion"
+import { useMemo } from "react"
 import Text from "../../../content/Text"
+import { useText, useMediaResolver } from "../../../content/context"
 
-import hero1 from "../../../assets/images/MIAEvents/events-hero-1.png"
-import hero2 from "../../../assets/images/MIAEvents/events-hero-2.png"
-import hero3 from "../../../assets/images/MIAEvents/events-hero-3.png"
 
+// Aspect ratios are part of the carousel layout; the files themselves and
+// their descriptions are editable in admin → Site Content.
 const HERO_PHOTOS = [
-  { src: hero1, alt: "Meet the award-winning author book launch", aspect: 300 / 417 },
-  { src: hero2, alt: "MIAA community panel discussion", aspect: 691 / 417 },
-  { src: hero3, alt: "Visitors connecting at a MIAA event", aspect: 409 / 417 },
+  { key: "offsite.hero.image1", aspect: 300 / 417 },
+  { key: "offsite.hero.image2", aspect: 691 / 417 },
+  { key: "offsite.hero.image3", aspect: 409 / 417 },
 ]
 
 export default function EventsHeroSection() {
-  const loopPhotos = [...HERO_PHOTOS, ...HERO_PHOTOS]
+  const media = useMediaResolver()
+  const t = useText()
+  const photos = useMemo(
+    () => HERO_PHOTOS.map((p) => ({ ...p, src: media(p.key), alt: t(`${p.key}.alt`) })),
+    [media, t]
+  )
+  const loopPhotos = [...photos, ...photos]
 
   return (
     <section className="relative bg-bg-deep overflow-hidden">

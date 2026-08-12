@@ -7,10 +7,9 @@ import { ArrowUpRight, Plus } from "lucide-react"
 const MotionLink = motion.create(Link)
 
 import logoCollab from "../../../assets/images/Homepage/SMWF/logo-collab.svg"
-import heroPhoto from "../../../assets/images/Homepage/SMWF/hero-photo.jpg"
 import patternKufic from "../../../assets/images/Homepage/SMWF/pattern-kufic.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 const MENU_LINKS = [
   { label: "Home",                       href: "#smwf-top" },
@@ -24,6 +23,7 @@ const MENU_LINKS = [
 ]
 
 export default function SMWFHeroSection() {
+  const image = useMedia("smwf.hero.image")
   const [menuOpen, setMenuOpen] = useState(false)
   const t = useText()
 
@@ -203,8 +203,8 @@ export default function SMWFHeroSection() {
           >
             <div className="overflow-hidden rounded-lg 2xl:rounded-xl aspect-[3/2] shadow-2xl ring-1 ring-white/10">
               <img
-                src={heroPhoto}
-                alt="Sydney Muslim Writers Festival panel discussion"
+                src={image.src}
+                alt={image.alt}
                 className="block w-full h-full object-cover"
               />
             </div>

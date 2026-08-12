@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Menu, X, ArrowUpRight } from "lucide-react"
 import CTAButton from "../ui/Button"
 import { NAV_LINKS } from "../../lib/constants"
-import smallLogo from "../../assets/images/Homepage/smalllogo.png"
+import { useMedia } from "../../content/context"
 import topRightSpheres from "../../assets/images/Homepage/herotoprightelement.png"
 
 const MotionLink = motion.create(Link)
@@ -17,6 +17,7 @@ const SOCIALS = [
 ]
 
 export default function Navbar() {
+  const logo = useMedia("brand.logo.image")
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
 
@@ -124,8 +125,8 @@ export default function Navbar() {
               <div className="flex items-center justify-between h-20 md:h-24 3xl:h-28">
                 <Link to="/" onClick={() => setMenuOpen(false)}>
                   <img
-                    src={smallLogo}
-                    alt="MIAA"
+                    src={logo.src}
+                    alt={logo.alt}
                     className="h-auto"
                     style={{ width: "clamp(60px, 5vw, 200px)" }}
                   />

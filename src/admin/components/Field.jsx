@@ -13,11 +13,14 @@ export function Field({ label, hint, children, className = "" }) {
   )
 }
 
+// Radius is a separate prop rather than part of the base string so a screen can
+// opt into a softer corner without two competing `rounded-*` classes, whose
+// winner would depend on Tailwind's stylesheet order rather than this file.
 const baseInput =
-  "block w-full px-3 py-2.5 text-sm text-primary bg-white border border-primary/15 rounded-sm placeholder:text-primary/35 focus:outline-none focus:border-secondary-terra/70 focus:ring-1 focus:ring-secondary-terra/30 transition-colors"
+  "block w-full px-3 py-2.5 text-sm text-primary bg-white border border-primary/15 placeholder:text-primary/35 focus:outline-none focus:border-secondary-terra/70 focus:ring-1 focus:ring-secondary-terra/30 transition-colors"
 
-export function TextInput(props) {
-  return <input className={baseInput} {...props} />
+export function TextInput({ radius = "rounded-sm", ...props }) {
+  return <input className={`${baseInput} ${radius}`} {...props} />
 }
 
 // Typed numeric field. Every number in the admin is a price, count, capacity or
@@ -36,6 +39,7 @@ export function NumberInput({
   onChange,
   onFocus,
   onBlur,
+  radius = "rounded-sm",
   className = "",
   ...props
 }) {
@@ -63,7 +67,7 @@ export function NumberInput({
       {...props}
       type="text"
       inputMode="decimal"
-      className={`${baseInput} ${className}`}
+      className={`${baseInput} ${radius} ${className}`}
       value={editing ? draft : asText(value)}
       onChange={handleChange}
       onFocus={(e) => {
@@ -85,13 +89,16 @@ export function NumberInput({
   )
 }
 
-export function TextArea(props) {
-  return <textarea className={`${baseInput} resize-none`} {...props} />
+export function TextArea({ radius = "rounded-sm", ...props }) {
+  return <textarea className={`${baseInput} ${radius} resize-none`} {...props} />
 }
 
-export function Select({ children, ...props }) {
+export function Select({ children, radius = "rounded-sm", ...props }) {
   return (
-    <select className={`${baseInput} appearance-none cursor-pointer pr-8`} {...props}>
+    <select
+      className={`${baseInput} ${radius} appearance-none cursor-pointer pr-8`}
+      {...props}
+    >
       {children}
     </select>
   )

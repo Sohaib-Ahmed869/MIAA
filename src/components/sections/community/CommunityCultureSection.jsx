@@ -1,11 +1,9 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
-import audienceImg from "../../../assets/images/Community Engagement/community-audience.png"
-import workshopImg from "../../../assets/images/Community Engagement/workshop-program.png"
 import float1 from "../../../assets/images/About/float1.png"
 import Text from "../../../content/Text"
 import { splitParagraphs } from "../../../content/format"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -26,6 +24,8 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function CommunityCultureSection() {
+  const image1 = useMedia("community.culture.image1")
+  const image2 = useMedia("community.culture.image2")
   const t = useText()
   return (
     <section className="relative bg-bg py-12 md:py-16 overflow-hidden">
@@ -75,8 +75,8 @@ export default function CommunityCultureSection() {
             {/* Top photo */}
             <div className="overflow-hidden rounded-sm">
               <img
-                src={audienceImg}
-                alt="Community audience at MIAA gathering"
+                src={image1.src}
+                alt={image1.alt}
                 className="w-full h-auto object-cover block"
               />
             </div>
@@ -84,8 +84,8 @@ export default function CommunityCultureSection() {
             {/* Bottom photo — overlapping the first, with thick white border + shadow */}
             <div className="relative z-10 w-[80%] ml-auto -mt-12 md:-mt-20 lg:-mt-28 bg-white p-2 md:p-3 ">
               <img
-                src={workshopImg}
-                alt="Sydney Muslim Writers Festival workshop"
+                src={image2.src}
+                alt={image2.alt}
                 className="w-full h-auto object-cover block"
               />
             </div>

@@ -13,10 +13,16 @@
  *   "multiline" textarea; a newline renders as <br>
  *   "richtext"  textarea; blank line separates paragraphs (\n\n → separate <p>)
  *
+ *   "image"     uploadable image  ┐ declared in ./mediaRegistry.js and merged
+ *   "video"     uploadable video  ├ into these groups below, so each section's
+ *   "embed"     player URL        ┘ media sits next to its copy in the editor
+ *
  * Keys are namespaced `page.section.field` and must be globally unique.
  */
 
-export const CONTENT_GROUPS = [
+import { MEDIA_ENTRIES } from "./mediaRegistry"
+
+const TEXT_GROUPS = [
   {
     id: "home",
     label: "Home",
@@ -1477,6 +1483,64 @@ export const CONTENT_GROUPS = [
   },
 ]
 
+// ── Media merge ──────────────────────────────────────────────────
+
+/** Field types that hold a media URL rather than copy. */
+export const MEDIA_TYPES = new Set(["image", "video", "embed"])
+
+export const isMediaType = (type) => MEDIA_TYPES.has(type)
+
+/** The accessible-description key that accompanies a media field. */
+export const altKeyFor = (key) => `${key}.alt`
+
+/**
+ * Fold `MEDIA_ENTRIES` into the text groups so the editor shows a section's
+ * images and video alongside its copy. Sections and groups referenced by a
+ * media entry but absent from the text registry are created on the fly.
+ *
+ * An entry may also declare `mirrors: [{ groupId, sectionId }]`. A file shared
+ * across pages is registered once but *surfaced* in each page that renders it,
+ * so an editor working on Home finds the artwork used by Home's Islamic Art
+ * block instead of having to know it lives under the Islamic Art tab. Both
+ * copies point at the same key, so editing either edits the one value.
+ */
+function buildGroups() {
+  const groups = TEXT_GROUPS.map((g) => ({
+    ...g,
+    sections: g.sections.map((s) => ({ ...s, fields: [...s.fields] })),
+  }))
+
+  const sectionFor = ({ groupId, groupLabel, groupPath, sectionId, sectionLabel }) => {
+    let group = groups.find((g) => g.id === groupId)
+    if (!group) {
+      group = {
+        id: groupId,
+        label: groupLabel || groupId,
+        path: groupPath || "/",
+        sections: [],
+      }
+      groups.push(group)
+    }
+    let section = group.sections.find((s) => s.id === sectionId)
+    if (!section) {
+      section = { id: sectionId, label: sectionLabel || sectionId, fields: [] }
+      group.sections.push(section)
+    }
+    return section
+  }
+
+  for (const entry of MEDIA_ENTRIES) {
+    sectionFor(entry).fields.push(...entry.fields)
+    for (const mirror of entry.mirrors || []) {
+      sectionFor(mirror).fields.push(...entry.fields)
+    }
+  }
+
+  return groups
+}
+
+export const CONTENT_GROUPS = buildGroups()
+
 // ── Derived lookups ──────────────────────────────────────────────
 
 /** Flat { key → default } map, built once from the registry. */
@@ -1486,6 +1550,9 @@ export const CONTENT_DEFAULTS = (() => {
     for (const section of group.sections) {
       for (const field of section.fields) {
         out[field.key] = field.default ?? ""
+        // A media field's `alt` declares a companion text key edited in the
+        // same card, so it needs a default like any other string.
+        if (typeof field.alt === "string") out[altKeyFor(field.key)] = field.alt
       }
     }
   }

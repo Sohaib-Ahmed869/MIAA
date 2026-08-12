@@ -1,9 +1,8 @@
 import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
-import teamImg from "../../../assets/images/Timeline/rp-infrastructure-team.png"
 import Text from "../../../content/Text"
 import { splitParagraphs } from "../../../content/format"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -24,6 +23,7 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function RPInfrastructureSection() {
+  const image = useMedia("timeline.rp.image")
   const t = useText()
   return (
     <section className="bg-bg pt-16 md:pt-20 3xl:pt-28 pb-16 md:pb-24 3xl:pb-32">
@@ -51,8 +51,8 @@ export default function RPInfrastructureSection() {
           <motion.div {...fadeInLeft}>
             <div className="overflow-hidden">
               <img
-                src={teamImg}
-                alt="RP Infrastructure team reviewing construction plans"
+                src={image.src}
+                alt={image.alt}
                 className="w-full h-auto object-cover block"
               />
             </div>

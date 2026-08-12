@@ -2,19 +2,22 @@ import { motion } from "framer-motion"
 import { fadeInUp, fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useMemo } from "react"
+import { useText, useMedia, useMediaResolver } from "../../../content/context"
 import { TIMELINE_MILESTONES } from "../../../lib/constants"
-import buildingImg from "../../../assets/images/Homepage/buildingfuture.jpg"
-
-import sydneyView from "../../../assets/images/Homepage/Miatimeline/sydney-view.png"
-import sydneyWater from "../../../assets/images/Homepage/Miatimeline/sydney-water.png"
-import sydneyPasture from "../../../assets/images/Homepage/Miatimeline/sydney-pasture.png"
-import sydneyArches from "../../../assets/images/Homepage/Miatimeline/sydney-arches.png"
-
-const timelineImages = [sydneyView, sydneyWater, sydneyPasture, sydneyArches]
+const MILESTONE_KEYS = [
+  "home.timeline.milestone1",
+  "home.timeline.milestone2",
+  "home.timeline.milestone3",
+  "home.timeline.milestone4",
+]
 
 export default function TimelineSection() {
   const t = useText()
+  const media = useMediaResolver()
+  const building = useMedia("home.timeline.image")
+  const timelineImages = useMemo(() => MILESTONE_KEYS.map(media), [media])
+
   return (
     <section className="pt-16 md:pt-24 3xl:pt-32 bg-accent-cream">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
@@ -36,8 +39,8 @@ export default function TimelineSection() {
           {/* Right - Building render */}
           <motion.div {...fadeInRight} className="flex items-center justify-end">
             <img
-              src={buildingImg}
-              alt="Future museum building render"
+              src={building.src}
+              alt={building.alt}
               className="w-full max-w-lg 3xl:max-w-2xl h-auto"
             />
           </motion.div>

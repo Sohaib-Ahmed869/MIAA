@@ -24,7 +24,21 @@ export default function EventDetail() {
     setLoading(true)
     setNotFound(false)
 
-    // Try direct fetch by id or slug; if that fails, try resolving against full list
+    // "Other Upcoming Events" must only advertise events that haven't happened
+    // yet, so this asks the server for the upcoming set rather than every event.
+    // The server owns the definition of "upcoming" (an all-day event counts
+    // until the end of its day, and undated "TBA" entries never expire) and
+    // returns them soonest-first, so the three shown are the next three.
+    const loadRelated = (excludeId) =>
+      api
+        .events({ upcoming: true })
+        .then((list) => {
+          if (!cancelled) setRelated(list.filter((e) => e._id !== excludeId))
+        })
+        .catch(() => {})
+
+    // Resolving the event itself deliberately queries the *unfiltered* list:
+    // a past event's own page must still open when someone follows an old link.
     const resolveFromList = () =>
       api
         .events()
@@ -36,11 +50,9 @@ export default function EventDetail() {
             list.find((e) => slugify(e.title) === id)
           if (match) {
             setEvent(match)
-            const matchKey = match._id
-            setRelated(list.filter((e) => e._id !== matchKey))
-          } else {
-            setNotFound(true)
+            return loadRelated(match._id)
           }
+          setNotFound(true)
         })
         .catch(() => {
           if (!cancelled) setNotFound(true)
@@ -52,13 +64,7 @@ export default function EventDetail() {
         if (cancelled) return
         if (data && data._id) {
           setEvent(data)
-          api
-            .events()
-            .then((list) => {
-              if (cancelled) return
-              setRelated(list.filter((e) => e._id !== data._id))
-            })
-            .catch(() => {})
+          loadRelated(data._id)
         } else {
           return resolveFromList()
         }

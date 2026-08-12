@@ -1,21 +1,19 @@
 import { useState } from "react"
+import { useMediaResolver } from "../../../content/context"
 import { motion, AnimatePresence } from "framer-motion"
 import { X } from "lucide-react"
 import { staggerContainer, staggerItem } from "../../../lib/motion"
 import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import Text from "../../../content/Text"
-import directorPortrait from "../../../assets/images/About/team-potrait-director.png"
-import malePortrait from "../../../assets/images/About/team-portrait-male.png"
-import femalePortrait from "../../../assets/images/About/team-portrait-female.png"
 
 const FALLBACK_PEOPLE = [
-  { name: "Prof Mehmet Ozalp", role: "Director", description: "", img: directorPortrait },
-  { name: "Orhan Kaba", role: "Design Consultant", description: "", img: malePortrait },
-  { name: "Dr Nur Shkembi OAM", role: "Artistic Director & Curator", description: "", img: femalePortrait },
-  { name: "Zeliha Baydogan", role: "Project Manager", description: "", img: directorPortrait },
-  { name: "Dr Derya Iner", role: "Research & Education Advisor", description: "", img: malePortrait },
-  { name: "Raaza Bashir", role: "Project Control Group", description: "", img: femalePortrait },
+  { name: "Prof Mehmet Ozalp", role: "Director", description: "", imgKey: "about.people.fallback1" },
+  { name: "Orhan Kaba", role: "Design Consultant", description: "", imgKey: "about.people.fallback2" },
+  { name: "Dr Nur Shkembi OAM", role: "Artistic Director & Curator", description: "", imgKey: "about.people.fallback3" },
+  { name: "Zeliha Baydogan", role: "Project Manager", description: "", imgKey: "about.people.fallback1" },
+  { name: "Dr Derya Iner", role: "Research & Education Advisor", description: "", imgKey: "about.people.fallback2" },
+  { name: "Raaza Bashir", role: "Project Control Group", description: "", imgKey: "about.people.fallback3" },
 ]
 
 function QuatrefoilMarker({ size = 11 }) {
@@ -83,6 +81,7 @@ function QuatrefoilPortrait({ src, alt, hovered }) {
 }
 
 function PersonCard({ person, onSelect }) {
+  const media = useMediaResolver()
   const [hovered, setHovered] = useState(false)
   return (
     <motion.div
@@ -94,7 +93,7 @@ function PersonCard({ person, onSelect }) {
     >
       <div className="transition-transform duration-300 overflow-visible p-3" style={{ transform: hovered ? "scale(1.05)" : "scale(1)" }}>
         <QuatrefoilPortrait
-          src={person.photoUrl || person.img || femalePortrait}
+          src={person.photoUrl || media(person.imgKey) || media("about.people.fallback3")}
           alt={person.name}
           hovered={hovered}
         />
@@ -110,6 +109,7 @@ function PersonCard({ person, onSelect }) {
 }
 
 export default function PeopleSection() {
+  const media = useMediaResolver()
   const { data: people } = useCMS(() => api.team(), FALLBACK_PEOPLE)
   const [selected, setSelected] = useState(null)
 
@@ -189,7 +189,7 @@ export default function PeopleSection() {
                 {/* Portrait — left column with floating ornaments */}
                 <div className="flex-shrink-0 lg:w-[35%] relative">
                   <img
-                    src={selected.photoUrl || selected.img || femalePortrait}
+                    src={selected.photoUrl || media(selected.imgKey) || media("about.people.fallback3")}
                     alt={selected.name}
                     className="w-full h-64 sm:h-80 lg:h-auto object-cover object-top rounded-xl relative z-10"
                   />

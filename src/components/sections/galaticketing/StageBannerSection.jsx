@@ -1,8 +1,9 @@
 import { motion } from "framer-motion"
+import { useMedia } from "../../../content/context"
 
-import stageImg from "../../../assets/images/GalaDinner/hero.jpg"
 
 export default function StageBannerSection() {
+  const image = useMedia("gala.hero.image")
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -13,7 +14,7 @@ export default function StageBannerSection() {
     >
       <div className="w-full h-[260px] md:h-[23.75rem] lg:h-[27.5rem] 3xl:h-[33vh] overflow-hidden">
         <img
-          src={stageImg}
+          src={image.src}
           alt="Inaugural Gala Dinner — stage performance"
           className="w-full h-full object-cover object-center"
         />

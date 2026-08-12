@@ -5,14 +5,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 import CTAButton from "../../ui/Button"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
-import heroImg from "../../../assets/images/GalaDinner/hero.jpg"
 import heroBgPattern from "../../../assets/images/GalaDinner/herobgpattern.png"
 
 gsap.registerPlugin(ScrollTrigger)
 
 export default function GalaHeroSection() {
+  const image = useMedia("gala.hero.image")
   const sectionRef = useRef(null)
   const imgRef = useRef(null)
   const t = useText()
@@ -96,8 +96,8 @@ export default function GalaHeroSection() {
       <div className="relative flex-none md:flex-1 w-full h-[70vh] sm:h-[65vh] md:h-auto bg-primary overflow-hidden">
         <img
           ref={imgRef}
-          src={heroImg}
-          alt="MIAA Inaugural Gala Dinner"
+          src={image.src}
+          alt={image.alt}
           className="w-full object-cover object-top block will-change-transform scale-110"
           style={{ height: "100%" }}
         />

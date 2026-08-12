@@ -3,11 +3,11 @@ import { motion, AnimatePresence } from "framer-motion"
 import { ZoomIn, ZoomOut, X } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
-import mapImg from "../../../assets/images/Ticketing/area-map.png"
+import { useText, useMedia } from "../../../content/context"
 import bgPattern from "../../../assets/images/GalaDinner/herobgpattern.png"
 
 export default function ParkingSection() {
+  const areaMap = useMedia("gala.parking.image")
   const t = useText()
   const PARKING_INFO = [
     { title: t("gala.parking.meterTitle"), body: t("gala.parking.meterBody") },
@@ -89,8 +89,8 @@ export default function ParkingSection() {
               onClick={openMap}
             >
               <motion.img
-                src={mapImg}
-                alt="Map of the area around Art Gallery of NSW with parking locations"
+                src={areaMap.src}
+                alt={areaMap.alt}
                 className="w-full h-auto object-contain transition-transform duration-300 group-hover:scale-105"
               />
               {/* Hover overlay with zoom icon */}
@@ -151,8 +151,8 @@ export default function ParkingSection() {
               onMouseDown={handleMouseDown}
             >
               <img
-                src={mapImg}
-                alt="Map of the area around Art Gallery of NSW with parking locations"
+                src={areaMap.src}
+                alt={areaMap.alt}
                 className="max-h-[80vh] w-auto transition-transform duration-150"
                 draggable={false}
                 style={{

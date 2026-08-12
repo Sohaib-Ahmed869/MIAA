@@ -2,7 +2,7 @@ import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "../../../lib/motion"
 
 import patternKufic from "../../../assets/images/Homepage/SMWF/pattern-kufic.png"
-import storiesImage from "../../../assets/images/Homepage/SMWF/stories-bg.jpg"
+import { useMedia } from "../../../content/context"
 
 const BULLETS = [
   "Muslim students in Years 7 to 12",
@@ -13,6 +13,7 @@ const BULLETS = [
 const SUBMIT_URL = "https://www.miaaustralia.org/smwf"
 
 export default function SMWFStoriesWeInheritSection() {
+  const image = useMedia("smwf.stories.image")
   return (
     <section
       id="smwf-stories-we-inherit"
@@ -91,8 +92,8 @@ export default function SMWFStoriesWeInheritSection() {
           >
             <div className="aspect-[5/4] lg:aspect-[6/5] desktop:aspect-[7/5] 3xl:aspect-[7/5] 4xl:aspect-[8/5] overflow-hidden rounded-lg">
               <img
-                src={storiesImage}
-                alt="Sydney Muslim Writers Festival author signing books"
+                src={image.src}
+                alt={image.alt}
                 className="block w-full h-full object-cover"
               />
             </div>

@@ -11,6 +11,8 @@ import loader06 from "../../assets/images/Homepage/loaderimages/loader-06.jpg"
 import loader07 from "../../assets/images/Homepage/loaderimages/loader-07.jpg"
 import loader08 from "../../assets/images/Homepage/loaderimages/loader-08.jpg"
 
+// Static on purpose: the intro animation plays before the content API has
+// answered, so a CMS-managed image here would flash the bundled one first.
 const galleryImages = [loader01, loader02, loader03, loader04, loader05, loader06, loader07, loader08]
 
 export default function Loader({ onComplete }) {
@@ -20,7 +22,7 @@ export default function Loader({ onComplete }) {
   useEffect(() => {
     let loaded = 0
     const total = galleryImages.length + 1
-    const allSrcs = [...galleryImages.map((g) => g.src), loaderLogo]
+    const allSrcs = [...galleryImages, loaderLogo]
     allSrcs.forEach((src) => {
       const img = new Image()
       img.src = src

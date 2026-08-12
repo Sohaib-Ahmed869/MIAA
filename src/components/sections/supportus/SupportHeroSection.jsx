@@ -1,9 +1,10 @@
 import { motion } from "framer-motion"
-import heroImg from "../../../assets/images/Support/support-hero.jpg"
 import supportElement from "../../../assets/images/Support/supportuselement.png"
 import Text from "../../../content/Text"
+import { useMedia } from "../../../content/context"
 
 export default function SupportHeroSection() {
+  const image = useMedia("support.hero.image")
   return (
     <section className="relative bg-bg-deep overflow-visible">
       {/* Three centered headings */}
@@ -43,8 +44,8 @@ export default function SupportHeroSection() {
       >
         <div className="w-full h-[55vh] md:h-[26.25rem] lg:h-[31.25rem] 3xl:h-[40vh] overflow-hidden">
           <img
-            src={heroImg}
-            alt="Speaker addressing the MIAA community"
+            src={image.src}
+            alt={image.alt}
             className="w-full object-cover object-center block"
             style={{ height: "100%" }}
           />

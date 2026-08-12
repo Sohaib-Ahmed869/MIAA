@@ -2,8 +2,7 @@ import { motion } from "framer-motion"
 import { fadeInLeft, fadeInRight, fadeInUp } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
-import venueImg from "../../../assets/images/Ticketing/agnsw-exterior.jpg"
+import { useText, useMedia } from "../../../content/context"
 import bgPattern from "../../../assets/images/Ticketing/bgpatternticket.png"
 
 function QuatrefoilIcon() {
@@ -19,6 +18,7 @@ function QuatrefoilIcon() {
 }
 
 export default function LocationSection() {
+  const image = useMedia("gala.location.image")
   const t = useText()
   return (
     <section className="relative bg-accent-cream overflow-hidden rounded-t-3xl">
@@ -61,8 +61,8 @@ export default function LocationSection() {
             <motion.div {...fadeInLeft}>
               <div className="overflow-hidden">
                 <img
-                  src={venueImg}
-                  alt="Art Gallery of New South Wales — exterior columns"
+                  src={image.src}
+                  alt={image.alt}
                   className="w-full h-auto object-cover"
                 />
               </div>

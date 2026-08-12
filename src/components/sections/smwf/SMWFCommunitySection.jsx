@@ -1,15 +1,10 @@
 import { motion } from "framer-motion"
+import { useMediaResolver } from "../../../content/context"
 import { Quote } from "lucide-react"
 import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
 
 import SMWFBehindTheMarkSection from "./SMWFBehindTheMarkSection"
 
-import partnerNswGov from "../../../assets/images/Homepage/SMWF/partners/nsw-gov.png"
-import partnerCbc from "../../../assets/images/Homepage/SMWF/partners/cbc.png"
-import partnerIsra from "../../../assets/images/Homepage/SMWF/partners/isra.png"
-import partnerLogoLockup from "../../../assets/images/Homepage/SMWF/partners/logo-lockup-07.png"
-import partnerCityOfParramatta from "../../../assets/images/Homepage/SMWF/partners/Group 25.png"
-import partnerBarakahBrew from "../../../assets/images/Homepage/SMWF/partners/Barakah.png"
 
 const TESTIMONIALS = [
   {
@@ -45,15 +40,16 @@ const TESTIMONIALS = [
 ]
 
 const PARTNER_LOGOS = [
-  { name: "NSW Government",       logo: partnerNswGov },
-  { name: "Canterbury Bankstown", logo: partnerCbc },
-  { name: "Think Studio",         logo: partnerLogoLockup },
-  { name: "ISRA",                 logo: partnerIsra },
-  { name: "City of Parramatta",   logo: partnerCityOfParramatta },
-  { name: "Barakah Brew",         logo: partnerBarakahBrew },
+  { name: "NSW Government",       mediaKey: "smwf.partners.logo1" },
+  { name: "Canterbury Bankstown", mediaKey: "smwf.partners.logo2" },
+  { name: "Think Studio",         mediaKey: "smwf.partners.logo3" },
+  { name: "ISRA",                 mediaKey: "smwf.partners.logo4" },
+  { name: "City of Parramatta",   mediaKey: "smwf.partners.logo5" },
+  { name: "Barakah Brew",         mediaKey: "smwf.partners.logo6" },
 ]
 
 export default function SMWFCommunitySection() {
+  const media = useMediaResolver()
   return (
     <>
       {/* Testimonials — moving carousel */}
@@ -164,7 +160,7 @@ export default function SMWFCommunitySection() {
                 className="h-40 md:h-48 lg:h-56 desktop:h-64 3xl:h-72 4xl:h-[28rem] bg-white flex items-center justify-center p-8 md:p-10 lg:p-12 desktop:p-14 3xl:p-16 4xl:p-24"
               >
                 <img
-                  src={p.logo}
+                  src={media(p.mediaKey)}
                   alt={p.name}
                   className="max-h-[70%] max-w-[80%] w-auto h-auto object-contain"
                 />

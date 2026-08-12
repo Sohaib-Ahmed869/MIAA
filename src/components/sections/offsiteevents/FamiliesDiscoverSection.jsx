@@ -1,32 +1,30 @@
 import { motion } from "framer-motion"
 import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMediaResolver } from "../../../content/context"
 
-import artConnectionImg from "../../../assets/images/MIAEvents/families-art-connection.png"
-import behindVisionImg from "../../../assets/images/MIAEvents/families-behind-vision.png"
-import heritageDesignImg from "../../../assets/images/MIAEvents/families-heritage-design.png"
 
 export default function FamiliesDiscoverSection() {
+  const media = useMediaResolver()
   const t = useText()
   const FAMILY_EVENTS = [
     {
       date: "07.02.26",
       title: t("offsite.families.card1.title"),
       description: t("offsite.families.card1.body"),
-      image: artConnectionImg,
+      image: media("offsite.families.image1"),
     },
     {
       date: "07.02.26",
       title: t("offsite.families.card2.title"),
       description: t("offsite.families.card2.body"),
-      image: behindVisionImg,
+      image: media("offsite.families.image2"),
     },
     {
       date: "07.02.26",
       title: t("offsite.families.card3.title"),
       description: t("offsite.families.card3.body"),
-      image: heritageDesignImg,
+      image: media("offsite.families.image3"),
     },
   ]
 

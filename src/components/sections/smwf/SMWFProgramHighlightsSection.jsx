@@ -1,13 +1,8 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { fadeInUp } from "../../../lib/motion"
+import { useMediaResolver } from "../../../content/context"
 
-import h1 from "../../../assets/images/Homepage/SMWF/highlights/h5.avif"
-import h2 from "../../../assets/images/Homepage/SMWF/highlights/h6.avif"
-import h3 from "../../../assets/images/Homepage/SMWF/highlights/h1.avif"
-import h4 from "../../../assets/images/Homepage/SMWF/highlights/h2.avif"
-import h5 from "../../../assets/images/Homepage/SMWF/highlights/h4.avif"
-import h6 from "../../../assets/images/Homepage/SMWF/highlights/h3.avif"
 
 const SECTION_BG = "#FFFFFF"
 const INK         = "#124039"
@@ -16,38 +11,43 @@ const HIGHLIGHTS = [
   {
     title: "Panel Discussions",
     body: "Thought-provoking conversations with writers, academics, and creatives exploring pressing ideas, stories, and perspectives.",
-    image: h1,
+    mediaKey: "smwf.highlights.image1",
   },
   {
     title: "Book Signings with Authors",
     body: "Meet your favourite authors in person and take home a signed copy as a treasured keepsake.",
-    image: h2,
+    mediaKey: "smwf.highlights.image2",
   },
   {
     title: "Hanging Poem Exhibition",
     body: "Experience poetry brought to life through a stunning visual display of words suspended in space.",
-    image: h3,
+    mediaKey: "smwf.highlights.image3",
   },
   {
     title: "Little Readers and Writers Corner",
     body: "A cosy space dedicated to children's love of books, brought to you by ISRA Children's Library.",
-    image: h4,
+    mediaKey: "smwf.highlights.image4",
   },
   {
     title: "Stalls",
     body: "Browse a vibrant marketplace of books, art, and community initiatives.",
-    image: h5,
+    mediaKey: "smwf.highlights.image5",
   },
   {
     title: "Teens with Pens",
     body: "A dynamic writing workshop for young creatives, guided by author George Green.",
-    image: h6,
+    mediaKey: "smwf.highlights.image6",
   },
 ]
 
 export default function SMWFProgramHighlightsSection() {
   const [activeIndex, setActiveIndex] = useState(0)
-  const activeImage = HIGHLIGHTS[activeIndex].image
+  const media = useMediaResolver()
+  const highlights = useMemo(
+    () => HIGHLIGHTS.map((h) => ({ ...h, image: media(h.mediaKey) })),
+    [media]
+  )
+  const activeImage = highlights[activeIndex].image
 
   return (
     <section
@@ -85,10 +85,10 @@ export default function SMWFProgramHighlightsSection() {
               both the line ABOVE and BELOW the currently-open item disappear
               (an opened item visually "floats" without dividers). */}
           <div>
-            {HIGHLIGHTS.map((item, i) => {
+            {highlights.map((item, i) => {
               const isOpen = i === activeIndex
               const prevOpen = i > 0 && i - 1 === activeIndex
-              const isLast = i === HIGHLIGHTS.length - 1
+              const isLast = i === highlights.length - 1
               // top border: hidden on the first item, AND hidden when the
               // previous item is open (since that would visually appear as
               // the open item's bottom divider). Always shown for the open

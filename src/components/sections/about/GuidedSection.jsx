@@ -2,9 +2,8 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Plus, Minus } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
-import missionImg from "../../../assets/images/About/journey-photo.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 function QuatrefoilMarker({ size = 11 }) {
   return (
@@ -25,6 +24,7 @@ function QuatrefoilMarker({ size = 11 }) {
 }
 
 export default function GuidedSection() {
+  const image = useMedia("about.guided.image")
   const [openIndex, setOpenIndex] = useState(0)
   const t = useText()
   const ITEMS = [
@@ -111,8 +111,8 @@ export default function GuidedSection() {
           <motion.div {...fadeInRight}>
             <div className="overflow-hidden">
               <img
-                src={missionImg}
-                alt="MIAA cultural performance"
+                src={image.src}
+                alt={image.alt}
                 className="w-full h-auto object-cover"
               />
             </div>

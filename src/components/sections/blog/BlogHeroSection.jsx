@@ -4,11 +4,12 @@ import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react"
 import { Link } from "react-router-dom"
 import { BLOG_ARTICLES } from "../../../lib/constants"
 import { blogImages } from "./blogImages"
-import heroImg from "../../../assets/images/UpdatesBlogs/blogshero.png"
+import { useMedia } from "../../../content/context"
 
 const FEATURED = BLOG_ARTICLES.filter((a) => a.featured || a.category === "Blog").slice(0, 4)
 
 export default function BlogHeroSection() {
+  const image = useMedia("blog.hero.image")
   const [current, setCurrent] = useState(0)
 
   const prev = () => setCurrent((c) => (c === 0 ? FEATURED.length - 1 : c - 1))
@@ -35,7 +36,7 @@ export default function BlogHeroSection() {
             <AnimatePresence mode="wait">
               <motion.img
                 key={current}
-                src={heroImg}
+                src={image.src}
                 alt={article.title}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
