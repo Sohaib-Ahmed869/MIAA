@@ -36,6 +36,9 @@ const EMPTY = {
     { tag: "", title: "", body: "" },
     { tag: "", title: "", body: "" },
   ],
+  // Ticket Tailor → Brevo list routing (optional; blank = no mapping)
+  ttEventId: "",
+  brevoListId: "",
   imageKey: "",
   order: 0,
   published: true,
@@ -125,6 +128,9 @@ export default function EventsAdmin() {
               capacity: t.capacity || 0,
             }))
           : [{ name: "General Admission", price: 0, description: "", capacity: 0 }]
+      // Stored as a number (or null) — the input needs "" for an empty field.
+      next.ttEventId = item.ttEventId || ""
+      next.brevoListId = item.brevoListId ?? ""
       next.customQuestions = Array.isArray(item.customQuestions)
         ? item.customQuestions.map((q) => ({
             id: q.id || "",
@@ -221,6 +227,14 @@ export default function EventsAdmin() {
               : [],
         }))
 
+      // Brevo list ids are plain numbers; anything unparseable is treated as
+      // "no list" rather than silently sending 0.
+      const brevoListIdRaw = Number(form.brevoListId)
+      const brevoListIdValue =
+        String(form.brevoListId ?? "").trim() === "" || !Number.isFinite(brevoListIdRaw)
+          ? null
+          : Math.round(brevoListIdRaw)
+
       const payload = {
         ...form,
         slug: slugify(form.slug || form.title),
@@ -240,6 +254,10 @@ export default function EventsAdmin() {
         capacity: Math.max(0, Math.round(Number(form.capacity) || 0)),
         order: Math.max(0, Math.round(Number(form.order) || 0)),
         customQuestions: cleanQuestions,
+        // Both blank leaves the event unmapped; the pair is what routes Ticket
+        // Tailor orders into a Brevo list (see the Event Lists screen).
+        ttEventId: (form.ttEventId || "").trim(),
+        brevoListId: brevoListIdValue,
       }
       // raisedAmount / donationCount / registeredCount are computed by the
       // payment pipeline — never send them back or a concurrent charge could be
@@ -978,6 +996,52 @@ export default function EventsAdmin() {
                   </div>
                 </div>
               </div>
+            )}
+          </div>
+
+          <div className="border-t border-primary/10 pt-5">
+            <p className="text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1">
+              Ticket Tailor → Brevo
+            </p>
+            <p className="text-[0.6875rem] text-primary/50 mb-4">
+              Optional. Fill in both to route this event's Ticket Tailor buyers into a
+              Brevo list — the mapping appears under Event Lists and can be managed there
+              too. Leave blank if this event isn't sold through Ticket Tailor.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field
+                label="Ticket Tailor Event ID"
+                hint="In the event's URL in your Ticket Tailor dashboard."
+              >
+                <TextInput
+                  value={form.ttEventId}
+                  onChange={(e) => setForm({ ...form, ttEventId: e.target.value })}
+                  placeholder="ev_1234…"
+                />
+              </Field>
+              <Field
+                label="Brevo List ID"
+                hint="The number in the URL at Brevo → Contacts → Lists → your list."
+              >
+                {/* Plain text input, not NumberInput: this field has to be able
+                    to sit empty (no mapping), and NumberInput settles a blank
+                    back to its floor of 0 on blur. */}
+                <TextInput
+                  inputMode="numeric"
+                  value={form.brevoListId}
+                  onChange={(e) =>
+                    setForm({ ...form, brevoListId: e.target.value.replace(/\D/g, "") })
+                  }
+                  placeholder="e.g. 12"
+                />
+              </Field>
+            </div>
+            {!!(form.ttEventId || "").trim() !==
+              !!String(form.brevoListId ?? "").trim() && (
+              <p className="text-[0.6875rem] text-amber-700 bg-amber-50 px-3 py-2 rounded-sm mt-3">
+                Both IDs are needed to route registrations — with only one filled in, no
+                list mapping is created.
+              </p>
             )}
           </div>
 

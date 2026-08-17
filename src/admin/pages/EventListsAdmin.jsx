@@ -260,6 +260,14 @@ export default function EventListsAdmin() {
                       <Star className="w-2.5 h-2.5 fill-current" /> Default
                     </span>
                   )}
+                  {item.eventId && (
+                    <span
+                      title="These IDs are set on the event itself under Events — editing them there updates this mapping."
+                      className="text-[0.5625rem] tracking-[0.15em] uppercase text-primary/50 bg-primary/8 px-2 py-0.5 rounded-sm"
+                    >
+                      From event
+                    </span>
+                  )}
                   {!item.active && (
                     <span className="text-[0.5625rem] tracking-[0.15em] uppercase text-primary/45 bg-primary/8 px-2 py-0.5 rounded-sm">
                       Disabled
