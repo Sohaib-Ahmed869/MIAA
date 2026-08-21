@@ -44,18 +44,18 @@ export default function Navbar() {
         }}
       />
 
-      {/* Top-of-page CTAs (Gala + Follow) — absolute so they scroll away with the page */}
+      {/* Top-of-page CTAs (Offsite Events + Follow) — absolute so they scroll away with the page */}
       <div className="absolute top-0 right-0 z-40 px-4 sm:px-6 md:px-10 lg:px-16 3xl:px-24 pointer-events-none">
         <div className="flex items-center justify-end h-20 md:h-24 3xl:h-28 gap-3 md:gap-5">
-          {!location.pathname.startsWith("/gala-dinner") && (
+          {!location.pathname.startsWith("/offsite-events") && (
             <MotionLink
-              to="/gala-dinner"
+              to="/offsite-events"
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.97 }}
               transition={{ type: "spring", stiffness: 400, damping: 20 }}
               className="group pointer-events-auto hidden lg:inline-flex items-center gap-1.5 3xl:gap-1.5 px-4 py-3 3xl:px-4 3xl:py-2.5 bg-white/15 backdrop-blur-sm text-white font-barlow text-[0.6875rem] 3xl:text-[0.6875rem] font-semibold tracking-[0.15em] uppercase rounded-sm overflow-hidden relative transition-colors duration-200 border border-white/20"
             >
-              <span className="relative z-10 inline-block" style={{ transform: "scaleY(1.15)", transformOrigin: "center" }}>Gala Dinner</span>
+              <span className="relative z-10 inline-block" style={{ transform: "scaleY(1.15)", transformOrigin: "center" }}>Offsite Events</span>
               <span className="relative z-10 inline-flex overflow-hidden w-[13px] h-[13px] 3xl:w-4 3xl:h-4">
                 <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} className="absolute inset-0 w-full h-full transition-transform duration-300 ease-out group-hover:translate-x-full group-hover:-translate-y-full" />
                 <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} className="absolute inset-0 w-full h-full -translate-x-full translate-y-full transition-transform duration-300 ease-out group-hover:translate-x-0 group-hover:translate-y-0" />
