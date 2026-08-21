@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import ReCAPTCHA from "react-google-recaptcha"
 import { fadeInLeft, fadeInRight } from "../lib/motion"
 import CTAButton from "../components/ui/Button"
+import PolicyConsent from "../components/ui/PolicyConsent"
 import SignupConfirmationModal from "../components/ui/SignupConfirmationModal"
 import { api } from "../lib/api"
 import Text from "../content/Text"
@@ -227,6 +228,11 @@ export default function Volunteer() {
                     {error}
                   </p>
                 )}
+                <PolicyConsent
+                  action="applying to volunteer"
+                  volunteer
+                  className="max-w-lg 3xl:max-w-2xl"
+                />
                 <div>
                   <CTAButton
                     type="submit"

@@ -16,6 +16,8 @@ import Contact from "./pages/Contact"
 import Blog from "./pages/Blog"
 import BlogDetail from "./pages/BlogDetail"
 import Volunteer from "./pages/Volunteer"
+import PrivacyPolicy from "./pages/PrivacyPolicy"
+import VolunteerPolicy from "./pages/VolunteerPolicy"
 import SupportUs from "./pages/SupportUs"
 import GalaDinner from "./pages/GalaDinner"
 import GalaDinnerTicketing from "./pages/GalaDinnerTicketing"
@@ -151,6 +153,8 @@ export default function App() {
           <Route path="blog" element={<Blog />} />
           <Route path="blog/:slug" element={<BlogDetail />} />
           <Route path="volunteer" element={<Volunteer />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="volunteer-policy" element={<VolunteerPolicy />} />
           <Route path="support-us" element={<SupportUs />} />
           <Route path="gala-dinner" element={<GalaDinner />} />
           <Route path="gala-dinner/tickets" element={<GalaDinnerTicketing />} />

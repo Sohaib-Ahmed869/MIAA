@@ -3,6 +3,7 @@ import { motion } from "framer-motion"
 import ReCAPTCHA from "react-google-recaptcha"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import CTAButton from "../../ui/Button"
+import PolicyConsent from "../../ui/PolicyConsent"
 import Text from "../../../content/Text"
 import { useText } from "../../../content/context"
 
@@ -236,6 +237,7 @@ export default function ContactPageSection() {
                 {error && (
                   <p className="text-sm 3xl:text-base text-secondary-terra" role="alert">{error}</p>
                 )}
+                <PolicyConsent action="sending this message" className="max-w-lg 3xl:max-w-2xl" />
                 <div>
                   <CTAButton type="submit" disabled={submitting} className="px-6 py-3 disabled:opacity-60">{submitting ? "Sending…" : t("contact.page.cta")}</CTAButton>
                 </div>

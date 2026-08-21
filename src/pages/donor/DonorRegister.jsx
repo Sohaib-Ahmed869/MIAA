@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom"
 import { motion, useMotionValue, useTransform, useSpring } from "framer-motion"
 import { ArrowUpRight, User, Mail, Lock, Eye, EyeOff, Phone } from "lucide-react"
 import { donorApi, setDonorSession, getDonorToken } from "../../lib/donorAuth"
+import PolicyConsent from "../../components/ui/PolicyConsent"
 import smallLogo from "../../assets/images/Homepage/smalllogo.png"
 import Quatrefoil from "../../admin/components/Quatrefoil"
 import DottedDivider from "../../admin/components/DottedDivider"
@@ -314,6 +315,12 @@ export default function DonorRegister() {
             )}
             <span className="absolute inset-0 bg-secondary-terra origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
           </motion.button>
+
+          <PolicyConsent
+            action="creating an account"
+            tone="light"
+            className="mt-4 text-center"
+          />
 
           {/* Login link */}
           <p className="text-center text-[0.8125rem] text-primary/50 mt-6">

@@ -1,6 +1,7 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import { Plus, Minus } from "lucide-react"
+import { Plus, Minus, ArrowUpRight } from "lucide-react"
 import { fadeInLeft, fadeInRight } from "../../../lib/motion"
 import Text from "../../../content/Text"
 import { useText } from "../../../content/context"
@@ -72,6 +73,18 @@ export default function VolunteerFAQSection() {
                 </AnimatePresence>
               </div>
             ))}
+
+            {/* The last question is about the policy, so the full text sits
+                directly under the accordion rather than inside an answer. */}
+            <Link
+              to="/volunteer-policy"
+              className="group mt-8 inline-flex items-center gap-2 self-start text-sm sm:text-base 3xl:text-lg font-medium text-secondary-terra hover:text-primary transition-colors"
+            >
+              <span className="underline underline-offset-4">
+                <Text k="support.faq.policyLink" />
+              </span>
+              <ArrowUpRight className="w-4 h-4 3xl:w-5 3xl:h-5 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </Link>
           </motion.div>
         </div>
       </div>

@@ -12,6 +12,7 @@ import {
 import { api } from "../lib/api"
 import { getDonorUser } from "../lib/donorAuth"
 import { fadeInUp } from "../lib/motion"
+import PolicyConsent from "../components/ui/PolicyConsent"
 
 const PRESET_AMOUNTS = [2500, 5000, 10000, 25000, 50000, 100000]
 const FREQUENCIES = [
@@ -121,6 +122,8 @@ function CardPaymentForm({ amountLabel, isRecurring, freqLabel, onSuccess, onEdi
           </>
         )}
       </button>
+
+      <PolicyConsent action="donating" className="text-center" />
 
       <button
         type="button"

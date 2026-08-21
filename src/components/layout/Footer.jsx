@@ -306,6 +306,22 @@ export default function Footer() {
 
             {/* Copyright */}
             <div className="flex flex-col gap-1 pb-4 lg:pb-8 3xl:pb-10">
+              {/* Policies sit above the copyright, where visitors expect them. */}
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2">
+                <Link
+                  to="/privacy-policy"
+                  className="text-sm 3xl:text-base text-primary font-medium hover:text-secondary-terra transition-colors"
+                >
+                  <Text k="footer.legal.privacyLabel" />
+                </Link>
+                <span className="text-primary/30" aria-hidden="true">·</span>
+                <Link
+                  to="/volunteer-policy"
+                  className="text-sm 3xl:text-base text-primary font-medium hover:text-secondary-terra transition-colors"
+                >
+                  <Text k="footer.legal.volunteerPolicyLabel" />
+                </Link>
+              </div>
               <p className="text-sm 3xl:text-base text-primary">
                 <Text k="footer.legal.copyright" />
               </p>

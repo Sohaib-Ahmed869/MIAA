@@ -23,6 +23,7 @@ import {
 import { toPng } from "html-to-image"
 import { api } from "../lib/api"
 import { getDonorUser } from "../lib/donorAuth"
+import PolicyConsent from "../components/ui/PolicyConsent"
 import { fadeInUp } from "../lib/motion"
 import Dropdown from "../components/ui/Dropdown"
 import GatePass from "../components/events/GatePass"
@@ -820,6 +821,10 @@ export default function EventRegister() {
                       : "Confirm registration"}
                 </button>
               </div>
+
+              {/* Sits on the review step so it covers the free and paid flows
+                  alike — the payment step below is only reached from here. */}
+              <PolicyConsent action="registering" className="mt-4 text-center" />
             </>
           )}
 

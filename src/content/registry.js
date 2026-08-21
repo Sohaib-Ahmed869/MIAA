@@ -1146,6 +1146,13 @@ const TEXT_GROUPS = [
           { key: "support.faq.a4", label: "A4", type: "richtext", default: "MIAA volunteers enjoy exclusive access to events, behind-the-scenes tours, training opportunities, and recognition for their contributions to the museum." },
           { key: "support.faq.q5", label: "Q5", type: "text", default: "Volunteer Policy" },
           { key: "support.faq.a5", label: "A5", type: "richtext", default: "All volunteers are expected to adhere to MIAA’s volunteer policy, which outlines responsibilities, code of conduct, and safety requirements." },
+          {
+            key: "support.faq.policyLink",
+            label: "Volunteer Policy link text",
+            type: "text",
+            help: "Shown under the questions. Goes to the Volunteer Policy page.",
+            default: "Read the full Volunteer Policy",
+          },
         ],
       },
     ],
@@ -1503,6 +1510,478 @@ const TEXT_GROUPS = [
     ],
   },
   {
+    // The two legal pages share one renderer (`sections/legal/PolicyPage`), so a
+    // clause is a section here plus one line in the page's `SECTIONS` array. In
+    // a body, a blank line starts a new paragraph and a run of lines each
+    // beginning "- " renders as a bullet list.
+    id: "privacy",
+    label: "Privacy Policy",
+    path: "/privacy-policy",
+    sections: [
+      {
+        id: "hero",
+        label: "Page Header",
+        fields: [
+          { key: "privacy.hero.eyebrow", label: "Eyebrow", type: "text", default: "Legal" },
+          { key: "privacy.hero.title", label: "Heading", type: "text", default: "Privacy Policy" },
+          {
+            key: "privacy.hero.intro",
+            label: "Intro paragraph",
+            type: "richtext",
+            default:
+              "The Museum of Islamic Art Australia is committed to protecting your privacy. This policy explains what personal information we collect, why we collect it, and how we store, use and share it.",
+          },
+          {
+            key: "privacy.hero.updated",
+            label: "Last-updated line",
+            type: "text",
+            help: "Update this whenever the policy text below changes.",
+            default: "Last updated: August 2026",
+          },
+          { key: "privacy.hero.contentsLabel", label: "Contents list — heading", type: "text", default: "On this page" },
+        ],
+      },
+      {
+        id: "about",
+        label: "1. About This Policy",
+        fields: [
+          { key: "privacy.about.heading", label: "Heading", type: "text", default: "About this policy" },
+          {
+            key: "privacy.about.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "The Museum of Islamic Art Australia (MIAA, “we”, “us”, “our”) is an initiative of the Islamic Sciences and Research Academy of Australia (ISRA). We are bound by the Privacy Act 1988 (Cth) and the Australian Privacy Principles.\n\nThis policy applies to this website and to every form, donation, membership, event registration and volunteer application made through it. It also covers information you give us by email, by phone, or in person at our events.\n\nBy using this website you agree to your personal information being handled as described in this policy.",
+          },
+        ],
+      },
+      {
+        id: "collect",
+        label: "2. Information We Collect",
+        fields: [
+          { key: "privacy.collect.heading", label: "Heading", type: "text", default: "Information we collect" },
+          {
+            key: "privacy.collect.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "We only collect personal information that we need in order to do what you have asked us to do. Depending on how you interact with us, that may include:\n\n- Your name, email address and phone number\n- Your postal or billing address, where a donation receipt or membership requires it\n- Donation details — the amount, the frequency, the campaign or cause you chose, and your receipt history\n- Event registration details, including ticket type, attendee names, and any access or dietary requirements you tell us about\n- Volunteer application details — your areas of interest, your availability, and anything you write in your message\n- Working With Children Check details, where the volunteer role you apply for requires one\n- Your donor account details, including your email address and an encrypted password\n- Technical information such as your IP address, browser type and the pages you visit\n\nWe do not collect sensitive information — such as health, religious or political information — unless you choose to give it to us, for example when telling us about an access requirement for an event. Where you do, we use it only for the purpose you gave it.",
+          },
+        ],
+      },
+      {
+        id: "how",
+        label: "3. How We Collect It",
+        fields: [
+          { key: "privacy.how.heading", label: "Heading", type: "text", default: "How we collect it" },
+          {
+            key: "privacy.how.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "We collect personal information directly from you wherever we can — when you fill in a form on this website, subscribe to our newsletter, register for an event, make a donation, create a donor account, apply to volunteer, or contact us.\n\nWe also receive information from the third parties who help us run our services, including our payment providers (Stripe and PayPal), our ticketing provider (Ticket Tailor) and our email provider (Brevo), where you have bought a ticket or subscribed through them.\n\nSome information is collected automatically by our website and hosting providers, as described in the section on cookies and analytics below.",
+          },
+        ],
+      },
+      {
+        id: "why",
+        label: "4. Why We Collect It",
+        fields: [
+          { key: "privacy.why.heading", label: "Heading", type: "text", default: "Why we collect and use it" },
+          {
+            key: "privacy.why.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "We use your personal information to:\n\n- Respond to your enquiry or your volunteer application\n- Process your donation, membership or event registration, and issue your receipt or ticket\n- Manage your donor account and show you your giving history\n- Administer and run events, including check-in at the door\n- Send you the newsletter and updates you have asked for\n- Meet our record-keeping, tax and reporting obligations as a not-for-profit\n- Improve the website and understand which parts of it are useful\n\nWe will not use your information for a purpose other than the one you gave it for, unless you would reasonably expect us to or the law requires or permits it. We do not sell your personal information to anyone.",
+          },
+        ],
+      },
+      {
+        id: "payments",
+        label: "5. Donations & Payments",
+        fields: [
+          { key: "privacy.payments.heading", label: "Heading", type: "text", default: "Donations and payments" },
+          {
+            key: "privacy.payments.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "Payments made through this website are processed by Stripe and PayPal. Your card number, expiry date and security code are entered directly into the payment provider’s secure form and go straight to them — MIAA never sees or stores your full card details.\n\nWe do keep a record of each transaction, including the amount, the date, the payment method type, the last four digits of the card where our provider supplies them, and the receipt number we issue you. We keep these records for as long as Australian tax and charity record-keeping law requires.\n\nIf you set up a recurring donation, the payment provider securely stores your payment method on your behalf so the donation can repeat. You can cancel a recurring donation at any time from your donor account or by contacting us.\n\nStripe and PayPal handle your payment information under their own privacy policies, which we encourage you to read.",
+          },
+        ],
+      },
+      {
+        id: "sharing",
+        label: "6. Who We Share It With",
+        fields: [
+          { key: "privacy.sharing.heading", label: "Heading", type: "text", default: "Who we share information with" },
+          {
+            key: "privacy.sharing.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "We share personal information only where it is needed to provide the service you asked for, or where the law requires it. That includes:\n\n- Our payment providers, Stripe and PayPal, to process donations and payments\n- Our email and marketing provider, Brevo, to send receipts, confirmations and newsletters\n- Ticket Tailor, where you buy an event ticket through their platform\n- Our hosting and storage providers, which host this website, our database and our uploaded files\n- Government agencies, auditors, professional advisers or law enforcement, where we are required or authorised by law to disclose it\n\nOur staff and volunteers can access personal information only where their role requires it. Volunteers who assist at events can see the check-in list for that event, but never donation or donor records.",
+          },
+        ],
+      },
+      {
+        id: "storage",
+        label: "7. Storage & Security",
+        fields: [
+          { key: "privacy.storage.heading", label: "Heading", type: "text", default: "Storage, security and overseas disclosure" },
+          {
+            key: "privacy.storage.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "We store your information in secured, access-controlled systems. Access to our administration and donor systems requires a password, and administrative activity is logged. Data sent between your browser and our systems is encrypted in transit, and passwords are stored only in hashed form.\n\nSome of our service providers store data on servers outside Australia, including in the United States and the European Union. By using this website you consent to your information being disclosed to those providers for the purposes described in this policy. We take reasonable steps to use providers who handle personal information to a standard comparable to the Australian Privacy Principles.\n\nNo method of transmission or storage is completely secure. While we take reasonable steps to protect your information, we cannot guarantee absolute security.\n\nWe keep personal information only for as long as we need it for the purposes described above, or for as long as the law requires, and then destroy or de-identify it.",
+          },
+        ],
+      },
+      {
+        id: "cookies",
+        label: "8. Cookies & Analytics",
+        fields: [
+          { key: "privacy.cookies.heading", label: "Heading", type: "text", default: "Cookies, analytics and reCAPTCHA" },
+          {
+            key: "privacy.cookies.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "This website uses cookies and similar browser storage to keep you signed in to your donor or administrator account, to remember your preferences, and to hold your donation or registration in progress as you move between pages. These are necessary for the site to work, and blocking them may stop parts of it functioning.\n\nWe may use analytics tools to understand how the site is used overall. That information does not identify you personally.\n\nOur contact and volunteer forms use Google reCAPTCHA to protect against automated abuse. reCAPTCHA collects hardware and software information from your device and sends it to Google for analysis, subject to Google’s own privacy policy and terms of service.\n\nMost browsers let you refuse or delete cookies through their settings.",
+          },
+        ],
+      },
+      {
+        id: "marketing",
+        label: "9. Newsletters & Marketing",
+        fields: [
+          { key: "privacy.marketing.heading", label: "Heading", type: "text", default: "Newsletters and marketing" },
+          {
+            key: "privacy.marketing.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "We send newsletters and event updates only to people who have asked for them, or who have given us their details in a context where they would reasonably expect to hear from us — for example after donating or registering for an event.\n\nEvery marketing email we send includes an unsubscribe link, and we act on unsubscribe requests promptly. You can also ask us to remove you at any time using the contact details below. Unsubscribing from marketing does not stop transactional messages such as donation receipts, event tickets or account emails.",
+          },
+        ],
+      },
+      {
+        id: "volunteers",
+        label: "10. Volunteers & Attendees",
+        fields: [
+          { key: "privacy.volunteers.heading", label: "Heading", type: "text", default: "Volunteers and event attendees" },
+          {
+            key: "privacy.volunteers.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "If you apply to volunteer with us, we keep your application so that we can contact you when a suitable opportunity arises. Where a role involves working with children we will ask you to provide a Working With Children Check, and we record only its number and expiry date.\n\nIf you register for an event, we record your attendance at check-in for safety, capacity and reporting purposes. Photography and filming sometimes take place at MIAA events; where they do, we will tell you at the venue and you can ask not to be photographed.\n\nHow we work with volunteers is set out in full in our Volunteer Policy.",
+          },
+        ],
+      },
+      {
+        id: "access",
+        label: "11. Access & Correction",
+        fields: [
+          { key: "privacy.access.heading", label: "Heading", type: "text", default: "Accessing and correcting your information" },
+          {
+            key: "privacy.access.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "You can ask us for a copy of the personal information we hold about you, and ask us to correct anything that is wrong or out of date. If you have a donor account you can view and update much of it yourself at any time.\n\nWe will respond within a reasonable time and will not charge you for making a request. In rare cases we may refuse access — for example where granting it would unreasonably affect another person’s privacy — and if we do, we will explain why in writing.\n\nYou may also ask us to delete your information. We will do so unless we are required to keep it, for example the tax records attached to a donation receipt.",
+          },
+        ],
+      },
+      {
+        id: "complaints",
+        label: "12. Complaints",
+        fields: [
+          { key: "privacy.complaints.heading", label: "Heading", type: "text", default: "Complaints" },
+          {
+            key: "privacy.complaints.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "If you believe we have mishandled your personal information, please contact us using the details below. We take privacy complaints seriously, and we will acknowledge your complaint and aim to resolve it within 30 days.\n\nIf you are not satisfied with our response, you can refer the matter to the Office of the Australian Information Commissioner at oaic.gov.au or on 1300 363 992.",
+          },
+        ],
+      },
+      {
+        id: "changes",
+        label: "13. Changes To This Policy",
+        fields: [
+          { key: "privacy.changes.heading", label: "Heading", type: "text", default: "Changes to this policy" },
+          {
+            key: "privacy.changes.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "We may update this policy from time to time as our services or the law change. The current version is always available on this page, and the date it was last updated is shown at the top. Significant changes will be notified on the website.",
+          },
+        ],
+      },
+      {
+        id: "contact",
+        label: "14. Contact Us",
+        fields: [
+          { key: "privacy.contact.heading", label: "Heading", type: "text", default: "Contact us" },
+          {
+            key: "privacy.contact.body",
+            label: "Text",
+            type: "richtext",
+            help: "Replace with MIAA’s official privacy contact, postal address and ABN before launch.",
+            default:
+              "To ask a question about this policy, request access to your information, or make a privacy complaint, contact:\n\nPrivacy Officer\nMuseum of Islamic Art Australia\nEmail: info@miaaustralia.org\n\nWe will respond as promptly as we can.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: "volunteer-policy",
+    label: "Volunteer Policy",
+    path: "/volunteer-policy",
+    sections: [
+      {
+        id: "hero",
+        label: "Page Header",
+        fields: [
+          { key: "volpolicy.hero.eyebrow", label: "Eyebrow", type: "text", default: "Volunteering" },
+          { key: "volpolicy.hero.title", label: "Heading", type: "text", default: "Volunteer Policy" },
+          {
+            key: "volpolicy.hero.intro",
+            label: "Intro paragraph",
+            type: "richtext",
+            default:
+              "Volunteers are central to everything MIAA does. This policy sets out what you can expect from us, what we ask of you, and how we keep everyone safe and supported.",
+          },
+          {
+            key: "volpolicy.hero.updated",
+            label: "Last-updated line",
+            type: "text",
+            help: "Update this whenever the policy text below changes.",
+            default: "Last updated: August 2026",
+          },
+          { key: "volpolicy.hero.contentsLabel", label: "Contents list — heading", type: "text", default: "On this page" },
+        ],
+      },
+      {
+        id: "purpose",
+        label: "1. Purpose & Scope",
+        fields: [
+          { key: "volpolicy.purpose.heading", label: "Heading", type: "text", default: "Purpose and scope" },
+          {
+            key: "volpolicy.purpose.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "MIAA volunteers give their time to help build Australia’s first museum dedicated to Islamic art. This policy explains how we recruit, support and work with volunteers, and the standards we hold each other to.\n\nIt applies to everyone who volunteers with MIAA — at events, in programs and tours, in administration, or online — whether for a single event or on an ongoing basis. It forms part of the arrangement between MIAA and each volunteer, but it is not a contract of employment and creates no employment relationship.",
+          },
+        ],
+      },
+      {
+        id: "commitment",
+        label: "2. Our Commitment",
+        fields: [
+          { key: "volpolicy.commitment.heading", label: "Heading", type: "text", default: "Our commitment to you" },
+          {
+            key: "volpolicy.commitment.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "Volunteering with MIAA should be worthwhile, safe and welcoming. We commit to:\n\n- Treat you with respect and value your contribution\n- Give you a clear description of your role and what it involves\n- Provide the induction, training, supervision and information you need to do it safely\n- Provide an environment free from discrimination, harassment and bullying\n- Cover you under our volunteer insurance while you carry out approved MIAA activities\n- Keep your personal information confidential and handle it in line with our Privacy Policy\n- Listen when you raise a concern, and act on it",
+          },
+        ],
+      },
+      {
+        id: "rights",
+        label: "3. Your Rights",
+        fields: [
+          { key: "volpolicy.rights.heading", label: "Heading", type: "text", default: "Your rights as a volunteer" },
+          {
+            key: "volpolicy.rights.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "As a MIAA volunteer you have the right to:\n\n- Be given meaningful work and a clear, achievable role\n- Say no to a task you are not comfortable with or trained for\n- Work in a safe environment and be told about any risks\n- Be treated as an equal member of the team, not as unpaid labour replacing a paid role\n- Be reimbursed for reasonable, pre-approved out-of-pocket expenses\n- Ask questions, give feedback, and have your concerns taken seriously\n- Withdraw from volunteering at any time",
+          },
+        ],
+      },
+      {
+        id: "responsibilities",
+        label: "4. What We Ask Of You",
+        fields: [
+          { key: "volpolicy.responsibilities.heading", label: "Heading", type: "text", default: "What we ask of you" },
+          {
+            key: "volpolicy.responsibilities.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "In return, we ask that you:\n\n- Carry out your role reliably and to the best of your ability\n- Turn up when you have said you will, and tell your coordinator as early as you can if you cannot\n- Follow MIAA’s directions, policies and safety procedures while volunteering\n- Treat visitors, staff, contractors and fellow volunteers with courtesy and respect\n- Respect the diversity of our visitors and our community\n- Keep confidential information confidential, both during and after your time with us\n- Take care of MIAA property, collections and equipment\n- Stay within your role, and refer anything outside it to a staff member",
+          },
+        ],
+      },
+      {
+        id: "recruitment",
+        label: "5. Becoming A Volunteer",
+        fields: [
+          { key: "volpolicy.recruitment.heading", label: "Heading", type: "text", default: "Becoming a volunteer" },
+          {
+            key: "volpolicy.recruitment.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "Volunteers are recruited through the volunteer form on this website, and through volunteer call-outs shared via our newsletter and social media.\n\nVolunteers must be at least 18 years of age. We will contact you when a volunteering opportunity matching your interests and availability becomes available — because we engage volunteers responsibly, that may not be immediately after you apply.\n\nDepending on the role, we may ask you to take part in an informal interview, provide referees, complete a National Police Check, or hold a current Working With Children Check.\n\nPlacement in a role is always at MIAA’s discretion and depends on the needs of the museum at the time.",
+          },
+        ],
+      },
+      {
+        id: "induction",
+        label: "6. Induction & Training",
+        fields: [
+          { key: "volpolicy.induction.heading", label: "Heading", type: "text", default: "Induction, training and supervision" },
+          {
+            key: "volpolicy.induction.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "Every volunteer receives an induction before their first shift, covering their role, the site, emergency procedures, and who to go to for help.\n\nEach volunteer is assigned a staff contact or coordinator who supervises their role and is the first point of call for questions and concerns. Further training is offered where a role requires it, and you are welcome to ask for more at any time.",
+          },
+        ],
+      },
+      {
+        id: "conduct",
+        label: "7. Code Of Conduct",
+        fields: [
+          { key: "volpolicy.conduct.heading", label: "Heading", type: "text", default: "Code of conduct" },
+          {
+            key: "volpolicy.conduct.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "While volunteering, and whenever you are identifiable as a MIAA volunteer, you must:\n\n- Act honestly, respectfully, and in the best interests of the museum and its visitors\n- Wear any identification or uniform provided, and follow the dress standards for your role\n- Not attend while affected by alcohol or illicit drugs\n- Not smoke or vape except in designated areas\n- Not discriminate against, harass, bully or intimidate anyone\n- Not accept gifts, benefits or payment from visitors or suppliers in connection with your role\n- Not speak to the media or make public comment as a representative of MIAA without approval\n- Declare any conflict of interest to your coordinator as soon as you become aware of it\n\nSerious breaches — including violence, theft, harassment, or conduct that puts a child or another person at risk — will end the volunteer placement immediately and may be reported to police.",
+          },
+        ],
+      },
+      {
+        id: "childsafe",
+        label: "8. Child Safety",
+        fields: [
+          { key: "volpolicy.childsafe.heading", label: "Heading", type: "text", default: "Child safety" },
+          {
+            key: "volpolicy.childsafe.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "MIAA is committed to being a child safe organisation, and we have zero tolerance for child abuse of any kind.\n\nVolunteers in child-related roles must hold a valid NSW Working With Children Check, and we verify every check before a placement begins. It is your responsibility to keep your check current and to tell us if its status changes.\n\nAll volunteers must:\n\n- Treat children with respect, and never engage in physical, verbal, sexual, emotional or psychological abuse\n- Avoid being alone with a child wherever it can be avoided, and stay within sight of others\n- Not photograph or film children without the consent of a parent or guardian\n- Not privately contact a child met through MIAA, including through personal social media\n\nIf you are concerned that a child is at risk of harm, report it to a MIAA staff member immediately. Serious concerns will be reported to the relevant authorities. You will not be penalised for making a report in good faith.",
+          },
+        ],
+      },
+      {
+        id: "whs",
+        label: "9. Health, Safety & Insurance",
+        fields: [
+          { key: "volpolicy.whs.heading", label: "Heading", type: "text", default: "Health, safety and insurance" },
+          {
+            key: "volpolicy.whs.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "MIAA provides a safe environment for volunteers and complies with the Work Health and Safety Act 2011 (NSW). Volunteers have the same right to a safe workplace as paid staff.\n\nWhile volunteering you must follow safety instructions and site rules, use any protective equipment provided, and report hazards, injuries and near misses to your coordinator straight away — however minor they seem.\n\nMIAA holds volunteer personal accident and public liability insurance covering registered volunteers carrying out approved activities. Cover applies only to activities MIAA has authorised; it does not extend to activities you undertake on your own initiative.",
+          },
+        ],
+      },
+      {
+        id: "privacy",
+        label: "10. Privacy & Confidentiality",
+        fields: [
+          { key: "volpolicy.privacy.heading", label: "Heading", type: "text", default: "Privacy and confidentiality" },
+          {
+            key: "volpolicy.privacy.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "We collect and hold personal information about volunteers in order to manage volunteering — your contact details, availability, areas of interest and, where relevant, the details of any background check. This information is handled in accordance with our Privacy Policy.\n\nAs a volunteer you may come across confidential information about visitors, donors, staff, other volunteers or the collection. You must not disclose it to anyone outside MIAA, and that obligation continues after you stop volunteering with us.\n\nYou can ask to see and correct the information we hold about you at any time.",
+          },
+        ],
+      },
+      {
+        id: "media",
+        label: "11. Photography & Social Media",
+        fields: [
+          { key: "volpolicy.media.heading", label: "Heading", type: "text", default: "Photography, social media and public comment" },
+          {
+            key: "volpolicy.media.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "Photography and filming take place at MIAA events for promotional purposes. We will let you know when it is happening, and you may ask not to be photographed — just tell your coordinator.\n\nWe love volunteers sharing their experience online. When you do, please respect the privacy of visitors and other volunteers, don’t post images of children without consent, don’t share confidential or behind-the-scenes information that has not been made public, and make clear you are speaking personally rather than for MIAA.\n\nMedia enquiries should always be referred to MIAA staff.",
+          },
+        ],
+      },
+      {
+        id: "expenses",
+        label: "12. Expenses",
+        fields: [
+          { key: "volpolicy.expenses.heading", label: "Heading", type: "text", default: "Expenses" },
+          {
+            key: "volpolicy.expenses.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "Volunteering with MIAA is unpaid. We will reimburse reasonable out-of-pocket expenses — such as agreed travel or materials — where they have been approved in advance by your coordinator and you provide a receipt.",
+          },
+        ],
+      },
+      {
+        id: "concerns",
+        label: "13. Raising A Concern",
+        fields: [
+          { key: "volpolicy.concerns.heading", label: "Heading", type: "text", default: "Raising a concern" },
+          {
+            key: "volpolicy.concerns.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "If something is not right, tell us. Raise it first with your coordinator or the staff member supervising your role. If that is not appropriate, or you are not satisfied with the outcome, contact MIAA’s volunteer manager using the details below.\n\nWe will treat your concern confidentially where we can, look into it fairly and promptly, keep you informed, and tell you the outcome. You will not be disadvantaged for raising a concern in good faith.",
+          },
+        ],
+      },
+      {
+        id: "ending",
+        label: "14. Ending A Placement",
+        fields: [
+          { key: "volpolicy.ending.heading", label: "Heading", type: "text", default: "Ending a volunteer placement" },
+          {
+            key: "volpolicy.ending.body",
+            label: "Text",
+            type: "richtext",
+            default:
+              "You may stop volunteering at any time. We simply ask, where you can, that you let your coordinator know so shifts can be covered, and that you return any identification, keys or equipment.\n\nMIAA may end a placement where a role is no longer required, where a role is not the right fit, or where this policy or the code of conduct has been breached. Other than for serious misconduct, we will talk with you first and give you a chance to respond.\n\nWe are glad to provide a reference or a record of your volunteering hours on request.",
+          },
+        ],
+      },
+      {
+        id: "contact",
+        label: "15. Contact Us",
+        fields: [
+          { key: "volpolicy.contact.heading", label: "Heading", type: "text", default: "Contact us" },
+          {
+            key: "volpolicy.contact.body",
+            label: "Text",
+            type: "richtext",
+            help: "Replace with MIAA’s official volunteer contact details before launch.",
+            default:
+              "To ask about volunteering, or about anything in this policy, contact:\n\nVolunteer Manager\nMuseum of Islamic Art Australia\nEmail: volunteer@miaaustralia.org\n\nYou can also apply through the volunteer form on this website.",
+          },
+        ],
+      },
+    ],
+  },
+  {
     // Site-wide: the footer renders on every public page except SMWF, which has
     // its own. The preview loads Home and the footer sits at the bottom of it.
     id: "footer",
@@ -1736,6 +2215,20 @@ const TEXT_GROUPS = [
             label: "Copyright line",
             type: "text",
             default: "© 2026 Museum of Islamic Art Australia",
+          },
+          {
+            key: "footer.legal.privacyLabel",
+            label: "Privacy link text",
+            type: "text",
+            help: "Goes to the Privacy Policy page.",
+            default: "Privacy Policy",
+          },
+          {
+            key: "footer.legal.volunteerPolicyLabel",
+            label: "Volunteer policy link text",
+            type: "text",
+            help: "Goes to the Volunteer Policy page.",
+            default: "Volunteer Policy",
           },
           {
             key: "footer.legal.creditLead",
