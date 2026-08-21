@@ -5,6 +5,7 @@ import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
 import Text from "../../../content/Text"
+import SectionDivider from "../../ui/SectionDivider"
 
 function slugify(s = "") {
   return String(s)
@@ -48,13 +49,27 @@ export default function OffsiteProgramsSection() {
   const media = useMediaResolver()
   // upcoming: true — events whose date has passed belong in the archive, not
   // under an "Upcoming Events" heading.
-  const { data: upcomingEvents } = useCMS(
+  const { data: upcomingEvents, loading, empty } = useCMS(
     () => api.events({ category: "offsite", upcoming: true }),
     FALLBACK_EVENTS
   )
 
+  // `empty` means the API answered and there is nothing upcoming — so there is
+  // no section to show. The placeholder events in FALLBACK_EVENTS exist for the
+  // case where the API never answered at all; presenting them as real listings
+  // when we know the calendar is clear would advertise events that don't exist.
+  //
+  // `loading` hides it too. The backend sleeps on Render's free tier and can
+  // take half a minute to wake, and showing three invented events for that long
+  // before removing them is worse than showing nothing until we know.
+  if (loading || empty) return null
+
   return (
-    <section className="py-12 md:py-16 3xl:py-24 bg-bg-deep">
+    <>
+      {/* The divider lives here rather than in the page so the "Upcoming Events"
+          label can't be left stranded above a section that removed itself. */}
+      <SectionDivider label="Upcoming Events" bg="bg-bg-deep" variant="dark" />
+      <section className="py-12 md:py-16 3xl:py-24 bg-bg-deep">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
         <motion.h2
           {...fadeInUp}
@@ -130,6 +145,7 @@ export default function OffsiteProgramsSection() {
           })}
         </motion.div>
       </div>
-    </section>
+      </section>
+    </>
   )
 }

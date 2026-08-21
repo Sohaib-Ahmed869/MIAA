@@ -63,10 +63,11 @@ export default function OffsiteEventsSection() {
 
   // upcoming: true — events whose date has passed belong in the archive, not
   // under an "Upcoming Events" heading.
-  const { data: upcomingEvents } = useCMS(
-    () => api.events({ category: "offsite", upcoming: true }),
-    FALLBACK_EVENTS
-  )
+  const {
+    data: upcomingEvents,
+    loading: upcomingLoading,
+    empty: noUpcoming,
+  } = useCMS(() => api.events({ category: "offsite", upcoming: true }), FALLBACK_EVENTS)
   const { data: previousEvents } = useCMS(
     () => api.previousEvents({ surface: "offsite" }),
     FALLBACK_PREVIOUS
@@ -86,7 +87,11 @@ export default function OffsiteEventsSection() {
           <CTAButton to="/offsite-events" className="self-start md:mt-1 whitespace-nowrap">{t("home.offsite.cta")}</CTAButton>
         </motion.div>
 
-        {/* Upcoming event cards */}
+        {/* Upcoming event cards. Dropped entirely once the API confirms there
+            is nothing upcoming — same reasoning as the Offsite Events page: the
+            fallback cards are an offline safety net, not filler. Previous
+            Events below stands on its own, so only this grid goes. */}
+        {!upcomingLoading && !noUpcoming && (
         <motion.div
           {...staggerContainer}
           className="grid grid-cols-1 md:grid-cols-3 gap-y-10 md:gap-y-12 mb-20"
@@ -144,6 +149,7 @@ export default function OffsiteEventsSection() {
             )
           })}
         </motion.div>
+        )}
 
         {/* Previous Events — 2 column layout */}
         <motion.div {...fadeInUp}>

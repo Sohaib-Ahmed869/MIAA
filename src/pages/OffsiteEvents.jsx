@@ -11,7 +11,8 @@ export default function OffsiteEvents() {
     <>
       <EventsHeroSection />
 
-      <SectionDivider label="Upcoming Events" bg="bg-bg-deep" variant="dark" />
+      {/* Renders its own "Upcoming Events" divider — the whole block removes
+          itself when the API reports nothing upcoming. */}
       <OffsiteProgramsSection />
 
       {/* Boundary float — top-right, viewport edge, partly off-screen */}
