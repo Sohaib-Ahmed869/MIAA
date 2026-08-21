@@ -757,6 +757,26 @@ const TEXT_GROUPS = [
         ],
       },
       {
+        id: "empty",
+        label: "Upcoming Events — nothing scheduled",
+        fields: [
+          {
+            key: "offsite.empty.heading",
+            label: "Heading",
+            type: "text",
+            help: "Shown in place of the events grid while nothing upcoming is published.",
+            default: "Nothing on the Calendar Just Yet",
+          },
+          {
+            key: "offsite.empty.body",
+            label: "Paragraph",
+            type: "richtext",
+            default:
+              "We’re busy planning what comes next. New exhibitions, talks and family programs are announced here first — join our mailing list below, or browse the event archive to see what MIAA has hosted so far.",
+          },
+        ],
+      },
+      {
         id: "families",
         label: "Families Discover",
         fields: [

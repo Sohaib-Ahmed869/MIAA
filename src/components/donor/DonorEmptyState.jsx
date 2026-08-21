@@ -174,11 +174,62 @@ export function CampaignArt() {
   )
 }
 
+// Sized by prop like DonationArt: the public Offsite Events page shows it at
+// page scale, not inside a portal card.
+export function CalendarArt({ className }) {
+  return (
+    <Illustration className={className}>
+      <motion.g {...float(0)}>
+        {/* binder rings */}
+        <rect x="80" y="42" width="4.5" height="15" rx="2.25" fill="#214952" fillOpacity="0.55" />
+        <rect x="115.5" y="42" width="4.5" height="15" rx="2.25" fill="#214952" fillOpacity="0.55" />
+        {/* card */}
+        <rect x="62" y="50" width="76" height="84" rx="8" fill="#FFFFFF" stroke="#214952" strokeOpacity="0.15" strokeWidth="1.5" />
+        {/* teal header — square bottom corners, so it reads as a band not a pill */}
+        <path d="M62 58 a8 8 0 0 1 8-8 h60 a8 8 0 0 1 8 8 v13 h-76 z" fill="#38717A" />
+        {/* date cells, all empty — a month with nothing marked in it */}
+        <g fill="#214952" fillOpacity="0.12">
+          <rect x="72" y="82" width="12" height="9" rx="2.5" />
+          <rect x="89" y="82" width="12" height="9" rx="2.5" />
+          <rect x="106" y="82" width="12" height="9" rx="2.5" />
+          <rect x="123" y="82" width="7" height="9" rx="2.5" />
+          <rect x="72" y="97" width="12" height="9" rx="2.5" />
+          <rect x="89" y="97" width="12" height="9" rx="2.5" />
+          <rect x="106" y="97" width="12" height="9" rx="2.5" />
+          <rect x="123" y="97" width="7" height="9" rx="2.5" />
+          <rect x="72" y="112" width="12" height="9" rx="2.5" />
+          <rect x="89" y="112" width="12" height="9" rx="2.5" />
+        </g>
+        {/* the one cell still waiting to be filled */}
+        <rect
+          x="106"
+          y="112"
+          width="12"
+          height="9"
+          rx="2.5"
+          fill="none"
+          stroke="#C15C45"
+          strokeOpacity="0.55"
+          strokeWidth="1.5"
+          strokeDasharray="3 3"
+        />
+      </motion.g>
+      <motion.g {...float(0.7)}>
+        <circle cx="52" cy="100" r="8" fill="#D7B893" />
+        <path d="M52 96 v4 l3 2" fill="none" stroke="#7A3A42" strokeWidth="1.6" strokeLinecap="round" />
+      </motion.g>
+      <Sparkle x="150" y="94" s={6} color="#38717A" />
+      <Sparkle x="146" y="62" s={5} color="#C15C45" />
+    </Illustration>
+  )
+}
+
 const ART = {
   receipt: ReceiptArt,
   donation: DonationArt,
   recurring: RecurringArt,
   campaign: CampaignArt,
+  calendar: CalendarArt,
 }
 
 /**

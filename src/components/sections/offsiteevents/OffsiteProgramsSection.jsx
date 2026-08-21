@@ -6,6 +6,7 @@ import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
 import Text from "../../../content/Text"
 import SectionDivider from "../../ui/SectionDivider"
+import NoUpcomingEventsSection from "./NoUpcomingEventsSection"
 
 function slugify(s = "") {
   return String(s)
@@ -54,21 +55,28 @@ export default function OffsiteProgramsSection() {
     FALLBACK_EVENTS
   )
 
-  // `empty` means the API answered and there is nothing upcoming — so there is
-  // no section to show. The placeholder events in FALLBACK_EVENTS exist for the
-  // case where the API never answered at all; presenting them as real listings
-  // when we know the calendar is clear would advertise events that don't exist.
-  //
-  // `loading` hides it too. The backend sleeps on Render's free tier and can
-  // take half a minute to wake, and showing three invented events for that long
-  // before removing them is worse than showing nothing until we know.
-  if (loading || empty) return null
+  // `loading` shows nothing at all. The backend sleeps on Render's free tier and
+  // can take half a minute to wake; both the invented events in FALLBACK_EVENTS
+  // and "nothing scheduled" would be a claim we can't yet make.
+  if (loading) return null
 
+  // `empty` means the API answered and the calendar is genuinely clear. The
+  // placeholder events exist for the case where the API never answered at all;
+  // presenting them as real listings here would advertise events that don't
+  // exist. So the grid gives way to an empty state rather than to silence — a
+  // section that deletes itself reads as a page that failed to load.
+  //
+  // The divider stays in both cases. It labels the empty state as correctly as
+  // it labels the grid, and the hero above is `bg-bg-deep` too, so without it
+  // the two dark blocks would run together.
   return (
     <>
       {/* The divider lives here rather than in the page so the "Upcoming Events"
-          label can't be left stranded above a section that removed itself. */}
+          label travels with the block it belongs to. */}
       <SectionDivider label="Upcoming Events" bg="bg-bg-deep" variant="dark" />
+      {empty ? (
+        <NoUpcomingEventsSection />
+      ) : (
       <section className="py-12 md:py-16 3xl:py-24 bg-bg-deep">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
         <motion.h2
@@ -146,6 +154,7 @@ export default function OffsiteProgramsSection() {
         </motion.div>
       </div>
       </section>
+      )}
     </>
   )
 }
