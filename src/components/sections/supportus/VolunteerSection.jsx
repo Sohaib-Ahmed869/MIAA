@@ -42,7 +42,7 @@ export default function VolunteerSection() {
               </p>
             </div>
 
-            <CTAButton to="/contact" className="mt-8 self-start">{t("support.volunteer.cta")}</CTAButton>
+            <CTAButton to="/volunteer" className="mt-8 self-start">{t("support.volunteer.cta")}</CTAButton>
           </motion.div>
         </div>
       </div>
