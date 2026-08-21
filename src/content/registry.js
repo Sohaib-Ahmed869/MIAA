@@ -1207,6 +1207,27 @@ const TEXT_GROUPS = [
         ],
       },
       {
+        id: "empty",
+        label: "Causes Grid — nothing published",
+        fields: [
+          {
+            key: "donate.empty.heading",
+            label: "Heading",
+            type: "text",
+            help: "Shown in place of the causes grid while no cause is published.",
+            default: "Support the Museum Directly",
+          },
+          {
+            key: "donate.empty.body",
+            label: "Paragraph",
+            type: "richtext",
+            default:
+              "There are no specific causes open for donations at the moment. Every gift still goes straight to building Australia’s first museum dedicated to Islamic art — and to the programs and exhibitions along the way.",
+          },
+          { key: "donate.empty.cta", label: "Button", type: "text", default: "Donate Now" },
+        ],
+      },
+      {
         id: "campaigns",
         label: "Campaigns",
         fields: [

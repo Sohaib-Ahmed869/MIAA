@@ -20,7 +20,10 @@ const HERO_IMAGES = [
 const ROTATE_MS = 4500
 const ease = [0.25, 0.1, 0.25, 1]
 
-export default function DonationsHeroSection() {
+// `showCausesLink` is decided by the page, which is the only place that knows
+// whether any cause is published — a link to a grid that isn't rendered would
+// scroll nowhere.
+export default function DonationsHeroSection({ showCausesLink = true }) {
   const [active, setActive] = useState(0)
   const t = useText()
   const REASSURANCES = [
@@ -94,12 +97,14 @@ export default function DonationsHeroSection() {
               className="mt-8 flex flex-wrap items-center justify-center lg:justify-start gap-4"
             >
               <CTAButton to="/donate/checkout">{t("donate.hero.cta")}</CTAButton>
-              <a
-                href="#choose-a-cause"
-                className="text-[0.6875rem] 3xl:text-sm tracking-[0.15em] uppercase font-semibold text-accent-cream/70 hover:text-accent-cream transition-colors"
-              >
-                <Text k="donate.hero.chooseLink" />
-              </a>
+              {showCausesLink && (
+                <a
+                  href="#choose-a-cause"
+                  className="text-[0.6875rem] 3xl:text-sm tracking-[0.15em] uppercase font-semibold text-accent-cream/70 hover:text-accent-cream transition-colors"
+                >
+                  <Text k="donate.hero.chooseLink" />
+                </a>
+              )}
             </motion.div>
 
             {/* Reassurance strip */}
