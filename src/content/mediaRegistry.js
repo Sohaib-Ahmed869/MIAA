@@ -153,6 +153,20 @@ import blogHeroImg from "../assets/images/UpdatesBlogs/blogshero.png"
 import siteLogo from "../assets/images/Homepage/smalllogo.png"
 import footerLogo from "../assets/images/Homepage/Footer Logo.png"
 
+/* ── Donations ────────────────────────────────────────────────────
+ * The hero-carousel photos are stock imagery (Unsplash) rather than files that
+ * ship in the build, so these defaults are remote URLs instead of imports.
+ * They are placeholders for MIAA's own photography — uploading from Site
+ * Content overrides them exactly like any other media key.
+ */
+const UNSPLASH = (id) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1400&q=70`
+
+const donateHero1 = UNSPLASH("photo-1469571486292-0ba58a3f068b")
+const donateHero2 = UNSPLASH("photo-1532629345422-7515f3d16bb6")
+const donateHero3 = UNSPLASH("photo-1593113646773-028c64a8f1b8")
+const donateHero4 = UNSPLASH("photo-1497633762265-9d179a990aa6")
+
 const SHARED_NOTE = "Shared — this file is used in more than one place on the site."
 
 export const MEDIA_ENTRIES = [
@@ -400,6 +414,25 @@ export const MEDIA_ENTRIES = [
     sectionId: "volunteer",
     fields: [
       { key: "support.volunteer.image", label: "Section image", type: "image", default: volunteerImg, alt: "MIAA volunteers" },
+    ],
+  },
+
+  /* ══ Donations ═════════════════════════════════════════════ */
+  {
+    groupId: "donate",
+    sectionId: "hero",
+    fields: [
+      {
+        key: "donate.hero.image1",
+        label: "Carousel photo 1",
+        type: "image",
+        help: "The four photos crossfade in this order beside the donation heading. Landscape 4:3 crops best.",
+        default: donateHero1,
+        alt: "Many hands raised together forming a heart",
+      },
+      { key: "donate.hero.image2", label: "Carousel photo 2", type: "image", default: donateHero2, alt: "Open hands offering coins with a 'make a change' note" },
+      { key: "donate.hero.image3", label: "Carousel photo 3", type: "image", default: donateHero3, alt: "Volunteers packing goods at a community drive" },
+      { key: "donate.hero.image4", label: "Carousel photo 4", type: "image", default: donateHero4, alt: "A stack of books representing learning and culture" },
     ],
   },
 

@@ -4,21 +4,14 @@ import { ShieldCheck, ReceiptText, HeartHandshake } from "lucide-react"
 import CTAButton from "../../ui/Button"
 import ornament from "../../../assets/images/Homepage/Ornament_1.png"
 import Text from "../../../content/Text"
-import { useText } from "../../../content/context"
-
-// Donation-themed imagery (Unsplash). ?auto=format keeps payloads small.
-const IMG = (id) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=1400&q=70`
-
-const HERO_IMAGES = [
-  { src: IMG("photo-1469571486292-0ba58a3f068b"), alt: "Many hands raised together forming a heart" },
-  { src: IMG("photo-1532629345422-7515f3d16bb6"), alt: "Open hands offering coins with a 'make a change' note" },
-  { src: IMG("photo-1593113646773-028c64a8f1b8"), alt: "Volunteers packing goods at a community drive" },
-  { src: IMG("photo-1497633762265-9d179a990aa6"), alt: "A stack of books representing learning and culture" },
-]
+import { useText, useMedia } from "../../../content/context"
 
 const ROTATE_MS = 4500
 const ease = [0.25, 0.1, 0.25, 1]
+
+// Number of carousel slots. Fixed, because each one is its own editable field
+// in Site Content → Donations → Hero (`donate.hero.image1`…`image4`).
+const SLOT_COUNT = 4
 
 // `showCausesLink` is decided by the page, which is the only place that knows
 // whether any cause is published — a link to a grid that isn't rendered would
@@ -26,6 +19,14 @@ const ease = [0.25, 0.1, 0.25, 1]
 export default function DonationsHeroSection({ showCausesLink = true }) {
   const [active, setActive] = useState(0)
   const t = useText()
+  // One hook per slot — unconditional and in a stable order, so the count has
+  // to stay in step with SLOT_COUNT.
+  const heroImages = [
+    useMedia("donate.hero.image1"),
+    useMedia("donate.hero.image2"),
+    useMedia("donate.hero.image3"),
+    useMedia("donate.hero.image4"),
+  ]
   const REASSURANCES = [
     { icon: ShieldCheck, label: t("donate.hero.badge1.label"), sub: t("donate.hero.badge1.sub") },
     { icon: ReceiptText, label: t("donate.hero.badge2.label"), sub: t("donate.hero.badge2.sub") },
@@ -37,7 +38,7 @@ export default function DonationsHeroSection({ showCausesLink = true }) {
     const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
     if (reduce) return
     const t = setInterval(
-      () => setActive((i) => (i + 1) % HERO_IMAGES.length),
+      () => setActive((i) => (i + 1) % SLOT_COUNT),
       ROTATE_MS
     )
     return () => clearInterval(t)
@@ -147,9 +148,9 @@ export default function DonationsHeroSection({ showCausesLink = true }) {
 
             <div className="relative rounded-md overflow-hidden ring-1 ring-accent-cream/15 shadow-2xl shadow-black/30 aspect-[4/3] bg-bg-deep">
               {/* Crossfading images */}
-              {HERO_IMAGES.map((img, i) => (
+              {heroImages.map((img, i) => (
                 <motion.img
-                  key={img.src}
+                  key={i}
                   src={img.src}
                   alt={img.alt}
                   loading={i === 0 ? "eager" : "lazy"}
@@ -171,9 +172,9 @@ export default function DonationsHeroSection({ showCausesLink = true }) {
               </div>
               {/* Carousel dots */}
               <div className="absolute bottom-4 right-4 flex items-center gap-1.5">
-                {HERO_IMAGES.map((img, i) => (
+                {heroImages.map((_, i) => (
                   <button
-                    key={img.src}
+                    key={i}
                     type="button"
                     onClick={() => setActive(i)}
                     aria-label={`Show image ${i + 1}`}
