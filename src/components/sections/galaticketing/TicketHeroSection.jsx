@@ -286,7 +286,7 @@ export default function TicketHeroSection() {
                           : "border-accent-cream/30 group-hover:border-accent-cream"
                       }`}
                     >
-                      {form.hasGuest && <Check className="w-3.5 h-3.5" strokeWidth={3} className="text-white" />}
+                      {form.hasGuest && <Check strokeWidth={3} className="text-white" />}
                     </span>
                     <span className="text-sm 3xl:text-base text-white">Add guest(s)</span>
                   </label>

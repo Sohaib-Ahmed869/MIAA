@@ -41,7 +41,7 @@ export default function OtherDonationsSection() {
                 className="flex gap-4 items-start"
               >
                 <span className="flex-shrink-0 mt-0.5 w-8 h-8 3xl:w-10 3xl:h-10 rounded-full border-2 border-primary/30 flex items-center justify-center">
-                  <Check className="w-4 h-4" strokeWidth={4} className="text-primary" />
+                  <Check strokeWidth={4} className="text-primary" />
                 </span>
                 <p className="text-base md:text-lg 3xl:text-xl text-primary leading-relaxed">
                   {opt.label && <span className="font-semibold">{opt.label} </span>}

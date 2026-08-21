@@ -57,8 +57,8 @@ export default function Navbar() {
             >
               <span className="relative z-10 inline-block" style={{ transform: "scaleY(1.15)", transformOrigin: "center" }}>Offsite Events</span>
               <span className="relative z-10 inline-flex overflow-hidden w-[13px] h-[13px] 3xl:w-4 3xl:h-4">
-                <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} className="absolute inset-0 w-full h-full transition-transform duration-300 ease-out group-hover:translate-x-full group-hover:-translate-y-full" />
-                <ArrowUpRight className="w-3.5 h-3.5" strokeWidth={2.5} className="absolute inset-0 w-full h-full -translate-x-full translate-y-full transition-transform duration-300 ease-out group-hover:translate-x-0 group-hover:translate-y-0" />
+                <ArrowUpRight strokeWidth={2.5} className="absolute inset-0 w-full h-full transition-transform duration-300 ease-out group-hover:translate-x-full group-hover:-translate-y-full" />
+                <ArrowUpRight strokeWidth={2.5} className="absolute inset-0 w-full h-full -translate-x-full translate-y-full transition-transform duration-300 ease-out group-hover:translate-x-0 group-hover:translate-y-0" />
               </span>
               <span className="absolute inset-0 bg-primary/80 origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 ease-out" />
             </MotionLink>
