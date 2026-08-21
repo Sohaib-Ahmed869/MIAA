@@ -32,17 +32,27 @@ function Backdrop() {
 }
 
 function Sparkle({ x, y, s = 6, color = "#D7B893" }) {
+  // Coerced, because every call site writes x="150" as an attribute string and
+  // `"150" + 1.5` is "1501.5" — the subtractions stayed numeric, so the shape
+  // kept only its left half and the control points shot off the canvas as a
+  // slab of colour instead of a four-point star.
+  const cx = Number(x)
+  const cy = Number(y)
+  const arm = s * 0.25
   return (
     <path
-      d={`M ${x} ${y - s} C ${x + s * 0.25} ${y - s * 0.25}, ${x + s * 0.25} ${y - s * 0.25}, ${x + s} ${y} C ${x + s * 0.25} ${y + s * 0.25}, ${x + s * 0.25} ${y + s * 0.25}, ${x} ${y + s} C ${x - s * 0.25} ${y + s * 0.25}, ${x - s * 0.25} ${y + s * 0.25}, ${x - s} ${y} C ${x - s * 0.25} ${y - s * 0.25}, ${x - s * 0.25} ${y - s * 0.25}, ${x} ${y - s} Z`}
+      d={`M ${cx} ${cy - s} C ${cx + arm} ${cy - arm}, ${cx + arm} ${cy - arm}, ${cx + s} ${cy} C ${cx + arm} ${cy + arm}, ${cx + arm} ${cy + arm}, ${cx} ${cy + s} C ${cx - arm} ${cy + arm}, ${cx - arm} ${cy + arm}, ${cx - s} ${cy} C ${cx - arm} ${cy - arm}, ${cx - arm} ${cy - arm}, ${cx} ${cy - s} Z`}
       fill={color}
     />
   )
 }
 
-function Illustration({ children }) {
+// `className` sizes the art. The portal's own empty states all sit inside cards
+// at one size; the public donate page shows it at page scale, so the size is a
+// prop rather than baked in.
+function Illustration({ children, className = "w-44 h-40" }) {
   return (
-    <svg viewBox="0 0 200 180" className="w-44 h-40" role="img" aria-hidden="true">
+    <svg viewBox="0 0 200 180" className={className} role="img" aria-hidden="true">
       <Backdrop />
       {children}
     </svg>
@@ -75,9 +85,9 @@ export function ReceiptArt() {
   )
 }
 
-export function DonationArt() {
+export function DonationArt({ className }) {
   return (
-    <Illustration>
+    <Illustration className={className}>
       {/* radiating rays */}
       <g stroke="#C15C45" strokeOpacity="0.35" strokeWidth="2" strokeLinecap="round">
         <line x1="100" y1="40" x2="100" y2="30" />
