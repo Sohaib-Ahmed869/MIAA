@@ -5,19 +5,15 @@ import { Menu, X, ArrowUpRight } from "lucide-react"
 import CTAButton from "../ui/Button"
 import { NAV_LINKS } from "../../lib/constants"
 import { useMedia } from "../../content/context"
+import { useSocialLinks } from "../../lib/socials"
 import topRightSpheres from "../../assets/images/Homepage/herotoprightelement.png"
 
 const MotionLink = motion.create(Link)
 
-const SOCIALS = [
-  { label: "Tiktok", url: "#" },
-  { label: "Twitter/X", url: "#" },
-  { label: "Facebook", url: "https://www.facebook.com/" },
-  { label: "YouTube", url: "https://www.youtube.com/" },
-]
-
 export default function Navbar() {
   const logo = useMedia("brand.logo.image")
+  // Same addresses as the footer, edited in Site Content → Footer → Socials.
+  const socials = useSocialLinks()
   const [menuOpen, setMenuOpen] = useState(false)
   const location = useLocation()
 
@@ -304,9 +300,9 @@ export default function Navbar() {
                   transition={{ duration: 0.4, delay: 0.3 }}
                   className="hidden md:flex flex-col items-end gap-2 self-center pr-2 lg:pr-6"
                 >
-                  {SOCIALS.map((s) => (
+                  {socials.map((s) => (
                     <a
-                      key={s.label}
+                      key={s.id}
                       href={s.url}
                       target="_blank"
                       rel="noreferrer noopener"
@@ -325,9 +321,9 @@ export default function Navbar() {
                 transition={{ delay: 0.5 }}
                 className="md:hidden mt-10 flex flex-wrap gap-x-5 gap-y-2"
               >
-                {SOCIALS.map((s) => (
+                {socials.map((s) => (
                   <a
-                    key={s.label}
+                    key={s.id}
                     href={s.url}
                     target="_blank"
                     rel="noreferrer noopener"

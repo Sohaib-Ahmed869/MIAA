@@ -23,11 +23,8 @@ export const FOOTER_LINKS = [
   { label: "Contact Us", path: "/contact" },
 ]
 
-export const SOCIAL_LINKS = [
-  { label: "Instagram", url: "https://www.instagram.com/museumofislamicartaustralia/", icon: "instagram" },
-  { label: "Facebook", url: "https://www.facebook.com/miaaustralia.org", icon: "facebook" },
-  { label: "YouTube", url: "https://www.youtube.com/@MuseumofIslamicArtAustralia", icon: "youtube" },
-]
+// Social accounts moved to ./socials.js — their addresses are Site Content
+// fields now (`footer.social.*`), so they're editable without a deploy.
 
 export const ACKNOWLEDGMENT_TEXT =
   "MIAA is proudly located on beautiful Dharug country in Granville, Western Sydney. The Museum of Islamic Art Australia (MIAA) respectfully acknowledges the Burramattagal people of the Dharug Nation as the Traditional Owners of the land on which the museum will be located. We pay our respects to Elders past, present and emerging. Sovereignty has never been ceded."

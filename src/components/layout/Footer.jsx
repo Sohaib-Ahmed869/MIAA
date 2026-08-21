@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { motion } from "framer-motion"
-import { ACKNOWLEDGMENT_TEXT } from "../../lib/constants"
 import { api } from "../../lib/api"
 import { fadeInUp } from "../../lib/motion"
-import { useMedia } from "../../content/context"
+import { useSocialLinks } from "../../lib/socials"
+import { useMedia, useText } from "../../content/context"
+import Text from "../../content/Text"
+import { splitParagraphs } from "../../content/format"
 import SignupConfirmationModal from "../ui/SignupConfirmationModal"
 import footerPattern from "../../assets/images/Homepage/Footer Pattern.png"
 
@@ -50,6 +52,33 @@ function YouTubeIcon() {
   )
 }
 
+function LinkedInIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="3xl:w-5 3xl:h-5">
+      <path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05a3.75 3.75 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46zM5.34 7.43a2.07 2.07 0 1 1 0-4.13 2.07 2.07 0 0 1 0 4.13zM7.12 20.45H3.55V9h3.57zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z" />
+    </svg>
+  )
+}
+
+function ThreadsIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" className="3xl:w-5 3xl:h-5">
+      <path d="M16.2 11.13c-.1-.05-.2-.09-.3-.13-.18-3.24-1.95-5.1-4.92-5.12h-.04c-1.78 0-3.25.76-4.16 2.14l1.63 1.12c.68-1.03 1.75-1.25 2.53-1.25h.03c.97 0 1.7.29 2.17.84.35.4.58.96.69 1.67a12.4 12.4 0 0 0-2.78-.13c-2.8.16-4.6 1.79-4.48 4.05.06 1.15.63 2.13 1.62 2.77.83.54 1.9.8 3.02.74 1.47-.08 2.63-.64 3.43-1.67.61-.78.99-1.79 1.16-3.06.7.42 1.21.97 1.5 1.63.48 1.13.51 2.98-1 4.49-1.33 1.32-2.92 1.9-5.32 1.91-2.66-.02-4.67-.87-5.98-2.53C4.78 16.95 4.15 14.7 4.13 12c.02-2.7.65-4.94 1.87-6.6C7.3 3.74 9.32 2.89 11.98 2.87c2.68.02 4.73.87 6.09 2.54.67.82 1.17 1.85 1.5 3.05l1.9-.51c-.4-1.48-1.04-2.76-1.9-3.82C17.83 2 15.2.9 11.98.88h-.01C8.77.9 6.18 2 4.29 4.15 2.62 6.06 1.75 8.72 1.72 12v.02c.03 3.27.9 5.93 2.57 7.84 1.89 2.15 4.48 3.25 7.7 3.27h.01c2.86-.02 4.87-.77 6.53-2.42 2.18-2.17 2.11-4.9 1.39-6.57-.51-1.2-1.5-2.17-2.85-2.82zm-4.94 5.7c-1.24.07-2.53-.49-2.6-1.65-.04-.86.62-1.82 2.67-1.94l.5-.01c.72 0 1.4.07 2.01.2-.23 2.87-1.58 3.34-2.58 3.4z" />
+    </svg>
+  )
+}
+
+/** The glyph for each account in `SOCIAL_ACCOUNTS`. */
+const SOCIAL_ICONS = {
+  instagram: InstagramIcon,
+  facebook: FacebookIcon,
+  youtube: YouTubeIcon,
+  linkedin: LinkedInIcon,
+  tiktok: TikTokIcon,
+  x: XIcon,
+  threads: ThreadsIcon,
+}
+
 function DottedDivider() {
   return (
     <div
@@ -62,16 +91,18 @@ function DottedDivider() {
   )
 }
 
+// Destinations are fixed in code; only the wording is editable.
 const footerLinks = [
-  { label: "Islamic Art in Australia", path: "/islamic-art" },
-  { label: "MIAA Off-Site Events", path: "/offsite-events" },
-  { label: "Sydney Muslim Writers Festival", path: "/events" },
-  { label: "Community Engagement & Education", path: "/community-engagement" },
-  { label: "MIAA Timeline & Construction", path: "/timeline" },
-  { label: "Contact Us", path: "/contact" },
+  { key: "footer.links.islamicArt", path: "/islamic-art" },
+  { key: "footer.links.offsite", path: "/offsite-events" },
+  { key: "footer.links.events", path: "/events" },
+  { key: "footer.links.community", path: "/community-engagement" },
+  { key: "footer.links.timeline", path: "/timeline" },
+  { key: "footer.links.contact", path: "/contact" },
 ]
 
 function NewsletterForm() {
+  const t = useText()
   const [email, setEmail] = useState("")
   const [status, setStatus] = useState("idle") // idle | submitting | success | error
   const [message, setMessage] = useState("")
@@ -85,7 +116,7 @@ function NewsletterForm() {
     try {
       await api.subscribeNewsletter(email, "footer")
       setStatus("success")
-      setMessage("Thanks — you're on the list.")
+      setMessage(t("footer.newsletter.success"))
       setModalOpen(true)
       setEmail("")
     } catch (err) {
@@ -101,10 +132,8 @@ function NewsletterForm() {
       <SignupConfirmationModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        title="Thank you for subscribing!"
-        lines={[
-          "As part of signing up, we’ve added you to our contact list, you can unsubscribe anytime.",
-        ]}
+        title={t("footer.newsletter.modalTitle")}
+        lines={splitParagraphs(t("footer.newsletter.modalBody"))}
       />
       <form onSubmit={onSubmit} className="flex gap-0">
         <input
@@ -112,7 +141,7 @@ function NewsletterForm() {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email address"
+          placeholder={t("footer.newsletter.placeholder")}
           className="flex-1 md:flex-none md:w-44 3xl:w-52 px-3 3xl:px-4 py-2 3xl:py-2.5 bg-white border border-primary/20 border-r-0 rounded-l-md text-xs 3xl:text-sm text-primary placeholder:text-primary/40 focus:outline-none focus:border-primary/40 transition-colors"
         />
         <button
@@ -141,6 +170,8 @@ function NewsletterForm() {
 
 export default function Footer() {
   const logo = useMedia("brand.logo.footer")
+  const t = useText()
+  const socials = useSocialLinks()
   return (
     <footer className="relative bg-accent-cream overflow-hidden">
       {/* Large MIAA logo watermark — flush bottom-left, hidden on mobile */}
@@ -169,8 +200,10 @@ export default function Footer() {
         />
         <motion.div {...fadeInUp} className="relative z-10 w-full px-6 md:px-10 lg:px-16 3xl:px-24 pt-10 pb-10 text-center">
           <div className="text-sm md:text-[0.9375rem] 3xl:text-base leading-[1.8] text-primary italic max-w-3xl 3xl:max-w-4xl mx-auto">
-            <p className="font-medium">MIAA is proudly located on beautiful Dharug country in Granville, Western Sydney.</p>
-            <p>The Museum of Islamic Art Australia (MIAA) respectfully acknowledges the Burramattagal people of the Dharug Nation as the Traditional Owners of the land on which the museum will be located. We pay our respects to Elders past, present and emerging. Sovereignty has never been ceded.</p>
+            <p className="font-medium"><Text k="footer.acknowledgement.lead" /></p>
+            {splitParagraphs(t("footer.acknowledgement.body")).map((para, i) => (
+              <p key={i}>{para}</p>
+            ))}
           </div>
         </motion.div>
       </div>
@@ -182,12 +215,11 @@ export default function Footer() {
           {/* ISRA info — on mobile shows after links, on desktop shows left */}
           <div className="order-2 lg:order-1 pt-2 pl-0 lg:pl-[42%]">
             <p className="text-sm 3xl:text-base text-primary leading-relaxed max-w-xs 3xl:max-w-sm">
-              Museum of Islamic Art Australia is an initiative of
-              the{" "}
-              <a href="https://isra.org.au" target="_blank" rel="noopener noreferrer" className="underline">
-                Islamic Sciences and Research Academy (ISRA)
+              <Text k="footer.about.lead" />{" "}
+              <a href={t("footer.about.linkUrl")} target="_blank" rel="noopener noreferrer" className="underline">
+                <Text k="footer.about.linkLabel" />
               </a>
-              . Funded by the Government of New South Wales WestInvest Program.
+              . <Text k="footer.about.funding" />
             </p>
           </div>
 
@@ -202,7 +234,7 @@ export default function Footer() {
                       to={link.path}
                       className="text-sm 3xl:text-base text-primary font-medium hover:text-secondary-terra transition-colors"
                     >
-                      {link.label}
+                      <Text k={link.key} />
                     </Link>
                   </li>
                 ))}
@@ -214,7 +246,7 @@ export default function Footer() {
                       to={link.path}
                       className="text-sm 3xl:text-base text-primary font-medium hover:text-secondary-terra transition-colors"
                     >
-                      {link.label}
+                      <Text k={link.key} />
                     </Link>
                   </li>
                 ))}
@@ -226,31 +258,30 @@ export default function Footer() {
             {/* Connect + social */}
             <div className="flex flex-col gap-4">
               <div>
-                <p className="text-sm 3xl:text-base font-medium mb-2" style={{ color: "#38717A" }}>Connect</p>
+                <p className="text-sm 3xl:text-base font-medium mb-2" style={{ color: "#38717A" }}>
+                  <Text k="footer.connect.label" />
+                </p>
                 <p className="text-sm 3xl:text-base leading-relaxed" style={{ color: "#38717A" }}>
-                  Stay connected with MIAA via our socials
-                  <br />
-                  Instagram FaceBook and You Tube
+                  <Text k="footer.connect.text" />
                 </p>
               </div>
-              <div className="flex gap-2">
-                {[
-                  { Icon: InstagramIcon, label: "Instagram", url: "https://www.instagram.com/museumofislamicartaustralia/" },
-                  { Icon: FacebookIcon, label: "Facebook", url: "https://www.facebook.com/miaaustralia.org" },
-                  { Icon: YouTubeIcon, label: "YouTube", url: "https://www.youtube.com/@MuseumofIslamicArtAustralia" },
-                ].map(({ Icon, label, url }) => (
-                  <a
-                    key={label}
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label={label}
-                    className="w-9 h-9 3xl:w-11 3xl:h-11 rounded-full flex items-center justify-center text-white hover:opacity-80 transition-all duration-200"
-                    style={{ backgroundColor: "#38717A" }}
-                  >
-                    <Icon />
-                  </a>
-                ))}
+              <div className="flex flex-wrap gap-2">
+                {socials.map(({ id, label, url }) => {
+                  const Icon = SOCIAL_ICONS[id]
+                  return (
+                    <a
+                      key={id}
+                      href={url}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label={label}
+                      className="w-9 h-9 3xl:w-11 3xl:h-11 rounded-full flex items-center justify-center text-white hover:opacity-80 transition-all duration-200"
+                      style={{ backgroundColor: "#38717A" }}
+                    >
+                      <Icon />
+                    </a>
+                  )
+                })}
               </div>
             </div>
 
@@ -260,11 +291,13 @@ export default function Footer() {
             <div className="flex flex-col gap-4">
               <div>
                 <p className="text-sm 3xl:text-base font-medium text-primary mb-2">
-                  Stay Connected
+                  <Text k="footer.newsletter.heading" />
                 </p>
-                <p className="text-sm 3xl:text-base text-primary leading-relaxed">
-                  Get news and updates from the Museum of Islamic Art Australia.
-                </p>
+                {splitParagraphs(t("footer.newsletter.body")).map((para, i) => (
+                  <p key={i} className="text-sm 3xl:text-base text-primary leading-relaxed">
+                    {para}
+                  </p>
+                ))}
               </div>
               <NewsletterForm />
             </div>
@@ -274,17 +307,17 @@ export default function Footer() {
             {/* Copyright */}
             <div className="flex flex-col gap-1 pb-4 lg:pb-8 3xl:pb-10">
               <p className="text-sm 3xl:text-base text-primary">
-                &copy; 2026 Museum of Islamic Art Australia
+                <Text k="footer.legal.copyright" />
               </p>
               <p className="text-sm 3xl:text-base text-primary">
-                Website by{" "}
+                <Text k="footer.legal.creditLead" />{" "}
                 <a
-                  href="https://www.thinkstudio.com.au"
+                  href={t("footer.legal.creditUrl")}
                   target="_blank"
                   rel="noreferrer noopener"
                   className="underline hover:text-secondary-terra transition-colors"
                 >
-                  Think Studio
+                  <Text k="footer.legal.creditLabel" />
                 </a>
               </p>
             </div>

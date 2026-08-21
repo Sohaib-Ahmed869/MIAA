@@ -619,6 +619,18 @@ export const MEDIA_ENTRIES = [
         default: siteLogo,
         alt: "MIAA",
       },
+    ],
+  },
+  {
+    // Same "Logos" card as the site logo above, but mirrored into the Footer
+    // page group so an editor working on the footer finds it there too.
+    groupId: "brand",
+    groupLabel: "Brand",
+    groupPath: "/",
+    sectionId: "logo",
+    sectionLabel: "Logos",
+    mirrors: [{ groupId: "footer", sectionId: "logo", sectionLabel: "Logo" }],
+    fields: [
       {
         key: "brand.logo.footer",
         label: "Footer logo",

@@ -1481,6 +1481,263 @@ const TEXT_GROUPS = [
       },
     ],
   },
+  {
+    // Site-wide: the footer renders on every public page except SMWF, which has
+    // its own. The preview loads Home and the footer sits at the bottom of it.
+    id: "footer",
+    label: "Footer",
+    path: "/",
+    sections: [
+      {
+        id: "acknowledgement",
+        label: "Acknowledgement of Country",
+        fields: [
+          {
+            key: "footer.acknowledgement.lead",
+            label: "First line",
+            type: "text",
+            default:
+              "MIAA is proudly located on beautiful Dharug country in Granville, Western Sydney.",
+          },
+          {
+            key: "footer.acknowledgement.body",
+            label: "Acknowledgement",
+            type: "richtext",
+            default:
+              "The Museum of Islamic Art Australia (MIAA) respectfully acknowledges the Burramattagal people of the Dharug Nation as the Traditional Owners of the land on which the museum will be located. We pay our respects to Elders past, present and emerging. Sovereignty has never been ceded.",
+          },
+        ],
+      },
+      {
+        id: "about",
+        label: "About MIAA",
+        fields: [
+          {
+            key: "footer.about.lead",
+            label: "Text before the ISRA link",
+            type: "text",
+            default: "Museum of Islamic Art Australia is an initiative of the",
+          },
+          {
+            key: "footer.about.linkLabel",
+            label: "Link text",
+            type: "text",
+            default: "Islamic Sciences and Research Academy (ISRA)",
+          },
+          {
+            key: "footer.about.linkUrl",
+            label: "Link address",
+            type: "text",
+            help: "Where the link above goes.",
+            default: "https://isra.org.au",
+          },
+          {
+            key: "footer.about.funding",
+            label: "Funding line",
+            type: "text",
+            help: "Shown after the link, on the same paragraph.",
+            default:
+              "Funded by the Government of New South Wales Western Sydney Infrastructure Grants Program.",
+          },
+        ],
+      },
+      {
+        id: "links",
+        label: "Quick Links",
+        fields: [
+          {
+            key: "footer.links.islamicArt",
+            label: "Link 1",
+            type: "text",
+            help: "Goes to the Islamic Art in Australia page.",
+            default: "Islamic Art in Australia",
+          },
+          {
+            key: "footer.links.offsite",
+            label: "Link 2",
+            type: "text",
+            help: "Goes to the Offsite Events page.",
+            default: "MIAA Off-Site Events",
+          },
+          {
+            key: "footer.links.events",
+            label: "Link 3",
+            type: "text",
+            help: "Goes to the Events page.",
+            default: "Sydney Muslim Writers Festival",
+          },
+          {
+            key: "footer.links.community",
+            label: "Link 4",
+            type: "text",
+            help: "Goes to the Community Engagement page.",
+            default: "Community Engagement & Education",
+          },
+          {
+            key: "footer.links.timeline",
+            label: "Link 5",
+            type: "text",
+            help: "Goes to the Timeline page.",
+            default: "MIAA Timeline & Construction",
+          },
+          {
+            key: "footer.links.contact",
+            label: "Link 6",
+            type: "text",
+            help: "Goes to the Contact page.",
+            default: "Contact Us",
+          },
+        ],
+      },
+      {
+        id: "connect",
+        label: "Connect & Socials",
+        fields: [
+          {
+            key: "footer.connect.label",
+            label: "Heading",
+            type: "text",
+            default: "Connect",
+          },
+          {
+            key: "footer.connect.text",
+            label: "Text",
+            type: "multiline",
+            help: "Press Enter for a line break.",
+            default: "Stay connected with MIAA via our socials\nInstagram, Facebook and YouTube",
+          },
+          // Each social icon is shown only when its address is filled in, so a
+          // blank field simply removes that icon from the footer. The three
+          // accounts that already exist ship as defaults; the rest are blank
+          // and can be switched on from here without a code change.
+          {
+            key: "footer.social.instagram",
+            label: "Instagram",
+            type: "text",
+            help: "Full profile address. Clear to restore the original link.",
+            default: "https://www.instagram.com/museumofislamicartaustralia/",
+          },
+          {
+            key: "footer.social.facebook",
+            label: "Facebook",
+            type: "text",
+            help: "Full profile address. Clear to restore the original link.",
+            default: "https://www.facebook.com/miaaustralia.org",
+          },
+          {
+            key: "footer.social.youtube",
+            label: "YouTube",
+            type: "text",
+            help: "Full channel address. Clear to restore the original link.",
+            default: "https://www.youtube.com/@MuseumofIslamicArtAustralia",
+          },
+          {
+            key: "footer.social.linkedin",
+            label: "LinkedIn",
+            type: "text",
+            help: "Paste the page address to show the icon. Leave blank to hide it.",
+            default: "",
+          },
+          {
+            key: "footer.social.tiktok",
+            label: "TikTok",
+            type: "text",
+            help: "Paste the profile address to show the icon. Leave blank to hide it.",
+            default: "",
+          },
+          {
+            key: "footer.social.x",
+            label: "X (Twitter)",
+            type: "text",
+            help: "Paste the profile address to show the icon. Leave blank to hide it.",
+            default: "",
+          },
+          {
+            key: "footer.social.threads",
+            label: "Threads",
+            type: "text",
+            help: "Paste the profile address to show the icon. Leave blank to hide it.",
+            default: "",
+          },
+        ],
+      },
+      {
+        id: "newsletter",
+        label: "Newsletter Signup",
+        fields: [
+          {
+            key: "footer.newsletter.heading",
+            label: "Heading",
+            type: "text",
+            default: "Stay Connected",
+          },
+          {
+            key: "footer.newsletter.body",
+            label: "Text",
+            type: "richtext",
+            default: "Get news and updates from the Museum of Islamic Art Australia.",
+          },
+          {
+            key: "footer.newsletter.placeholder",
+            label: "Email box placeholder",
+            type: "text",
+            default: "Email address",
+          },
+          {
+            key: "footer.newsletter.success",
+            label: "Success message",
+            type: "text",
+            help: "Shown under the form once someone subscribes.",
+            default: "Thanks — you’re on the list.",
+          },
+          {
+            key: "footer.newsletter.modalTitle",
+            label: "Thank-you pop-up — title",
+            type: "text",
+            default: "Thank you for subscribing!",
+          },
+          {
+            key: "footer.newsletter.modalBody",
+            label: "Thank-you pop-up — message",
+            type: "richtext",
+            help: "Leave a blank line between paragraphs.",
+            default:
+              "As part of signing up, we’ve added you to our contact list, you can unsubscribe anytime.",
+          },
+        ],
+      },
+      {
+        id: "legal",
+        label: "Copyright",
+        fields: [
+          {
+            key: "footer.legal.copyright",
+            label: "Copyright line",
+            type: "text",
+            default: "© 2026 Museum of Islamic Art Australia",
+          },
+          {
+            key: "footer.legal.creditLead",
+            label: "Credit — text",
+            type: "text",
+            default: "Website by",
+          },
+          {
+            key: "footer.legal.creditLabel",
+            label: "Credit — link text",
+            type: "text",
+            default: "Think Studio",
+          },
+          {
+            key: "footer.legal.creditUrl",
+            label: "Credit — link address",
+            type: "text",
+            default: "https://www.thinkstudio.com.au",
+          },
+        ],
+      },
+    ],
+  },
 ]
 
 // ── Media merge ──────────────────────────────────────────────────
