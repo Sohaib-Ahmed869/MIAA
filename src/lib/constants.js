@@ -7,7 +7,7 @@ export const NAV_LINKS = [
   { label: "Sydney Muslim Writers Festival", path: "/smwf" },
   { label: "Education & Community Engagement", path: "/community-engagement" },
   { label: "Timeline & Construction", path: "/timeline" },
-  // { label: "Updates & Blogs", path: "/blog" },
+  { label: "Updates & Blogs", path: "/blog" },
   { label: "Donate", path: "/donate" },
   { label: "Volunteer", path: "/volunteer" },
   { label: "Contact Us", path: "/contact" },
