@@ -8,6 +8,8 @@ import Drawer from "../components/Drawer"
 import EmptyState from "../components/EmptyState"
 import ImageUpload from "../components/ImageUpload"
 import { Field, TextInput, TextArea, Select, Checkbox } from "../components/Field"
+import BlogBlockEditor from "../components/BlogBlockEditor"
+import { blocksToHtml, cleanBlocks, emptyBlock, toBlocks, withKeys } from "../../lib/blogBlocks"
 import { useToast } from "../components/Toast"
 import { useConfirm } from "../../components/ui/ConfirmDialog"
 import { SkeletonCardGrid } from "../components/Skeleton"
@@ -17,6 +19,7 @@ const EMPTY = {
   title: "",
   description: "",
   body: "",
+  blocks: [],
   category: "Blog",
   author: "MIAA Team",
   date: "",
@@ -62,10 +65,17 @@ export default function BlogAdmin() {
   const open = (item) => {
     if (item) {
       setEditing(item._id)
-      setForm({ ...EMPTY, ...item })
+      // A post written before the builder has HTML in `body` and no blocks —
+      // parse it so it opens as editable blocks rather than raw markup.
+      setForm({
+        ...EMPTY,
+        ...item,
+        blocks: withKeys(toBlocks(item.blocks?.length ? item.blocks : item.body) || []),
+      })
     } else {
       setEditing("new")
-      setForm(EMPTY)
+      // Start with a lead paragraph so the builder opens on something to type in.
+      setForm({ ...EMPTY, blocks: withKeys([emptyBlock("intro")]) })
     }
     setError("")
   }
@@ -79,9 +89,14 @@ export default function BlogAdmin() {
     setBusy(true)
     setError("")
     try {
+      const blocks = cleanBlocks(form.blocks)
       const payload = {
         ...form,
         slug: form.slug || slugify(form.title),
+        blocks,
+        // `body` stays in sync as HTML so anything still reading it — and any
+        // future export — sees the same article the builder produced.
+        body: blocksToHtml(blocks),
       }
       if (editing === "new") {
         await adminApi.createBlog(payload)
@@ -267,19 +282,15 @@ export default function BlogAdmin() {
               onChange={(e) => setForm({ ...form, description: e.target.value })}
             />
           </Field>
-          <Field label="Body" hint="Full article body — HTML allowed (use <p>, <b>, <a>...)">
-            <TextArea
-              rows={10}
-              value={form.body}
-              onChange={(e) => setForm({ ...form, body: e.target.value })}
-              placeholder="<p>Lead paragraph…</p>"
-            />
-          </Field>
           <ImageUpload
             folder="blog"
             currentKey={form.coverImageKey}
             onUploaded={(key) => setForm({ ...form, coverImageKey: key })}
             label="Cover Image"
+          />
+          <BlogBlockEditor
+            blocks={form.blocks}
+            onChange={(blocks) => setForm((f) => ({ ...f, blocks }))}
           />
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 pt-2">
             <Checkbox

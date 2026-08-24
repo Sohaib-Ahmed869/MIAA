@@ -29,6 +29,81 @@ const SHARE_BUTTONS = [
   },
 ]
 
+/**
+ * One body block from the admin builder (see `lib/blogBlocks.js`). Text keeps
+ * whitespace-pre-line so the line breaks an author typed survive.
+ */
+function BodyBlock({ block }) {
+  switch (block.type) {
+    case "intro":
+      return (
+        <p className="text-base sm:text-lg md:text-xl 3xl:text-2xl text-primary leading-relaxed font-medium whitespace-pre-line">
+          {block.text}
+        </p>
+      )
+    case "heading":
+      return (
+        <h2 className="text-base sm:text-lg md:text-xl 3xl:text-2xl font-semibold text-primary leading-snug mt-2">
+          {block.text}
+        </h2>
+      )
+    case "list": {
+      const List = block.ordered ? "ol" : "ul"
+      return (
+        <List
+          className={`flex flex-col gap-2 pl-5 text-sm sm:text-base 3xl:text-lg text-primary leading-relaxed ${
+            block.ordered ? "list-decimal" : "list-disc"
+          } marker:text-secondary-terra`}
+        >
+          {(block.items || []).map((item, i) => (
+            <li key={i} className="pl-1 whitespace-pre-line">
+              {item}
+            </li>
+          ))}
+        </List>
+      )
+    }
+    case "quote":
+      return (
+        <blockquote className="border-l-2 border-secondary-terra pl-5 sm:pl-6 my-2">
+          <p className="text-base sm:text-lg md:text-xl 3xl:text-2xl text-primary italic leading-relaxed whitespace-pre-line">
+            {block.text}
+          </p>
+          {block.attribution && (
+            <footer className="mt-2 text-xs sm:text-sm 3xl:text-base tracking-wider uppercase text-primary/60">
+              {block.attribution}
+            </footer>
+          )}
+        </blockquote>
+      )
+    case "image": {
+      const src = block.imageUrl || block.url || ""
+      if (!src) return null
+      return (
+        <figure className="my-2">
+          <img
+            src={src}
+            alt={block.caption || ""}
+            loading="lazy"
+            className="w-full h-auto rounded-lg object-cover"
+          />
+          {block.caption && (
+            <figcaption className="mt-2 text-xs sm:text-sm 3xl:text-base text-primary/60 italic">
+              {block.caption}
+            </figcaption>
+          )}
+        </figure>
+      )
+    }
+    default:
+      return (
+        <p className="text-sm sm:text-base 3xl:text-lg text-primary leading-relaxed whitespace-pre-line">
+          {block.text}
+        </p>
+      )
+  }
+}
+
 export default function BlogDetailSection({ article }) {
   const allRelated = BLOG_ARTICLES.filter(
     (a) => a.slug !== article.slug && a.category === article.category
@@ -120,27 +195,9 @@ export default function BlogDetailSection({ article }) {
           <div className="grid grid-cols-1 lg:grid-cols-[1fr_auto] gap-10 lg:gap-16 items-start">
             {/* Body */}
             <motion.div {...fadeInUp} className="flex flex-col gap-6">
-              {bodyContent.map((block, i) => {
-                if (block.type === "intro") {
-                  return (
-                    <p key={i} className="text-base sm:text-lg md:text-xl 3xl:text-2xl text-primary leading-relaxed font-medium whitespace-pre-line">
-                      {block.text}
-                    </p>
-                  )
-                }
-                if (block.type === "heading") {
-                  return (
-                    <h2 key={i} className="text-base sm:text-lg md:text-xl 3xl:text-2xl font-semibold text-primary leading-snug mt-2">
-                      {block.text}
-                    </h2>
-                  )
-                }
-                return (
-                  <p key={i} className="text-sm sm:text-base 3xl:text-lg text-primary leading-relaxed whitespace-pre-line">
-                    {block.text}
-                  </p>
-                )
-              })}
+              {bodyContent.map((block, i) => (
+                <BodyBlock key={i} block={block} />
+              ))}
             </motion.div>
 
             {/* Share sidebar */}

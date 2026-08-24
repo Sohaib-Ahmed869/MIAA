@@ -71,9 +71,11 @@ export default function ImageUpload({
 
   return (
     <div>
-      <p className="block text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1.5">
-        {label}
-      </p>
+      {label && (
+        <p className="block text-[0.625rem] tracking-[0.2em] uppercase text-primary/55 mb-1.5">
+          {label}
+        </p>
+      )}
       {hint && <p className="text-[0.6875rem] text-primary/40 mb-2 -mt-0.5">{hint}</p>}
 
       {previewUrl ? (

@@ -4,49 +4,7 @@ import CTAButton from "../components/ui/Button"
 import BlogDetailSection from "../components/sections/blog/BlogDetailSection"
 import { BLOG_ARTICLES } from "../lib/constants"
 import { api } from "../lib/api"
-
-/**
- * Convert a body value into the {type,text}[] shape BlogDetailSection expects.
- * - Arrays: pass through
- * - HTML strings: split into intro + paragraph blocks, stripping tags
- * - Anything else / empty: undefined → component falls back to its lorem default
- */
-function bodyToBlocks(body) {
-  if (Array.isArray(body)) return body
-  if (typeof body !== "string" || !body.trim()) return undefined
-
-  // Keep single newlines (and <br>s) intact — the renderer preserves them with
-  // whitespace-pre-line, so authors get the line breaks they typed. Only runs
-  // of spaces/tabs collapse.
-  const stripTags = (s) =>
-    s
-      .replace(/<br\s*\/?>/gi, "\n")
-      .replace(/<[^>]+>/g, "")
-      .replace(/[^\S\n]+/g, " ")
-      .replace(/ *\n */g, "\n")
-      .trim()
-
-  const blocks = []
-  const pTagMatches = [...body.matchAll(/<p[^>]*>([\s\S]*?)<\/p>/gi)]
-  if (pTagMatches.length) {
-    pTagMatches.forEach((m, i) => {
-      const text = stripTags(m[1])
-      if (!text) return
-      blocks.push({ type: i === 0 ? "intro" : "paragraph", text })
-    })
-  } else {
-    // No <p> tags — split on blank lines
-    body
-      .split(/\n\s*\n/)
-      .map((s) => stripTags(s))
-      .filter(Boolean)
-      .forEach((text, i) => {
-        blocks.push({ type: i === 0 ? "intro" : "paragraph", text })
-      })
-  }
-
-  return blocks.length ? blocks : undefined
-}
+import { toBlocks } from "../lib/blogBlocks"
 
 function normalise(post) {
   if (!post) return null
@@ -54,7 +12,9 @@ function normalise(post) {
     ...post,
     image: post.image || "",
     imageUrl: post.coverImageUrl || post.imageUrl || "",
-    body: bodyToBlocks(post.body),
+    // Blocks from the admin builder win; older posts still carry HTML in `body`,
+    // which toBlocks() parses into the same shape.
+    body: toBlocks(post.blocks?.length ? post.blocks : post.body),
   }
 }
 
