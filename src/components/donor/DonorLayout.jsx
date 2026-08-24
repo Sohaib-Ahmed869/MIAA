@@ -344,7 +344,7 @@ export default function DonorLayout() {
         {/* ── Content area ─────────────────────────────────── */}
         <main className="md:ml-64 flex-1 min-h-screen pt-14 md:pt-0">
           <DonorHeader meta={meta} donor={donor} />
-          <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 py-6 md:py-10 pb-24 md:pb-10">
+          <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 py-6 md:py-10 pb-28 md:pb-10">
             <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
@@ -359,9 +359,9 @@ export default function DonorLayout() {
           </div>
         </main>
 
-        {/* ── Mobile bottom tab bar ────────────────────────── */}
-        <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-bg-deep/95 backdrop-blur-xl border-t border-white/10 safe-area-pb">
-          <div className="flex items-stretch">
+        {/* ── Mobile bottom tab bar (floating) ─────────────── */}
+        <nav className="md:hidden fixed bottom-0 inset-x-0 z-40 px-3 donor-tabbar-safe-pb">
+          <div className="flex items-stretch rounded-2xl bg-bg-deep/95 backdrop-blur-xl border border-white/10 shadow-lg shadow-black/25 overflow-hidden">
             {NAV.map((item) => (
               <NavLink
                 key={item.to}

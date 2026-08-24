@@ -174,12 +174,18 @@ export default function Footer() {
   const socials = useSocialLinks()
   return (
     <footer className="relative bg-accent-cream overflow-hidden">
-      {/* Large MIAA logo watermark — flush bottom-left, hidden on mobile */}
-      <div className="absolute bottom-0 left-0 pointer-events-none z-20 hidden md:block">
+      {/* Large MIAA logo watermark — flush bottom-left. Only shown from `lg`
+          up, where the 2-column footer grid actually gives it clear room;
+          below that the footer content still stacks to one full-width
+          column (see the grid below), so the corner would sit directly
+          under real text. Sits behind the content (z-0 vs the content's
+          z-10) and scales up gradually so it never grows wider than the
+          content column can safely clear. */}
+      <div className="absolute bottom-0 left-0 pointer-events-none z-0 hidden lg:block">
         <img
           src={logo.src}
           alt=""
-          className="md:w-[31.25rem] lg:w-[40.625rem] 3xl:w-[28vw] h-auto block"
+          className="lg:w-[18rem] desktop:w-[28rem] 3xl:w-[28vw] h-auto block"
         />
       </div>
 
@@ -341,8 +347,10 @@ export default function Footer() {
         </div>
       </div>
 
-      {/* Mobile footer logo — bottom left */}
-      <div className="relative z-10 md:hidden mt-6 pb-0">
+      {/* In-flow footer logo for narrow/single-column widths (below `lg`,
+          where the corner watermark above is hidden) — sits after the
+          content instead of behind it, so it can never overlap text. */}
+      <div className="relative z-10 lg:hidden mt-6 pb-0">
         <img
           src={logo.src}
           alt=""

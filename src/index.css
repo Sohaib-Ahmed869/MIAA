@@ -133,10 +133,15 @@ body.loading {
   overflow: hidden;
 }
 
-/* Smooth image rendering */
-img {
-  max-width: 100%;
-  height: auto;
+/* Smooth image rendering. Wrapped in @layer base so it stays BELOW Tailwind's
+   utilities layer in the cascade — unlayered CSS always wins over any @layer
+   rule regardless of specificity, which was silently overriding every h-*/w-*
+   sizing utility applied to an <img> (e.g. the donor portal mobile logo). */
+@layer base {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
 }
 
 /* Responsive site logo — small on phones, scales with viewport above md */
@@ -314,4 +319,11 @@ img {
 /* Safe area padding for iOS bottom bar */
 .safe-area-pb {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Gap beneath the floating donor-portal mobile tab bar, so it sits clear of
+   the screen edge instead of flush against it, while still respecting the
+   iOS home-indicator safe area. */
+.donor-tabbar-safe-pb {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
 }
