@@ -360,7 +360,7 @@ export default function EventsAdmin() {
             <motion.div
               key={it._id}
               variants={{ hidden: { opacity: 0, y: 10 }, visible: { opacity: 1, y: 0 } }}
-              className="group h-full flex flex-col bg-white border border-primary/10 rounded-sm overflow-hidden hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
+              className="group @container h-full flex flex-col bg-white border border-primary/10 rounded-sm overflow-hidden hover:border-secondary-terra/60 hover:shadow-md transition-all duration-300"
             >
               <div className="aspect-[16/10] bg-accent-cream relative overflow-hidden flex-shrink-0">
                 {it.imageUrl ? (
@@ -430,8 +430,12 @@ export default function EventsAdmin() {
                     )}
                   </div>
                 )}
-                {/* Actions — pinned to the card bottom so every card lines up */}
-                <div className="grid grid-cols-5 gap-0.5 mt-auto pt-3 border-t border-primary/8">
+                {/* Actions — pinned to the card bottom so every card lines up.
+                    Five labelled actions need ~20rem of card; below that the
+                    "Volunteers"/"Analytics" labels used to overrun their cells
+                    and print on top of each other (3-column grid at 1024-1366
+                    and 4-column at 1536-1600). Wrap to two rows instead. */}
+                <div className="grid grid-cols-3 @min-[20rem]:grid-cols-5 gap-0.5 mt-auto pt-3 border-t border-primary/8">
                   {[
                     { label: "Edit", icon: Pencil, onClick: () => open(it) },
                     { label: "Analytics", icon: BarChart3, onClick: () => setAnalyticsFor(it) },

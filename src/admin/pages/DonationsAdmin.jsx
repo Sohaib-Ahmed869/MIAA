@@ -138,11 +138,15 @@ export default function DonationsAdmin() {
         />
       ) : (
         <>
+        {/* The desktop table has four fixed columns; below ~56rem the two
+            flexible ones (donor, product) truncate to a few characters. Give it
+            a floor and let it scroll sideways instead. Mobile cards unaffected. */}
+        <div className="lg:overflow-x-auto lg:-mx-1 lg:px-1 lg:pb-1">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
-          className="flex flex-col gap-2"
+          className="flex flex-col gap-2 lg:min-w-[56rem]"
         >
           {/* Table header */}
           <div className="hidden lg:grid grid-cols-[1fr_1fr_auto_auto_auto_auto] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
@@ -236,6 +240,7 @@ export default function DonationsAdmin() {
             </motion.div>
           ))}
         </motion.div>
+        </div>
 
         {/* Pagination */}
         {totalPages > 1 && (

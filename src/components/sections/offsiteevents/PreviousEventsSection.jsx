@@ -82,7 +82,9 @@ export default function PreviousEventsSection() {
                         </p>
                       )}
 
-                      {/* Hover image */}
+                      {/* Hover image — lg and up only. Below that the
+                          right-hand column is too narrow for a 180px thumbnail
+                          to float beside the title without sitting on it. */}
                       <AnimatePresence>
                         {hoveredPrev === i && (
                           <motion.div
@@ -90,7 +92,7 @@ export default function PreviousEventsSection() {
                             animate={{ opacity: 1, scale: 1, rotate: 3 }}
                             exit={{ opacity: 0, scale: 0.9 }}
                             transition={{ duration: 0.25 }}
-                            className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none shadow-lg"
+                            className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none shadow-lg"
                           >
                             <img
                               src={event.imageUrl || fallbackImage.src}
@@ -106,7 +108,11 @@ export default function PreviousEventsSection() {
                   const commonProps = {
                     onMouseEnter: () => setHoveredPrev(i),
                     onMouseLeave: () => setHoveredPrev(null),
-                    className: `block py-4 3xl:py-5 relative ${
+                    // The right inset reserves the hover thumbnail's lane so
+                    // the title and date wrap before they reach it instead of
+                    // being covered by it. Padding, not margin, so the
+                    // divider rules still run the full width of the column.
+                    className: `block py-4 3xl:py-5 relative lg:pr-[13rem] 3xl:pr-[14vw] ${
                       to ? "cursor-pointer" : ""
                     }`,
                   }

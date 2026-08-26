@@ -34,9 +34,11 @@ export default function Navbar() {
 
   return (
     <>
-      {/* Dotted divider at bottom of nav area */}
+      {/* Dotted divider at bottom of nav area. Its left inset must track the
+          logo link in Layout.jsx (left-4 sm:left-6 …) — it used to start at
+          left-6 on phones, 8px right of the logo it is meant to underline. */}
       <div
-        className="absolute top-20 md:top-24 3xl:top-28 left-6 md:left-10 lg:left-16 3xl:left-24 right-4 sm:right-6 md:right-10 lg:right-16 3xl:right-24 h-[2px] z-40 pointer-events-none"
+        className="absolute top-20 md:top-24 3xl:top-28 left-4 sm:left-6 md:left-10 lg:left-16 3xl:left-24 right-4 sm:right-6 md:right-10 lg:right-16 3xl:right-24 h-[2px] z-40 pointer-events-none"
         style={{
           backgroundImage:
             "radial-gradient(circle, #6CA1AA50 0.09375rem, transparent 0.09375rem)",

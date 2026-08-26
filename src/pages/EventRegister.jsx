@@ -533,7 +533,9 @@ export default function EventRegister() {
         <h1 className="text-3xl md:text-4xl font-medium text-accent-cream tracking-tight mb-4">
           {event.title}
         </h1>
-        <div className="flex items-center justify-center gap-5 text-sm text-accent-cream/60">
+        {/* Wraps: a date and a full venue address will not sit side by side on
+            a phone, and without this they compress into each other. */}
+        <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-sm text-accent-cream/60">
           {event.date && (
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="w-3.5 h-3.5" /> {event.date}

@@ -34,7 +34,7 @@ export default function DonorDashboard() {
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {[1, 2, 3].map((i) => (
           <div key={i} className="h-28 rounded-sm bg-primary/5 animate-pulse" />
         ))}
@@ -55,7 +55,7 @@ export default function DonorDashboard() {
   return (
     <div>
       {/* Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-10">
         {stats.map((s, i) => (
           <motion.div
             key={s.label}

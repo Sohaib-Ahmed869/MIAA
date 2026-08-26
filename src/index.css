@@ -87,13 +87,27 @@ html {
 }
 
 /* Large-screen scaling — fluid root font so ALL rem-based Tailwind
-   utilities (text, spacing, sizing, images) scale proportionally.
-   Scales from 18px at 2200px → 32px at 3840px (~2×), keeping the
-   visual feel of the 1440p design on 4K monitors without oversizing. */
-@media (min-width: 2200px) {
+   utilities (text, spacing, sizing, images) scale proportionally, keeping
+   the visual feel of the 1440p design on 2K/4K monitors without oversizing.
+
+   The ramp is exactly 100vw / 120, clamped to [16px, 32px]. Two properties
+   matter and both are deliberate:
+     • It equals the browser default 16px at precisely 1920px, so the ramp
+       STARTS where it is already a no-op — there is no step. The previous
+       rule started at 2200px with a 18px floor, which meant a 2199px window
+       rendered at 16px and a 2200px window jumped to 18px: every rem-based
+       size on the page (type, spacing, the logo box, the hamburger) grew
+       12.5% on a single pixel of resize.
+     • It still lands on the same top end, 32px at 3840px, and tracks the old
+       curve within ~2% everywhere it used to apply (2200 → 18.3px vs 18px,
+       2560 → 21.3px vs 21.1px, 3200 → 26.7px vs 26.5px), so the signed-off
+       2K/4K proportions are preserved.
+   `rem`/`vw` in a media query resolve against the INITIAL root font size, so
+   the px breakpoints below are unaffected by this rule. */
+@media (min-width: 1920px) {
   html {
-    /* 18px at 2200vw → ~24px at 3000vw → 32px at 3840vw */
-    font-size: clamp(18px, 0.854vw - 0.8px, 32px);
+    /* 16px at 1920 → 18.3px at 2200 → 21.3px at 2560 → 32px at 3840 */
+    font-size: clamp(16px, 0.8333vw, 32px);
   }
 }
 
@@ -153,6 +167,25 @@ body.loading {
 }
 @media (min-width: 768px) {
   .miaa-logo { width: clamp(125px, 8.5vw, 360px); }
+}
+
+/* Full-screen nav overlay on SHORT laptop screens.
+   The overlay's 13 links are sized off width alone (lg:text-[2.125rem] +
+   md:py-2.5), which stacks to ~944px of content. On the very common short
+   laptops — 1366x768, 1440x700, 1280x600 — that pushes the last three links
+   (Volunteer / Contact Us / Donor Portal) below the fold behind a scroll the
+   overlay gives no visual hint of. Tightening the rhythm only when the
+   viewport is genuinely short brings the whole menu back on screen; anything
+   900px tall or more (1440x900, 1920x1080, 2K, 4K) is untouched.
+   `.nav-link` is set by Navbar.jsx and used nowhere else. This rule is
+   unlayered, so it beats the Tailwind utilities in @layer without
+   !important. */
+@media (min-width: 1024px) and (max-height: 800px) {
+  .nav-link {
+    font-size: 1.625rem;
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+  }
 }
 
 /* SMWF homepage carousel — on phones each lower image steps LEFT and

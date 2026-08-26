@@ -99,21 +99,21 @@ export default function DonorProfile() {
     : null
 
   return (
-    <div className="max-w-6xl grid grid-cols-1 lg:grid-cols-[19rem_1fr] gap-5 items-start">
+    <div className="max-w-6xl grid grid-cols-1 xl:grid-cols-[19rem_1fr] gap-5 items-start">
       {/* ── Profile summary card ─────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.45, ease: [0.25, 0.1, 0.25, 1] }}
-        className="relative overflow-hidden rounded-2xl bg-bg-deep text-accent-cream p-6 md:p-7 lg:sticky lg:top-24"
+        className="relative overflow-hidden rounded-2xl bg-bg-deep text-accent-cream p-6 md:p-7 xl:sticky xl:top-24"
       >
         {/* soft glow */}
         <div className="absolute -top-16 -right-10 w-56 h-56 bg-secondary-terra/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="relative flex items-center gap-4 lg:flex-col lg:items-start lg:gap-4">
+        <div className="relative flex items-center gap-4 xl:flex-col xl:items-start xl:gap-4">
           <div className="grid place-items-center w-16 h-16 md:w-[4.5rem] md:h-[4.5rem] rounded-full bg-secondary-terra text-white text-xl font-semibold shadow-lg shadow-black/20 flex-shrink-0 ring-4 ring-white/10">
             {initials(form.firstName, form.lastName)}
           </div>
-          <div className="min-w-0 flex-1 lg:w-full">
+          <div className="min-w-0 flex-1 xl:w-full">
             <h2 className="text-2xl md:text-[1.6rem] leading-none tracking-tight truncate" style={{ fontFamily: "var(--font-display)" }}>
               {`${form.firstName} ${form.lastName}`.trim() || "Your Profile"}
             </h2>
@@ -125,19 +125,19 @@ export default function DonorProfile() {
         </div>
 
         {/* Stat chips */}
-        <div className="relative flex flex-wrap gap-2.5 mt-5 lg:flex-col">
-          <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white/[0.06] ring-1 ring-inset ring-white/10 text-xs lg:w-full">
+        <div className="relative flex flex-wrap gap-2.5 mt-5 xl:flex-col">
+          <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white/[0.06] ring-1 ring-inset ring-white/10 text-xs xl:w-full">
             <Heart className="w-3.5 h-3.5 text-secondary-terra flex-shrink-0" strokeWidth={2} />
             <span className="text-accent-cream/60">Total donated</span>
-            <span className="font-semibold text-accent-cream tabular-nums lg:ml-auto">
+            <span className="font-semibold text-accent-cream tabular-nums xl:ml-auto">
               ${((profile?.totalDonated || 0) / 100).toLocaleString()}
             </span>
           </span>
           {memberSince && (
-            <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white/[0.06] ring-1 ring-inset ring-white/10 text-xs lg:w-full">
+            <span className="inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-white/[0.06] ring-1 ring-inset ring-white/10 text-xs xl:w-full">
               <CalendarDays className="w-3.5 h-3.5 text-accent-wheat flex-shrink-0" strokeWidth={2} />
               <span className="text-accent-cream/60">Member since</span>
-              <span className="font-semibold text-accent-cream lg:ml-auto">{memberSince}</span>
+              <span className="font-semibold text-accent-cream xl:ml-auto">{memberSince}</span>
             </span>
           )}
         </div>

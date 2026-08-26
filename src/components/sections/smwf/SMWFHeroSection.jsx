@@ -174,7 +174,7 @@ export default function SMWFHeroSection() {
               <Text k="smwf.hero.date" />
             </span>
 
-            <h1 className="mt-4 md:mt-5 2xl:mt-6 3xl:mt-7 font-aeonik text-white tracking-[-0.01em] leading-[1.06] text-[1.875rem] sm:text-[2.25rem] md:text-[2.5rem] lg:text-[2rem] xl:text-[2.625rem] 2xl:text-[3.5rem] 3xl:text-[5.5rem] font-medium">
+            <h1 className="mt-4 md:mt-5 2xl:mt-6 3xl:mt-7 font-aeonik text-white tracking-[-0.01em] leading-[1.06] text-[1.875rem] sm:text-[2.25rem] md:text-[2.5rem] lg:text-[2.25rem] xl:text-[2.625rem] 2xl:text-[3.5rem] 3xl:text-[5.5rem] font-medium">
               <Text k="smwf.hero.heading" />
             </h1>
 

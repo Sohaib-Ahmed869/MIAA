@@ -125,11 +125,15 @@ export default function SubscriptionsAdmin() {
             />
           </div>
 
+          {/* Six fractional columns switch on at md (768), where the donor
+              column is barely wide enough for an avatar. Give the table a floor
+              and scroll it sideways rather than crushing every column. */}
+          <div className="md:overflow-x-auto md:-mx-1 md:px-1 md:pb-1">
           <motion.div
             initial="hidden"
             animate="visible"
             variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
-            className="flex flex-col gap-2.5"
+            className="flex flex-col gap-2.5 md:min-w-[52rem]"
           >
             {/* Column header */}
             <div className="hidden md:grid grid-cols-[1.6fr_0.8fr_0.9fr_0.9fr_1fr_0.8fr] gap-4 px-5 text-[0.5625rem] tracking-[0.2em] uppercase text-primary/40">
@@ -226,6 +230,7 @@ export default function SubscriptionsAdmin() {
               )
             })}
           </motion.div>
+          </div>
 
           {/* Pagination */}
           {totalPages > 1 && (

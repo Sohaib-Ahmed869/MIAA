@@ -218,7 +218,7 @@ export default function Volunteer() {
                 </div>
 
                 {RECAPTCHA_SITE_KEY && (
-                  <div className="3xl:scale-150 3xl:origin-top-left 3xl:mb-8">
+                  <div className="w-fit max-w-full 3xl:scale-150 3xl:origin-top-left 3xl:mb-8">
                     <ReCAPTCHA ref={recaptchaRef} sitekey={RECAPTCHA_SITE_KEY} theme="dark" />
                   </div>
                 )}

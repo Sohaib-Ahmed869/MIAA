@@ -44,11 +44,15 @@ export default function DonorsAdmin() {
           hint="Donors will appear here once they create accounts."
         />
       ) : (
+        // The desktop table's three fixed columns leave the name/email columns
+        // only a few characters wide under ~50rem — scroll sideways instead of
+        // truncating. Mobile keeps its stacked card layout.
+        <div className="lg:overflow-x-auto lg:-mx-1 lg:px-1 lg:pb-1">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
-          className="flex flex-col gap-2"
+          className="flex flex-col gap-2 lg:min-w-[50rem]"
         >
           {/* Table header */}
           <div className="hidden lg:grid grid-cols-[1fr_1fr_auto_auto_auto] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
@@ -103,6 +107,7 @@ export default function DonorsAdmin() {
             </motion.div>
           ))}
         </motion.div>
+        </div>
       )}
 
       {/* Detail drawer */}

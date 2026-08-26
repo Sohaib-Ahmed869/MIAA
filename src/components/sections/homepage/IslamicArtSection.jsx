@@ -15,6 +15,20 @@ gsap.registerPlugin(ScrollTrigger)
 
 // Layout only. Every credit string — artist, title, year, caption — is editable
 // in admin → Site Content (Islamic Art → Artwork credits) and resolved below.
+//
+// The scattered composition below only renders from `xl:` (1280px) up — see the
+// desktop branch. Below that the container is too narrow to hold the 32rem text
+// column *and* five frames, so the stacked layout serves instead.
+//
+// `TEXT_CLEARANCE` clamps a side frame so its inner edge can never come closer
+// than 2.5rem to the centred text column (half of `max-w-lg` = 16rem either side
+// of centre). It is written as a `min()` so it is completely inert at the widths
+// the composition was signed off at (>=1400px, where the container caps at
+// 1400px, and 3xl/4K) and only bites in the 1280–1400 band where the container
+// is still growing. `fw` is the frame's own width at that breakpoint.
+const TEXT_CLEARANCE = (inset, fw) =>
+  `min(${inset}, calc(50% - 16rem - 2.5rem - ${fw}))`
+
 const ART_PIECES = [
   {
     mediaKey: "islamicart.gallery.image5",
@@ -47,7 +61,9 @@ const ART_PIECES = [
   {
     mediaKey: "islamicart.gallery.image4",
     top: "52%",
-    right: "8%",
+    // Sits level with the body paragraph, so it is the one frame that has to be
+    // held off the text column as the container narrows towards 1280px.
+    right: TEXT_CLEARANCE("8%", "14rem"),
     size: "w-28 md:w-40 lg:w-56 3xl:w-[18vw]",
     parallaxFactor: 1.3,
   },
@@ -172,8 +188,10 @@ export default function IslamicArtSection() {
   return (
     <section ref={sectionRef} className="py-16 md:py-24 3xl:py-32 bg-accent-cream overflow-hidden">
       <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24">
-        {/* Mobile layout — stacked, no overlap */}
-        <div className="md:hidden flex flex-col items-center text-center gap-8">
+        {/* Stacked layout — phone through laptop (<1280px), no overlap.
+            Capped at 42rem from tablet up so the frames don't blow up to
+            half-screen width on a 1280-wide laptop. */}
+        <div className="xl:hidden flex flex-col items-center text-center gap-8 md:gap-10 md:max-w-2xl md:mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -200,10 +218,10 @@ export default function IslamicArtSection() {
           </motion.div>
 
           <motion.div {...fadeInUp} className="px-2 py-4">
-            <h2 className="text-3xl font-medium text-primary tracking-tight leading-snug">
+            <h2 className="text-3xl md:text-4xl font-medium text-primary tracking-tight leading-snug">
               <Text k="home.art.heading" />
             </h2>
-            <p className="mt-5 text-sm text-primary leading-relaxed font-medium">
+            <p className="mt-5 text-sm md:text-base text-primary leading-relaxed font-medium">
               <Text k="home.art.body" />
             </p>
             <div className="mt-6">
@@ -237,9 +255,12 @@ export default function IslamicArtSection() {
           </motion.div>
         </div>
 
-        {/* Desktop layout — scattered frames with mouse-tracking */}
-        <div ref={containerRef} className="hidden md:block">
-          <div className="relative md:min-h-[46.875rem] lg:min-h-[56.25rem]">
+        {/* Desktop layout — scattered frames with mouse-tracking.
+            Gated at xl (1280px): below that the container inner width can't fit
+            the 32rem text column plus a frame in each gutter, which is what made
+            the frames run through the paragraph on 1024–1200px laptops. */}
+        <div ref={containerRef} className="hidden xl:block">
+          <div className="relative min-h-[56.25rem]">
             {/* Center text */}
             <motion.div
               {...fadeInUp}

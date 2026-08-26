@@ -29,14 +29,19 @@ export default function EducationHeroSection() {
         </motion.h1>
       </div>
 
-      {/* Split body — left image on white section bg, right content on its own teal bg that extends lower */}
-      <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0 items-start">
+      {/* Split body — left image on white section bg, right content on its own teal bg that extends lower.
+          `lg:items-stretch` so the image column fills the row: from 1024 to ~1439 the accordion copy
+          wraps to more lines than the image is tall (246px of bare white showed at 1024), and the image
+          used to stop short of the teal block. The image still contributes its natural height to the
+          row — a percentage height resolves as `auto` during intrinsic sizing — so at 1440+ the image
+          is still the tallest item, `h-full` equals its natural height, and nothing is cropped. */}
+      <div className="relative grid grid-cols-1 lg:grid-cols-2 gap-0 items-start lg:items-stretch">
         {/* Left — image flush to LEFT edge, no bg behind. Below the image is the section's white bg. */}
         <motion.div {...fadeInLeft}>
           <img
             src={image.src}
             alt={image.alt}
-            className="w-full h-auto block"
+            className="w-full h-auto block lg:h-full lg:object-cover"
           />
         </motion.div>
 

@@ -298,7 +298,10 @@ export default function AdminLayout() {
 
           {/* Content area */}
           <main className="lg:ml-64 flex-1 min-h-screen w-full min-w-0">
-            <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-4 sm:px-6 md:px-8 lg:px-12 2xl:px-16 pt-20 lg:pt-10 pb-10">
+            {/* At lg the 16rem sidebar already takes a quarter of a 1024px
+                window, so keep the gutters at md size until xl — px-12 there
+                cost another 6rem of table width in the tightest band. */}
+            <div className="max-w-[90rem] 2xl:max-w-[110rem] 3xl:max-w-[130rem] 4xl:max-w-[170rem] mx-auto px-4 sm:px-6 md:px-8 xl:px-12 2xl:px-16 pt-20 lg:pt-10 pb-10">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={location.pathname}

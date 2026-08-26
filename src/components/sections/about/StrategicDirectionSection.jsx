@@ -103,14 +103,18 @@ export default function StrategicDirectionSection() {
         <motion.div
           ref={scrollerRef}
           {...staggerContainer}
-          className="flex gap-5 overflow-x-auto scroll-smooth no-scrollbar px-6 md:px-10 lg:px-16 3xl:px-24 pb-2 justify-center flex-wrap lg:flex-nowrap"
+          className="flex gap-5 overflow-x-auto scroll-smooth no-scrollbar px-6 md:px-10 lg:px-16 3xl:px-24 pb-2 justify-center flex-wrap xl:flex-nowrap"
           style={{ scrollbarWidth: "none" }}
         >
+          {/* Five equal columns only from xl (1280) up. Between 1024 and 1279
+              that split leaves ~165px per card and the copy breaks to one or
+              two words a line, so the cards keep a fixed 17.5rem width and
+              wrap 3 + 2 instead. */}
           {PILLARS.map((pillar) => (
             <motion.div
               key={pillar.key}
               {...staggerItem}
-              className="bg-bg-teal/25 border border-accent-wheat/15 p-6 3xl:p-8 flex flex-col gap-4 flex-shrink-0 w-[260px] md:w-[18.75rem] lg:w-0 lg:flex-1 hover:bg-bg-teal/40 transition-colors duration-300"
+              className="bg-bg-teal/25 border border-accent-wheat/15 p-6 3xl:p-8 flex flex-col gap-4 flex-shrink-0 w-[260px] md:w-[18.75rem] lg:w-[17.5rem] xl:w-0 xl:flex-1 hover:bg-bg-teal/40 transition-colors duration-300"
             >
               <img src={pillar.icon} alt="" className="w-10 h-10 3xl:w-14 3xl:h-14 object-contain" />
               <p className="text-accent-cream/75 text-[0.8125rem] 3xl:text-base leading-relaxed">

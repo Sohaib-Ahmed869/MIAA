@@ -16,12 +16,23 @@ import { splitCaptionDate, creditLine } from "../../../lib/artCredit"
 
 gsap.registerPlugin(ScrollTrigger)
 
+// The centre text column is capped at max-w-xl (36rem) and centred, so the
+// usable gutter on each side is `50% - 18rem`. A frame parked at a raw
+// percentage walks straight into that column once the viewport drops below
+// ~1300px (the client's 1024–1280 laptop band). `gutter` is the furthest the
+// frame may sit from its edge before it would touch the text; the inline
+// style takes min(percentage, gutter) so wide screens keep the signed-off
+// scatter and narrow ones slide the frame back into the margin.
+// gutter = 50% - (18rem column half + frame width + 0.75rem breathing room)
+const GUTTER_W44 = "calc(50% - 29.75rem)" // frames that are lg:w-44 (11rem)
+const GUTTER_W48 = "calc(50% - 30.75rem)" // frames that are lg:w-48 (12rem)
+
 const BASE_FRAMES = [
-  { mediaKey: "islamicart.gallery.image5", top: "3%", left: "4%", size: "w-28 md:w-36 lg:w-44 3xl:w-[14vw]", parallaxFactor: 1.2, hoverWidth: "w-[14rem] lg:w-[16rem] 3xl:w-[18rem] relative left-1/2 -translate-x-1/2" },
-  { mediaKey: "islamicart.gallery.image2", top: "35%", left: "2%", size: "w-28 md:w-40 lg:w-44 3xl:w-[14vw]", parallaxFactor: 0.8, hoverWidth: "w-[16rem] lg:w-[18rem] 3xl:w-[20rem] relative left-1/2 -translate-x-1/2" },
-  { mediaKey: "islamicart.gallery.image3", top: "68%", left: "12%", size: "w-28 md:w-40 lg:w-48 3xl:w-[14vw]", parallaxFactor: 1.5, hoverWidth: "w-[16rem] lg:w-[18rem] 3xl:w-[20rem] relative left-1/2 -translate-x-1/2" },
-  { mediaKey: "islamicart.gallery.image1", top: "8%", right: "4%", size: "w-32 md:w-48 lg:w-48 3xl:w-[15vw]", parallaxFactor: 1.0 },
-  { mediaKey: "islamicart.gallery.image4", top: "52%", right: "4%", size: "w-28 md:w-40 lg:w-44 3xl:w-[14vw]", parallaxFactor: 1.3 },
+  { mediaKey: "islamicart.gallery.image5", top: "3%", left: "4%", gutter: GUTTER_W44, size: "w-28 md:w-36 lg:w-44 3xl:w-[14vw]", parallaxFactor: 1.2, hoverWidth: "w-[14rem] lg:w-[16rem] 3xl:w-[18rem] relative left-1/2 -translate-x-1/2" },
+  { mediaKey: "islamicart.gallery.image2", top: "35%", left: "2%", gutter: GUTTER_W44, size: "w-28 md:w-40 lg:w-44 3xl:w-[14vw]", parallaxFactor: 0.8, hoverWidth: "w-[16rem] lg:w-[18rem] 3xl:w-[20rem] relative left-1/2 -translate-x-1/2" },
+  { mediaKey: "islamicart.gallery.image3", top: "68%", left: "12%", gutter: GUTTER_W48, size: "w-28 md:w-40 lg:w-48 3xl:w-[14vw]", parallaxFactor: 1.5, hoverWidth: "w-[16rem] lg:w-[18rem] 3xl:w-[20rem] relative left-1/2 -translate-x-1/2" },
+  { mediaKey: "islamicart.gallery.image1", top: "8%", right: "4%", gutter: GUTTER_W48, size: "w-32 md:w-48 lg:w-48 3xl:w-[15vw]", parallaxFactor: 1.0 },
+  { mediaKey: "islamicart.gallery.image4", top: "52%", right: "4%", gutter: GUTTER_W44, size: "w-28 md:w-40 lg:w-44 3xl:w-[14vw]", parallaxFactor: 1.3 },
 ]
 
 const ArtFrame = forwardRef(function ArtFrame(
@@ -35,11 +46,11 @@ const ArtFrame = forwardRef(function ArtFrame(
   return (
     <div
       ref={ref}
-      className={`${piece.size} absolute z-10 cursor-pointer hidden md:block`}
+      className={`${piece.size} absolute z-10 cursor-pointer hidden lg:block`}
       style={{
         top: piece.top,
-        left: piece.left,
-        right: piece.right,
+        left: piece.left ? `min(${piece.left}, ${piece.gutter})` : undefined,
+        right: piece.right ? `min(${piece.right}, ${piece.gutter})` : undefined,
       }}
     >
       <motion.div
@@ -320,8 +331,10 @@ export default function IslamicArtPageSection() {
 
       </div>
 
-      {/* Mobile art gallery — swipeable Swiper carousel */}
-      <div className="md:hidden pb-10 relative">
+      {/* Mobile/tablet art gallery — swipeable Swiper carousel.
+          Shown up to lg: below 1024px there is no room for the scattered
+          frames beside the text column, so the carousel carries the artwork. */}
+      <div className="lg:hidden pb-10 relative">
         <Swiper
           modules={[Pagination, Autoplay]}
           pagination={{ clickable: true }}
@@ -330,6 +343,7 @@ export default function IslamicArtPageSection() {
           speed={800}
           spaceBetween={16}
           slidesPerView={1.2}
+          breakpoints={{ 768: { slidesPerView: 2.2 } }}
           centeredSlides
           loop
           style={{

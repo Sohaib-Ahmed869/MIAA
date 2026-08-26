@@ -118,7 +118,7 @@ function TicketCard({ event }) {
       {...staggerItem}
       className="relative bg-white overflow-visible"
     >
-      <div className="flex flex-col md:flex-row items-stretch min-h-[8rem] md:min-h-[9rem] lg:min-h-[10rem] 2xl:min-h-[11rem] 3xl:min-h-[13rem]">
+      <div className="flex flex-col lg:flex-row items-stretch min-h-[8rem] md:min-h-[9rem] lg:min-h-[10rem] 2xl:min-h-[11rem] 3xl:min-h-[13rem]">
         {/* LEFT — event info + photos */}
         <div className="flex-[3] p-7 md:p-10 2xl:p-12 3xl:p-14 flex flex-col md:flex-row md:items-center gap-6 md:gap-10 2xl:gap-12 3xl:gap-16">
           {/* Info column */}
@@ -165,7 +165,7 @@ function TicketCard({ event }) {
         </div>
 
         {/* MIDDLE — perforated divider with triangular notches at top and bottom */}
-        <div className="relative hidden md:block w-px self-stretch flex-shrink-0">
+        <div className="relative hidden lg:block w-px self-stretch flex-shrink-0">
           <DottedVerticalLine />
           {/* Top notch — rounded diamond cutout (rotated square with soft corners) */}
           <span
@@ -194,7 +194,7 @@ function TicketCard({ event }) {
         </div>
 
         {/* RIGHT — price + register */}
-        <div className="flex-1 p-7 md:p-10 2xl:p-12 3xl:p-14 flex flex-col justify-between gap-5 md:gap-6 2xl:gap-7 3xl:gap-9 border-t md:border-t-0 border-[#1240391a]">
+        <div className="flex-1 p-7 md:p-10 2xl:p-12 3xl:p-14 flex flex-col justify-between gap-5 md:gap-6 2xl:gap-7 3xl:gap-9 border-t lg:border-t-0 border-[#1240391a]">
           <div className="text-right">
             <p
               className="font-aeonik text-4xl md:text-5xl lg:text-6xl 2xl:text-[4rem] 3xl:text-7xl font-medium leading-none"

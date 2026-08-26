@@ -76,7 +76,10 @@ export default function OffsiteProgramsSection() {
                 <Link to={cardLink} className="block">
                   {/* Date & location — left-aligned */}
                   <div className="mb-4">
-                    <p className="text-2xl md:text-3xl 3xl:text-[2.4rem] tracking-wide text-[#D0A270] font-medium">
+                    {/* md is where the grid becomes three columns — a ~180px
+                        card cannot hold "10 December 2026" at text-3xl, so the
+                        date steps down until lg widens the columns again. */}
+                    <p className="text-2xl md:text-xl lg:text-3xl 3xl:text-[2.4rem] tracking-wide text-[#D0A270] font-medium">
                       {formatEventDate(event.date)}
                     </p>
                     <p className="text-[0.6875rem] 3xl:text-sm text-white/70 mt-1.5 tracking-wide font-medium">

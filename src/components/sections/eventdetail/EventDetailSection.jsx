@@ -113,7 +113,10 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1 }}
-            className="text-2xl sm:text-3xl md:text-6xl lg:text-7xl 3xl:text-[6.5rem] font-medium text-accent-cream tracking-tight leading-[1.05] max-w-5xl"
+            /* One `lg:` step used to carry 1024 all the way to 2200, so a long
+               event title rendered at 72px inside a 896px column at 1024. The
+               scale now steps 768 → 1024 → 1280; 1280+ is unchanged. */
+            className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl xl:text-7xl 3xl:text-[6.5rem] font-medium text-accent-cream tracking-tight leading-[1.05] max-w-5xl"
           >
             {event.title}
           </motion.h1>
@@ -174,7 +177,9 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
       {/* Feature image + body */}
       <section className="bg-bg-cream py-14 sm:py-20 md:py-28 3xl:py-36">
         <div className="max-w-[1400px] 3xl:max-w-[3200px] mx-auto px-4 sm:px-6 md:px-10 lg:px-16 3xl:px-24">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-20 items-start">
+          {/* An 80px gutter is affordable at 1280+, but at 1024 it eats a
+              tenth of the row and squeezes the body column to ~390px. */}
+          <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-12 xl:gap-20 items-start">
             <motion.div
               {...fadeInLeft}
               className="relative"
@@ -310,7 +315,10 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
                 <motion.div
                   key={i}
                   {...staggerItem}
-                  className="group bg-bg-cream rounded-xl p-7 md:p-9 3xl:p-12 border border-primary/5 hover:border-secondary-terra/30 transition-colors"
+                  /* The 3-up grid starts at md, where a card is only ~208px
+                     wide — 36px of padding on each side left too little room
+                     for the title. The roomier padding waits for lg. */
+                  className="group bg-bg-cream rounded-xl p-7 lg:p-9 3xl:p-12 border border-primary/5 hover:border-secondary-terra/30 transition-colors"
                 >
                   {item.tag && (
                     <p className="text-[0.625rem] 3xl:text-xs tracking-[0.3em] uppercase text-secondary-terra mb-5">
@@ -318,7 +326,7 @@ export default function EventDetailSection({ event, relatedEvents = [] }) {
                     </p>
                   )}
                   {item.title && (
-                    <h3 className="text-xl md:text-2xl 3xl:text-3xl font-medium text-primary leading-tight">
+                    <h3 className="text-xl lg:text-2xl 3xl:text-3xl font-medium text-primary leading-tight">
                       {item.title}
                     </h3>
                   )}

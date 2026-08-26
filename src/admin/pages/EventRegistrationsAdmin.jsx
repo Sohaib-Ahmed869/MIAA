@@ -292,11 +292,15 @@ export default function EventRegistrationsAdmin() {
           hint="Registrations appear here once attendees sign up for an event."
         />
       ) : (
+        // The seven-column desktop table needs ~60rem before the two flexible
+        // columns collapse to a few characters. Below that it scrolls sideways
+        // instead of shrinking. Mobile keeps its stacked card layout untouched.
+        <div className="lg:overflow-x-auto lg:-mx-1 lg:px-1 lg:pb-1">
         <motion.div
           initial="hidden"
           animate="visible"
           variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.03 } } }}
-          className="flex flex-col gap-2"
+          className="flex flex-col gap-2 lg:min-w-[60rem]"
         >
           <div className="hidden lg:grid grid-cols-[minmax(0,1.3fr)_minmax(0,1.1fr)_4rem_5.5rem_6rem_7.5rem_5.5rem] gap-4 px-4 py-2 text-[0.625rem] tracking-[0.2em] uppercase text-primary/50">
             <span>Attendee</span>
@@ -419,6 +423,7 @@ export default function EventRegistrationsAdmin() {
             </motion.div>
           ))}
         </motion.div>
+        </div>
       )}
 
       {/* Detail drawer */}
