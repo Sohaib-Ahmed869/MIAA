@@ -5,6 +5,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger"
 import { useGSAP } from "@gsap/react"
 import { ZoomIn, ZoomOut, X } from "lucide-react"
 import { fadeInUp } from "../../../lib/motion"
+import { splitCaptionDate, creditLine } from "../../../lib/artCredit"
 import CTAButton from "../../ui/Button"
 import Text from "../../../content/Text"
 import { useText, useMediaResolver } from "../../../content/context"
@@ -12,12 +13,11 @@ import { useText, useMediaResolver } from "../../../content/context"
 
 gsap.registerPlugin(ScrollTrigger)
 
+// Layout only. Every credit string — artist, title, year, caption — is editable
+// in admin → Site Content (Islamic Art → Artwork credits) and resolved below.
 const ART_PIECES = [
   {
     mediaKey: "islamicart.gallery.image5",
-    alt: "(2011). 99 channel SD video sculpture installation, audio, and 98 paintings: acrylic, watercolour and gouache on dye diffusion thermal transfer prints. Installation view (detail) for Destiny Disrupted, Griffith University Art Museum. Courtesy the artist and Milani Gallery, Brisbane. Photograph by Carl Warner.",
-    credit: "99 —",
-    creditAuthor: "Khaled Sabsabi",
     top: "3%",
     left: "12%",
     size: "w-28 md:w-36 lg:w-56 3xl:w-[18vw]",
@@ -25,9 +25,6 @@ const ART_PIECES = [
   },
   {
     mediaKey: "islamicart.gallery.image2",
-    alt: "(2025). Clay, cardamom, size variable. Installation view at Liverpool Powerhouse. Courtesy the artist. Photograph by Kamil Abdullahi.",
-    credit: "Udub-Core —",
-    creditAuthor: "Idil Abdullahi",
     top: "35%",
     left: "-3%",
     size: "w-28 md:w-40 lg:w-56 3xl:w-[18vw]",
@@ -35,9 +32,6 @@ const ART_PIECES = [
   },
   {
     mediaKey: "islamicart.gallery.image3",
-    alt: "(2008), Borderlands series surfboard: digital decal fibreglass, polystyrene and carbon fibre, wire stand, vinyl, 194 x 45 x 8cm. Courtesy the artist. Artist acknowledgment Mark Rabbidge for production. Photograph by Phillip George.",
-    credit: "Inshalla —",
-    creditAuthor: "Phillip George",
     top: "62%",
     left: "20%",
     size: "w-24 md:w-36 lg:w-50 3xl:w-[15vw]",
@@ -45,9 +39,6 @@ const ART_PIECES = [
   },
   {
     mediaKey: "islamicart.gallery.image1",
-    alt: "(2014-). Hand-stitched white prayer caps (topi), Perspex dome and light, 107 (Dia.) x 60 cm. Image courtesy the artist and Gallery Sally Dan Cuthbert, \u00a9the artist. In Private Collection. Photograph by Abdullah M. I. Syed.",
-    credit: "Aura II —",
-    creditAuthor: "Abdullah M. I. Syed",
     top: "5%",
     right: "2%",
     size: "w-32 md:w-48 lg:w-60 3xl:w-[19vw]",
@@ -55,9 +46,6 @@ const ART_PIECES = [
   },
   {
     mediaKey: "islamicart.gallery.image4",
-    alt: "(2008\u20132021), Folded US$ Bills and staple pins. Image courtesy the artist. Photograph by Mahmood Ali.",
-    credit: "Flying Rug —",
-    creditAuthor: "Abdullah M. I. Syed",
     top: "52%",
     right: "8%",
     size: "w-28 md:w-40 lg:w-56 3xl:w-[18vw]",
@@ -78,11 +66,33 @@ export default function IslamicArtSection() {
   const t = useText()
   const media = useMediaResolver()
 
-  // Artwork files are editable in admin → Site Content; positions, credits and
-  // captions stay here as layout/structured data.
+  // Artwork files *and* their credits are editable in admin → Site Content;
+  // only the scatter positions stay here as layout data. The year is its own
+  // field, but a caption pasted from a gallery ("(2008), Borderlands series…")
+  // still carries one at the front, so that form is understood as a fallback.
   const artPieces = useMemo(
-    () => ART_PIECES.map((piece) => ({ ...piece, src: media(piece.mediaKey) })),
-    [media]
+    () =>
+      ART_PIECES.map((piece) => {
+        const parsed = splitCaptionDate(t(`${piece.mediaKey}.caption`))
+        const year = t(`${piece.mediaKey}.year`) || parsed.date
+        const artist = t(`${piece.mediaKey}.artist`)
+        const title = t(`${piece.mediaKey}.title`)
+        return {
+          ...piece,
+          src: media(piece.mediaKey),
+          artist,
+          title,
+          caption: parsed.caption,
+          credit: creditLine(artist, title, year),
+          // Title and year on their own, for the lightbox header where the
+          // artist is already the heading above.
+          titleYear: creditLine("", title, year),
+          alt: [creditLine(artist, title, year), parsed.caption]
+            .filter(Boolean)
+            .join(". "),
+        }
+      }),
+    [media, t]
   )
 
   const openLightbox = (i) => {
@@ -285,14 +295,15 @@ export default function IslamicArtSection() {
             {/* Top bar */}
             <div className="flex items-center justify-between px-6 md:px-10 py-5 border-b border-accent-wheat/15">
               <div>
+                {/* Artist, then title and year, then the caption. */}
                 <h3 className="font-display text-lg md:text-xl 3xl:text-2xl text-accent-cream uppercase tracking-wide">
-                  {artPieces[lightboxIndex].credit}
+                  {artPieces[lightboxIndex].artist}
                 </h3>
                 <p className="text-sm 3xl:text-base text-accent-wheat">
-                  {artPieces[lightboxIndex].creditAuthor}
+                  {artPieces[lightboxIndex].titleYear}
                 </p>
                 <p className="text-xs 3xl:text-sm text-accent-cream/50 mt-1">
-                  {artPieces[lightboxIndex].alt}
+                  {artPieces[lightboxIndex].caption}
                 </p>
               </div>
               <div className="flex items-center gap-3">
@@ -396,11 +407,13 @@ const ArtFrame = forwardRef(function ArtFrame(
               transition={{ duration: 0.25 }}
               className="mt-2.5 text-[0.625rem] lg:text-[0.6875rem] 3xl:text-sm text-primary leading-snug text-center"
             >
-              <span className="not-italic text-[0.5625rem] lg:text-[0.625rem] 3xl:text-xs font-normal opacity-80">{piece.alt}</span>
+              {/* Caption first, then the credit line underneath: artist, title,
+                  and the year last. */}
+              <span className="not-italic text-[0.5625rem] lg:text-[0.625rem] 3xl:text-xs font-normal opacity-80">
+                {piece.caption}
+              </span>
               <br />
-              <span className="not-italic font-medium">{piece.credit.replace(" —", "")}</span>
-              {" ~ "}
-              <span className="not-italic font-bold">{piece.creditAuthor}</span>
+              <span className="not-italic font-bold">{piece.credit}</span>
             </motion.p>
           )}
         </AnimatePresence>

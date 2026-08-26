@@ -22,6 +22,56 @@
 
 import { MEDIA_ENTRIES } from "./mediaRegistry"
 
+/**
+ * Credits for the five artworks in the Islamic Art gallery, keyed to the media
+ * keys they belong to (`islamicart.gallery.imageN`). They live here rather than
+ * in the two components that draw the gallery — the Home block and the Islamic
+ * Art page — so an editor changes a credit once and both surfaces follow, and
+ * so a wrong artist name is a content fix rather than a code change.
+ */
+const ARTWORK_CREDITS = [
+  {
+    n: 1,
+    artist: "Abdullah M. I. Syed",
+    title: "Aura II",
+    year: "2014–",
+    caption:
+      "Hand-stitched white prayer caps (topi), Perspex dome and light, 107 (Dia.) x 60 cm. Image courtesy the artist and Gallery Sally Dan Cuthbert, ©the artist. In Private Collection. Photograph by Abdullah M. I. Syed.",
+  },
+  {
+    n: 2,
+    artist: "Idil Abdullahi",
+    title: "Udub-Core",
+    year: "2025",
+    caption:
+      "Clay, cardamom, size variable. Installation view at Liverpool Powerhouse. Courtesy the artist. Photograph by Kamil Abdullahi.",
+  },
+  {
+    n: 3,
+    artist: "Phillip George",
+    title: "Inshalla",
+    year: "2008",
+    caption:
+      "Borderlands series surfboard: digital decal fibreglass, polystyrene and carbon fibre, wire stand, vinyl, 194 x 45 x 8cm. Courtesy the artist. Artist acknowledgment Mark Rabbidge for production. Photograph by Phillip George.",
+  },
+  {
+    n: 4,
+    artist: "Abdullah M. I. Syed",
+    title: "Flying Rug",
+    year: "2008–2021",
+    caption:
+      "Folded US$ Bills and staple pins. Image courtesy the artist. Photograph by Mahmood Ali.",
+  },
+  {
+    n: 5,
+    artist: "Khaled Sabsabi",
+    title: "99",
+    year: "2011",
+    caption:
+      "99 channel SD video sculpture installation, audio, and 98 paintings: acrylic, watercolour and gouache on dye diffusion thermal transfer prints. Installation view (detail) for Destiny Disrupted, Griffith University Art Museum. Courtesy the artist and Milani Gallery, Brisbane. Photograph by Carl Warner.",
+  },
+]
+
 const TEXT_GROUPS = [
   {
     id: "home",
@@ -232,6 +282,20 @@ const TEXT_GROUPS = [
             label: "Button",
             type: "text",
             default: "Visit Blog",
+          },
+          {
+            key: "home.insights.empty.heading",
+            label: "Empty state — heading",
+            type: "text",
+            help: "Shown in place of the blog cards while no posts are published.",
+            default: "No Posts Just Yet",
+          },
+          {
+            key: "home.insights.empty.body",
+            label: "Empty state — paragraph",
+            type: "richtext",
+            default:
+              "New stories, updates and reflections from the MIAA team are on the way. Check back soon, or follow us on social media for the latest.",
           },
         ],
       },
@@ -576,6 +640,48 @@ const TEXT_GROUPS = [
           },
         ],
       },
+      {
+        // The five artworks are shared with Home's Islamic Art block, so their
+        // credits are mirrored there too — an editor working on Home can fix a
+        // caption without knowing it is stored under Islamic Art.
+        id: "credits",
+        label: "Artwork credits",
+        mirrors: [{ groupId: "home", sectionId: "art" }],
+        fields: [
+          ...ARTWORK_CREDITS.flatMap(({ n, artist, title, year, caption }) => [
+            {
+              key: `islamicart.gallery.image${n}.artist`,
+              label: `Artwork ${n} — artist`,
+              type: "text",
+              help:
+                n === 1
+                  ? "Shown under the artwork on hover, and in the enlarged view: artist ~ title (year)."
+                  : undefined,
+              default: artist,
+            },
+            {
+              key: `islamicart.gallery.image${n}.title`,
+              label: `Artwork ${n} — title`,
+              type: "text",
+              default: title,
+            },
+            {
+              key: `islamicart.gallery.image${n}.year`,
+              label: `Artwork ${n} — year`,
+              type: "text",
+              help: "Printed in brackets at the end of the credit line. Leave empty to omit it.",
+              default: year,
+            },
+            {
+              key: `islamicart.gallery.image${n}.caption`,
+              label: `Artwork ${n} — caption`,
+              type: "richtext",
+              help: "Medium, dimensions, courtesy and photography credit. Also used as the image's alt text.",
+              default: caption,
+            },
+          ]),
+        ],
+      },
     ],
   },
   {
@@ -777,63 +883,6 @@ const TEXT_GROUPS = [
         ],
       },
       {
-        id: "families",
-        label: "Families Discover",
-        fields: [
-          {
-            key: "offsite.families.heading",
-            label: "Heading",
-            type: "text",
-            default: "Where Families Discover Art Together",
-          },
-          {
-            key: "offsite.families.location",
-            label: "Card location note",
-            type: "text",
-            default: "At Gallery A, MIAA",
-          },
-          {
-            key: "offsite.families.card1.title",
-            label: "Card 1 — title",
-            type: "text",
-            default: "The Art of Connection",
-          },
-          {
-            key: "offsite.families.card1.body",
-            label: "Card 1 — text",
-            type: "richtext",
-            default:
-              "How Islamic art continues to inspire creativity and unity across Australia's diverse communities.",
-          },
-          {
-            key: "offsite.families.card2.title",
-            label: "Card 2 — title",
-            type: "text",
-            default: "Behind the Vision",
-          },
-          {
-            key: "offsite.families.card2.body",
-            label: "Card 2 — text",
-            type: "richtext",
-            default:
-              "Meet the people and ideas shaping the Museum of Islamic Art Australia's journey.",
-          },
-          {
-            key: "offsite.families.card3.title",
-            label: "Card 3 — title",
-            type: "text",
-            default: "Heritage and Design",
-          },
-          {
-            key: "offsite.families.card3.body",
-            label: "Card 3 — text",
-            type: "richtext",
-            default:
-              "Exploring how tradition and innovation come together in MIAA's creative process.",
-          },
-        ],
-      },
-      {
         id: "previous",
         label: "Previous Events",
         fields: [
@@ -842,6 +891,14 @@ const TEXT_GROUPS = [
             label: "Heading",
             type: "text",
             default: "Previous Events",
+          },
+          {
+            key: "offsite.previous.empty",
+            label: "Empty state — text",
+            type: "richtext",
+            help: "Shown in place of the archive list while no past events have been published.",
+            default:
+              "The archive is still filling up. Past exhibitions, talks and programs will be listed here once they have run.",
           },
         ],
       },
@@ -2318,6 +2375,17 @@ function buildGroups() {
       group.sections.push(section)
     }
     return section
+  }
+
+  // A text section may mirror too — copy shared by two pages (the artwork
+  // credits drawn by both Home and the Islamic Art page) is declared once and
+  // surfaced in each, exactly like a shared image.
+  for (const group of TEXT_GROUPS) {
+    for (const section of group.sections) {
+      for (const mirror of section.mirrors || []) {
+        sectionFor(mirror).fields.push(...section.fields)
+      }
+    }
   }
 
   for (const entry of MEDIA_ENTRIES) {

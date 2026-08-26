@@ -2,7 +2,6 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 import CTAButton from "../components/ui/Button"
 import BlogDetailSection from "../components/sections/blog/BlogDetailSection"
-import { BLOG_ARTICLES } from "../lib/constants"
 import { api } from "../lib/api"
 import { toBlocks } from "../lib/blogBlocks"
 
@@ -10,7 +9,6 @@ function normalise(post) {
   if (!post) return null
   return {
     ...post,
-    image: post.image || "",
     imageUrl: post.coverImageUrl || post.imageUrl || "",
     // Blocks from the admin builder win; older posts still carry HTML in `body`,
     // which toBlocks() parses into the same shape.
@@ -20,10 +18,10 @@ function normalise(post) {
 
 export default function BlogDetail() {
   const { slug } = useParams()
-  // Start with the static fallback so we render immediately + survive offline
-  const [article, setArticle] = useState(() =>
-    BLOG_ARTICLES.find((a) => a.slug === slug) || null
-  )
+  // No static fallback: the CMS is the only source of posts, so a slug it
+  // doesn't know is a 404 rather than an invented article.
+  const [article, setArticle] = useState(null)
+  const [related, setRelated] = useState([])
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
 
@@ -31,6 +29,7 @@ export default function BlogDetail() {
     let cancelled = false
     setLoading(true)
     setNotFound(false)
+    setArticle(null)
     api
       .blogBySlug(slug)
       .then((post) => {
@@ -39,12 +38,8 @@ export default function BlogDetail() {
       })
       .catch((err) => {
         if (cancelled) return
-        // If the CMS doesn't have it AND we don't have a fallback, show 404
-        const staticMatch = BLOG_ARTICLES.find((a) => a.slug === slug)
-        if (!staticMatch) {
-          if (err.status === 404) setNotFound(true)
-          else setArticle(null)
-        }
+        if (err.status === 404) setNotFound(true)
+        else setArticle(null)
       })
       .finally(() => {
         if (!cancelled) setLoading(false)
@@ -53,6 +48,24 @@ export default function BlogDetail() {
       cancelled = true
     }
   }, [slug])
+
+  // Related posts — same list the blog index reads. A failure here costs the
+  // reader nothing, so it stays silent and the related row simply doesn't show.
+  useEffect(() => {
+    let cancelled = false
+    api
+      .blogList()
+      .then((items) => {
+        if (cancelled) return
+        setRelated(
+          items.map((p) => ({ ...p, imageUrl: p.coverImageUrl || p.imageUrl || "" }))
+        )
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   if (notFound || (!loading && !article)) {
     return (
@@ -76,5 +89,5 @@ export default function BlogDetail() {
     )
   }
 
-  return <BlogDetailSection article={article} />
+  return <BlogDetailSection article={article} related={related} />
 }

@@ -224,12 +224,45 @@ export function CalendarArt({ className }) {
   )
 }
 
+// Sized by prop like CalendarArt: the public Blog page and the Home page's
+// Insights block both show it at page scale rather than inside a portal card.
+export function JournalArt({ className }) {
+  return (
+    <Illustration className={className}>
+      <motion.g {...float(0)}>
+        {/* open journal — two facing pages */}
+        <path d="M100 62 C 88 54, 74 52, 60 54 v66 c 14 -2, 28 0, 40 8 Z" fill="#FFFFFF" stroke="#214952" strokeOpacity="0.15" strokeWidth="1.5" />
+        <path d="M100 62 C 112 54, 126 52, 140 54 v66 c -14 -2, -28 0, -40 8 Z" fill="#FFFFFF" stroke="#214952" strokeOpacity="0.15" strokeWidth="1.5" />
+        {/* spine */}
+        <path d="M100 62 v66" stroke="#214952" strokeOpacity="0.25" strokeWidth="1.5" />
+        {/* left page — a story already written */}
+        <g fill="#214952" fillOpacity="0.16">
+          <rect x="68" y="66" width="26" height="4" rx="2" />
+          <rect x="68" y="76" width="26" height="3" rx="1.5" />
+          <rect x="68" y="84" width="26" height="3" rx="1.5" />
+          <rect x="68" y="92" width="18" height="3" rx="1.5" />
+        </g>
+        {/* right page — still blank, waiting for the next post */}
+        <rect x="106" y="66" width="26" height="46" rx="3" fill="none" stroke="#C15C45" strokeOpacity="0.45" strokeWidth="1.5" strokeDasharray="3 3" />
+      </motion.g>
+      {/* quill */}
+      <motion.g {...float(0.7)}>
+        <path d="M148 56 C 132 62, 124 76, 122 92 C 134 88, 146 78, 148 56 Z" fill="#D7B893" />
+        <path d="M146 58 L 118 96" stroke="#7A3A42" strokeOpacity="0.5" strokeWidth="1.6" strokeLinecap="round" />
+      </motion.g>
+      <Sparkle x="52" y="86" s={6} color="#38717A" />
+      <Sparkle x="150" y="110" s={5} color="#C15C45" />
+    </Illustration>
+  )
+}
+
 const ART = {
   receipt: ReceiptArt,
   donation: DonationArt,
   recurring: RecurringArt,
   campaign: CampaignArt,
   calendar: CalendarArt,
+  journal: JournalArt,
 }
 
 /**

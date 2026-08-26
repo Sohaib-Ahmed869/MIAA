@@ -8,7 +8,7 @@ import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
 import Text from "../../../content/Text"
-import { useText, useMediaResolver } from "../../../content/context"
+import { useText, useMedia } from "../../../content/context"
 
 function slugify(s = "") {
   return String(s)
@@ -18,59 +18,25 @@ function slugify(s = "") {
     .replace(/^-+|-+$/g, "")
 }
 
-
-const FALLBACK_EVENTS = [
-  {
-    date: "07.02.26",
-    location: "At Gallery A, MIAA",
-    title: "Islamic Art Showcase",
-    description:
-      "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    mediaKey: "offsite.programs.image1",
-  },
-  {
-    date: "07.02.26",
-    location: "At Gallery A, MIAA",
-    title: "Islamic Art Showcase",
-    description:
-      "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    mediaKey: "offsite.programs.image2",
-  },
-  {
-    date: "TBA",
-    location: "At Gallery A, MIAA",
-    title: "Islamic Art Showcase",
-    description:
-      "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    mediaKey: "offsite.programs.image3",
-  },
-]
-
-const FALLBACK_PREVIOUS = [
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-]
-
 export default function OffsiteEventsSection() {
   const [hoveredPrev, setHoveredPrev] = useState(null)
   const t = useText()
-  // Placeholder imagery for when the Events CMS is empty — editable in
-  // admin → Site Content, resolved at render so a saved override applies as
-  // soon as the content overrides land.
-  const media = useMediaResolver()
+  // Stands in for a real archive record with no photo of its own — editable in
+  // admin → Site Content.
+  const fallbackImage = useMedia("offsite.previous.image")
 
   // upcoming: true — events whose date has passed belong in the archive, not
-  // under an "Upcoming Events" heading.
-  const {
-    data: upcomingEvents,
-    loading: upcomingLoading,
-    empty: noUpcoming,
-  } = useCMS(() => api.events({ category: "offsite", upcoming: true }), FALLBACK_EVENTS)
+  // under an "Upcoming Events" heading. Real records or nothing: the three
+  // placeholder exhibitions that used to stand in whenever the API did not
+  // answer advertised events the museum had never scheduled.
+  const { data: upcomingEvents, loading: upcomingLoading } = useCMS(
+    () => api.events({ category: "offsite", upcoming: true }),
+    []
+  )
+  // Same for the archive rows below.
   const { data: previousEvents } = useCMS(
     () => api.previousEvents({ surface: "offsite" }),
-    FALLBACK_PREVIOUS
+    []
   )
 
   return (
@@ -87,11 +53,10 @@ export default function OffsiteEventsSection() {
           <CTAButton to="/offsite-events" className="self-start md:mt-1 whitespace-nowrap">{t("home.offsite.cta")}</CTAButton>
         </motion.div>
 
-        {/* Upcoming event cards. Dropped entirely once the API confirms there
-            is nothing upcoming — same reasoning as the Offsite Events page: the
-            fallback cards are an offline safety net, not filler. Previous
-            Events below stands on its own, so only this grid goes. */}
-        {!upcomingLoading && !noUpcoming && (
+        {/* Upcoming event cards. Dropped entirely when there is nothing to show;
+            the "Events at MIAA" button above still leads to the Events page,
+            which carries the full empty state. */}
+        {!upcomingLoading && upcomingEvents.length > 0 && (
         <motion.div
           {...staggerContainer}
           className="grid grid-cols-1 md:grid-cols-3 gap-y-10 md:gap-y-12 mb-20"
@@ -118,10 +83,10 @@ export default function OffsiteEventsSection() {
                   </div>
 
                   {/* Image */}
-                  {(event.imageUrl || media(event.mediaKey)) ? (
+                  {event.imageUrl ? (
                     <div className="h-48 md:h-56 3xl:h-72 overflow-hidden rounded-xl mb-5 isolate">
                       <img
-                        src={event.imageUrl || media(event.mediaKey)}
+                        src={event.imageUrl}
                         alt={event.title}
                         className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
                       />
@@ -151,7 +116,10 @@ export default function OffsiteEventsSection() {
         </motion.div>
         )}
 
-        {/* Previous Events — 2 column layout */}
+        {/* Previous Events — 2 column layout. Nothing archived yet means no
+            block at all here; the Events page carries the full archive and its
+            own empty state. */}
+        {previousEvents.length > 0 && (
         <motion.div {...fadeInUp}>
           <div className="grid grid-cols-1 md:grid-cols-[15rem_1fr] gap-8 md:gap-16">
             {/* Left column — heading */}
@@ -213,7 +181,7 @@ export default function OffsiteEventsSection() {
                             className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none"
                           >
                             <img
-                              src={event.imageUrl || media(event.mediaKey)}
+                              src={event.imageUrl || fallbackImage.src}
                               alt=""
                               className="w-full h-full object-cover"
                             />
@@ -247,6 +215,7 @@ export default function OffsiteEventsSection() {
             </div>
           </div>
         </motion.div>
+        )}
       </div>
     </section>
   )

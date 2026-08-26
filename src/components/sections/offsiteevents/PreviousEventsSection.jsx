@@ -7,24 +7,18 @@ import { useCMS } from "../../../hooks/useCMS"
 import { api } from "../../../lib/api"
 import { formatEventDate } from "../../../lib/eventDate"
 import Text from "../../../content/Text"
-
-
-const FALLBACK_PREVIOUS = [
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-  { title: "Event Title Lorem Ipsum Dolor Sit Amet", mediaKey: "offsite.previous.image" },
-]
-
-import { useMediaResolver } from "../../../content/context"
+import { useMedia } from "../../../content/context"
 
 export default function PreviousEventsSection() {
-  const media = useMediaResolver()
   const [hoveredPrev, setHoveredPrev] = useState(null)
-  const { data: previousEvents } = useCMS(
+  // Stands in for a real archive record that has no photo of its own — editable
+  // in admin → Site Content.
+  const fallbackImage = useMedia("offsite.previous.image")
+  // Real archive records or nothing: the placeholder rows that used to fill this
+  // list advertised five events the museum never held.
+  const { data: previousEvents, loading } = useCMS(
     () => api.previousEvents({ surface: "offsite" }),
-    FALLBACK_PREVIOUS
+    []
   )
 
   return (
@@ -39,15 +33,25 @@ export default function PreviousEventsSection() {
               </h3>
             </div>
 
-            {/* Right — list with hover image inline */}
+            {/* Right — list with hover image inline, or a plain line saying the
+                archive is still empty. The divider above labels this block, so
+                removing it entirely would leave the label over blank space. */}
             <div>
-              <div className="flex flex-col divide-y divide-primary/15 border-y border-primary/15">
+              {!loading && previousEvents.length === 0 && (
+                <p className="text-base 3xl:text-lg text-primary/70 leading-relaxed border-y border-primary/15 py-6">
+                  <Text k="offsite.previous.empty" />
+                </p>
+              )}
+              <div
+                className={`flex-col divide-y divide-primary/15 border-y border-primary/15 ${
+                  previousEvents.length > 0 ? "flex" : "hidden"
+                }`}
+              >
                 {previousEvents.map((event, i) => {
                   // The API hands us the right destination per entry —
                   // /previous-events/… for a written-up archive record, the
-                  // event's own page for one that simply ran its course. The
-                  // seeded fallback placeholders have neither and stay
-                  // non-clickable.
+                  // event's own page for one that simply ran its course. An
+                  // entry with neither stays non-clickable.
                   const to = event.detailPath || null
 
                   const inner = (
@@ -89,7 +93,7 @@ export default function PreviousEventsSection() {
                             className="hidden md:block absolute right-0 top-1/2 -translate-y-1/2 w-[180px] h-[120px] 3xl:w-[12vw] 3xl:h-[8vw] rounded overflow-hidden z-10 pointer-events-none shadow-lg"
                           >
                             <img
-                              src={event.imageUrl || media(event.mediaKey)}
+                              src={event.imageUrl || fallbackImage.src}
                               alt=""
                               className="w-full h-full object-cover"
                             />

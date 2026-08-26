@@ -1,9 +1,9 @@
-import { useState, useMemo, useEffect, useCallback } from "react"
+import { useState, useMemo, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { ArrowUpRight, ArrowRight, ArrowLeft } from "lucide-react"
 import { Link } from "react-router-dom"
-import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
-import { blogImages } from "./blogImages"
+import { fadeInUp } from "../../../lib/motion"
+import NoBlogPosts from "./NoBlogPosts"
 
 const PAGE_SIZE = 6
 
@@ -24,21 +24,30 @@ export default function BlogGridSection({
   intro,
   articles,
   bg = "bg-accent-cream",
+  // True while the first fetch is in flight. Skeletons are the honest answer
+  // then — neither the grid nor "nothing published" is a claim we can make yet.
+  fetching = false,
+  emptyHeading,
+  emptyBody,
 }) {
-  const [page, setPage] = useState(0)
-  const [loading, setLoading] = useState(false)
+  const [requestedPage, setPage] = useState(0)
+  const [paging, setPaging] = useState(false)
+  const loading = fetching || paging
 
   const pageCount = Math.max(1, Math.ceil(articles.length / PAGE_SIZE))
+  // A fetch that lands after mount can shrink the list under a page the reader
+  // is already on, so the page is clamped on read rather than stored blindly.
+  const page = Math.min(requestedPage, pageCount - 1)
   const visible = useMemo(() => {
     const start = page * PAGE_SIZE
     return articles.slice(start, start + PAGE_SIZE)
   }, [articles, page])
 
   const changePage = useCallback((newPage) => {
-    setLoading(true)
+    setPaging(true)
     setTimeout(() => {
       setPage(newPage)
-      setLoading(false)
+      setPaging(false)
     }, 600)
   }, [])
 
@@ -90,6 +99,18 @@ export default function BlogGridSection({
                 </div>
               ))}
             </motion.div>
+          ) : articles.length === 0 ? (
+            /* Nothing published in this category — say so rather than filling
+               the grid with placeholder articles. */
+            <motion.div
+              key="empty"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <NoBlogPosts heading={emptyHeading} body={emptyBody} />
+            </motion.div>
           ) : (
             <motion.div
               key={page}
@@ -110,12 +131,14 @@ export default function BlogGridSection({
                   className={`group flex flex-col relative ${isCenter ? "lg:before:absolute lg:before:left-[-1.25rem] lg:before:top-0 lg:before:bottom-0 lg:before:w-px lg:before:bg-primary/10 lg:after:absolute lg:after:right-[-1.25rem] lg:after:top-0 lg:after:bottom-0 lg:after:w-px lg:after:bg-primary/10" : ""}`}
                 >
                   <Link to={`/blog/${post.slug}`} className="block mb-4 overflow-hidden">
-                    <div className="aspect-[16/10] overflow-hidden rounded-lg">
-                      <img
-                        src={post.imageUrl || blogImages[post.image]}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
+                    <div className="aspect-[16/10] overflow-hidden rounded-lg bg-primary/10">
+                      {post.imageUrl && (
+                        <img
+                          src={post.imageUrl}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      )}
                     </div>
                   </Link>
                   <h3 className="text-base md:text-lg 3xl:text-2xl font-semibold text-primary leading-tight mb-2">

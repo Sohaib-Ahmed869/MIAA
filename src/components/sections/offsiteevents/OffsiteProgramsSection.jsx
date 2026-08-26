@@ -16,55 +16,23 @@ function slugify(s = "") {
     .replace(/^-+|-+$/g, "")
 }
 
-
-const FALLBACK_EVENTS = [
-  {
-    date: "07.02.26",
-    location: "At Gallery A, MIAA",
-    title: "Islamic Art Showcase",
-    description:
-      "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    mediaKey: "offsite.programs.image1",
-  },
-  {
-    date: "07.02.26",
-    location: "At Gallery A, MIAA",
-    title: "Islamic Art Showcase",
-    description:
-      "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    mediaKey: "offsite.programs.image2",
-  },
-  {
-    date: "TBA",
-    location: "At Gallery A, MIAA",
-    title: "Islamic Art Showcase",
-    description:
-      "A curated exhibition highlighting works by emerging Muslim Australian artists and their global influences.",
-    mediaKey: "offsite.programs.image3",
-  },
-]
-
-import { useMediaResolver } from "../../../content/context"
-
 export default function OffsiteProgramsSection() {
-  const media = useMediaResolver()
   // upcoming: true — events whose date has passed belong in the archive, not
   // under an "Upcoming Events" heading.
-  const { data: upcomingEvents, loading, empty } = useCMS(
+  const { data: upcomingEvents, loading } = useCMS(
     () => api.events({ category: "offsite", upcoming: true }),
-    FALLBACK_EVENTS
+    []
   )
 
-  // `loading` shows nothing at all. The backend sleeps on Render's free tier and
-  // can take half a minute to wake; both the invented events in FALLBACK_EVENTS
-  // and "nothing scheduled" would be a claim we can't yet make.
+  // `loading` shows nothing at all. The backend sleeps on Render's free tier
+  // and can take half a minute to wake, and "nothing scheduled" is not a claim
+  // we can make yet.
   if (loading) return null
 
-  // `empty` means the API answered and the calendar is genuinely clear. The
-  // placeholder events exist for the case where the API never answered at all;
-  // presenting them as real listings here would advertise events that don't
-  // exist. So the grid gives way to an empty state rather than to silence — a
-  // section that deletes itself reads as a page that failed to load.
+  // Real events or an empty state — never invented ones. This used to fall back
+  // to three placeholder exhibitions whenever the API did not answer, which put
+  // events on the page that the museum had never scheduled. An empty state is
+  // wrong at most about timing; a fake listing is wrong about the museum.
   //
   // The divider stays in both cases. It labels the empty state as correctly as
   // it labels the grid, and the hero above is `bg-bg-deep` too, so without it
@@ -74,7 +42,7 @@ export default function OffsiteProgramsSection() {
       {/* The divider lives here rather than in the page so the "Upcoming Events"
           label travels with the block it belongs to. */}
       <SectionDivider label="Upcoming Events" bg="bg-bg-deep" variant="dark" />
-      {empty ? (
+      {upcomingEvents.length === 0 ? (
         <NoUpcomingEventsSection />
       ) : (
       <section className="py-12 md:py-16 3xl:py-24 bg-bg-deep">
@@ -117,10 +85,10 @@ export default function OffsiteProgramsSection() {
                   </div>
 
                   {/* Image */}
-                  {(event.imageUrl || media(event.mediaKey)) ? (
+                  {event.imageUrl ? (
                     <div className="h-48 md:h-56 3xl:h-72 overflow-hidden rounded-xl mb-5 isolate">
                       <img
-                        src={event.imageUrl || media(event.mediaKey)}
+                        src={event.imageUrl}
                         alt={event.title}
                         className="w-full h-full object-cover rounded-xl group-hover:scale-105 transition-transform duration-500"
                       />

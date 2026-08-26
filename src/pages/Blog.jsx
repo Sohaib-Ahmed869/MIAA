@@ -2,7 +2,6 @@ import { useMemo } from "react"
 import BlogHeroSection from "../components/sections/blog/BlogHeroSection"
 import BlogGridSection from "../components/sections/blog/BlogGridSection"
 import SectionDivider from "../components/ui/SectionDivider"
-import { BLOG_ARTICLES } from "../lib/constants"
 import { useCMS } from "../hooks/useCMS"
 import { api } from "../lib/api"
 
@@ -10,50 +9,47 @@ import { api } from "../lib/api"
 function toArticle(post) {
   return {
     ...post,
-    image: post.image || "",
     imageUrl: post.coverImageUrl || post.imageUrl || "",
     body: post.body || "",
   }
 }
 
 export default function Blog() {
-  // Fallbacks (used while loading, when API is unreachable, or when the CMS is empty)
-  const fallbackUpdates = useMemo(
-    () => BLOG_ARTICLES.filter((a) => a.category === "Update"),
-    []
-  )
-  const fallbackPosts = useMemo(
-    () => BLOG_ARTICLES.filter((a) => a.category === "Blog"),
+  // One request for the whole page; the two rows are a filter over it. The
+  // fallback is an empty list on purpose — there is no invented content to fall
+  // back to, so an unreachable API and an empty CMS both show the empty state.
+  const { data: posts, loading } = useCMS(
+    () => api.blogList().then((items) => items.map(toArticle)),
     []
   )
 
-  const { data: cmsUpdates } = useCMS(
-    () => api.blogList({ category: "Update" }).then((items) => items.map(toArticle)),
-    fallbackUpdates
-  )
-  const { data: cmsPosts } = useCMS(
-    () => api.blogList({ category: "Blog" }).then((items) => items.map(toArticle)),
-    fallbackPosts
-  )
+  const updates = useMemo(() => posts.filter((p) => p.category === "Update"), [posts])
+  const blogPosts = useMemo(() => posts.filter((p) => p.category === "Blog"), [posts])
 
   return (
     <>
-      <BlogHeroSection />
+      <BlogHeroSection articles={posts} loading={loading} />
 
       <SectionDivider label="Updates" bg="bg-accent-cream" variant="light" />
       <BlogGridSection
         heading="MIAA Updates"
         intro="Check in to read about our latest news, reviews and happenings.
 For up to the minute news and updates remember to follow us on our socials."
-        articles={cmsUpdates}
+        articles={updates}
+        fetching={loading}
+        emptyHeading="No Updates Just Yet"
+        emptyBody="News from the museum — milestones, announcements and behind-the-scenes progress — will appear here as it happens."
       />
 
       <SectionDivider label="Blog" bg="bg-bg" variant="light" />
       <BlogGridSection
         heading="MIAA Blog Posts"
         intro="Check in to hear from the MIAA team about all things Islamic art, literature and creative communities."
-        articles={cmsPosts}
+        articles={blogPosts}
+        fetching={loading}
         bg="bg-bg"
+        emptyHeading="No Posts Just Yet"
+        emptyBody="Stories from our team about Islamic art, literature and creative communities are on the way. Check back soon."
       />
     </>
   )

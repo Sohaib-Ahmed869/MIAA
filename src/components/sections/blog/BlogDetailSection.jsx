@@ -2,9 +2,7 @@ import { useState } from "react"
 import { motion } from "framer-motion"
 import { ArrowUpRight, ArrowLeft, ArrowRight, Link2 } from "lucide-react"
 import { Link } from "react-router-dom"
-import { fadeInUp, staggerContainer, staggerItem } from "../../../lib/motion"
-import { BLOG_ARTICLES } from "../../../lib/constants"
-import { blogImages } from "./blogImages"
+import { fadeInUp } from "../../../lib/motion"
 
 const SHARE_BUTTONS = [
   {
@@ -104,44 +102,18 @@ function BodyBlock({ block }) {
   }
 }
 
-export default function BlogDetailSection({ article }) {
-  const allRelated = BLOG_ARTICLES.filter(
+export default function BlogDetailSection({ article, related: relatedPosts = [] }) {
+  // Related posts come from the CMS alongside this one — never from a static
+  // list, which would link a live post to articles that do not exist.
+  const allRelated = relatedPosts.filter(
     (a) => a.slug !== article.slug && a.category === article.category
   )
   const [relPage, setRelPage] = useState(0)
   const relPageCount = Math.max(1, Math.ceil(allRelated.length / 3))
   const related = allRelated.slice(relPage * 3, relPage * 3 + 3)
 
-  const bodyContent = article.body || [
-    {
-      type: "intro",
-      text: "In id pellentesque purus, sed auctor elit. Phasellus ut dui ex. Curabitur molestie dignissim laoreet. Fusce mollis sagittis tellus, id efficitur diam gravida vitae. Integer convallis ultricies metus, id euismod nisl auctor nec. Mauris vestibulum consequat ligula, eget viverra nisi efficitur quis. Pellentesque egestas magna in lorem vulputate efficitur.",
-    },
-    {
-      type: "paragraph",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel libero molestie ligula ullamcorper eleifend vitae ornare lectus. Nam et quam mollis risus tristique placerat eu non enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor ex eu turpis accumsan semper. Integer pretium lorem at metus maximus, ac suscipit ligula pulvinar. Pellentesque non ex nec nulla malesuada placerat elementum condimentum eros. Pellentesque at magna sit amet lectus volutpat placerat. Phasellus a varius massa, at suscipit velit. Duis tellus urna, feugiat eu dapibus sit amet, euismod in enim. Nulla vehicula mattis quam ut bibendum. Nulla feugiat mollis neque et efficitur.",
-    },
-    {
-      type: "heading",
-      text: "Lorem ipsum dolor sit amet consectetur adipiscing.",
-    },
-    {
-      type: "paragraph",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel libero molestie ligula ullamcorper eleifend vitae ornare lectus. Nam et quam mollis risus tristique placerat eu non enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor ex eu turpis accumsan semper. Integer pretium lorem at metus maximus, ac suscipit ligula pulvinar. Pellentesque non ex nec nulla malesuada placerat elementum condimentum eros. Pellentesque at magna sit amet lectus volutpat placerat. Phasellus a varius massa, at suscipit velit.",
-    },
-    {
-      type: "heading",
-      text: "Lorem ipsum dolor sit amet consectetur adipiscing.",
-    },
-    {
-      type: "paragraph",
-      text: "Suspendisse dapibus ex non sagittis laoreet. Quisque quis finibus quam. Morbi lacus lacus, malesuada sit amet quam nec, lobortis euismod arcu. Sed quis mauris in orci volutpat maximus. Morbi rutrum tristique metus et consequat. Morbi lacinia ligula felis, et suscipit felis egestas sit amet. Ut eu lacinia massa, pulvinar imperdiet urna. In interdum tincidunt eros, ac rutrum metus dictum vulputate. Vivamus tristique et ipsum at cursus.",
-    },
-    {
-      type: "paragraph",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel libero molestie ligula ullamcorper eleifend vitae ornare lectus. Nam et quam mollis risus tristique placerat eu non enim. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed porttitor ex eu turpis accumsan semper. Integer pretium lorem at metus maximus, ac suscipit ligula pulvinar.",
-    },
-  ]
+  // No invented body: a post with nothing written in it renders nothing.
+  const bodyContent = Array.isArray(article.body) ? article.body : []
 
   return (
     <>
@@ -181,11 +153,13 @@ export default function BlogDetailSection({ article }) {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="max-w-[1100px] 3xl:max-w-[2200px] mx-auto px-6 md:px-10 lg:px-16 3xl:px-24"
         >
-          <img
-            src={article.imageUrl || blogImages[article.image]}
-            alt={article.title}
-            className="w-full h-auto object-contain"
-          />
+          {article.imageUrl && (
+            <img
+              src={article.imageUrl}
+              alt={article.title}
+              className="w-full h-auto object-contain"
+            />
+          )}
         </motion.div>
       </section>
 
@@ -224,7 +198,11 @@ export default function BlogDetailSection({ article }) {
         </div>
       </section>
 
-      {/* Related Post section divider */}
+      {/* Related posts — divider and all. With only one post published there is
+          nothing to relate to, and an empty "Related Post" band would just be a
+          heading over blank space. */}
+      {allRelated.length > 0 && (
+      <>
       <div className="w-full px-6 md:px-10 lg:px-16 3xl:px-24 pt-8 pb-2 bg-bg">
         <div className="flex items-center gap-2 mb-2">
           <svg width="14" height="14" viewBox="0 0 100 100" fill="#DD613E">
@@ -266,12 +244,14 @@ export default function BlogDetailSection({ article }) {
                   className={`group flex flex-col relative ${isCenter ? "lg:before:absolute lg:before:left-[-1.25rem] lg:before:top-0 lg:before:bottom-0 lg:before:w-px lg:before:bg-primary/10 lg:after:absolute lg:after:right-[-1.25rem] lg:after:top-0 lg:after:bottom-0 lg:after:w-px lg:after:bg-primary/10" : ""}`}
                 >
                   <Link to={`/blog/${post.slug}`} className="block mb-4 overflow-hidden">
-                    <div className="aspect-[16/10] overflow-hidden rounded-lg">
-                      <img
-                        src={post.imageUrl || blogImages[post.image]}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
+                    <div className="aspect-[16/10] overflow-hidden rounded-lg bg-primary/10">
+                      {post.imageUrl && (
+                        <img
+                          src={post.imageUrl}
+                          alt={post.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        />
+                      )}
                     </div>
                   </Link>
                   <h3 className="text-base md:text-lg 3xl:text-2xl font-semibold text-primary leading-tight mb-2">
@@ -313,6 +293,8 @@ export default function BlogDetailSection({ article }) {
           )}
         </div>
       </section>
+      </>
+      )}
     </>
   )
 }

@@ -40,9 +40,7 @@
  * covers, Sponsor logos, Event images, Donation products, Campaigns (their
  * *fallback* placeholders are registered here, the real records are not); the
  * SMWF panellist portraits, which belong with each panellist's name and bio and
- * want their own collection rather than 34 loose image fields; and the legacy
- * `blogImages` filename map, which exists only to resolve seeded posts whose
- * `image` field is a bare filename.
+ * want their own collection rather than 34 loose image fields.
  */
 
 /* ── Home ─────────────────────────────────────────────────────── */
@@ -84,13 +82,7 @@ import workshopImg from "../assets/images/Community Engagement/workshop-program.
 import eventsHero1 from "../assets/images/MIAEvents/events-hero-1.png"
 import eventsHero2 from "../assets/images/MIAEvents/events-hero-2.png"
 import eventsHero3 from "../assets/images/MIAEvents/events-hero-3.png"
-import offsiteImg1 from "../assets/images/Homepage/Offsite program images/offsiteimg-01.png"
-import offsiteImg2 from "../assets/images/Homepage/Offsite program images/offsiteimg-02.png"
-import offsiteImg3 from "../assets/images/Homepage/Offsite program images/offsiteimg-03.png"
 import offsiteImg4 from "../assets/images/Homepage/Offsite program images/offsiteimg-04.png"
-import familiesArtImg from "../assets/images/MIAEvents/families-art-connection.png"
-import familiesVisionImg from "../assets/images/MIAEvents/families-behind-vision.png"
-import familiesHeritageImg from "../assets/images/MIAEvents/families-heritage-design.png"
 
 /* ── Timeline ─────────────────────────────────────────────────── */
 import timelineHeroImg from "../assets/images/Timeline/buildingfuture.jpg"
@@ -250,7 +242,7 @@ export const MEDIA_ENTRIES = [
         key: "islamicart.gallery.image1",
         label: "Artwork 1",
         type: "image",
-        help: `${SHARED_NOTE} These five artworks also fill the Islamic Art block on the Home page. Each artwork's credit line stays with the section's copy.`,
+        help: `${SHARED_NOTE} These five artworks also fill the Islamic Art block on the Home page. Each artwork's artist, title, year and caption are edited under "Artwork credits".`,
         default: art1,
       },
       { key: "islamicart.gallery.image2", label: "Artwork 2", type: "image", default: art2 },
@@ -315,32 +307,6 @@ export const MEDIA_ENTRIES = [
       { key: "offsite.hero.image1", label: "Carousel photo 1", type: "image", default: eventsHero1, alt: "Meet the award-winning author book launch" },
       { key: "offsite.hero.image2", label: "Carousel photo 2", type: "image", default: eventsHero2, alt: "MIAA community panel discussion" },
       { key: "offsite.hero.image3", label: "Carousel photo 3", type: "image", default: eventsHero3, alt: "Visitors connecting at a MIAA event" },
-    ],
-  },
-  {
-    groupId: "offsite",
-    sectionId: "programs",
-    // Home's Offsite Events block falls back to the same three.
-    mirrors: [{ groupId: "home", sectionId: "offsite" }],
-    fields: [
-      {
-        key: "offsite.programs.image1",
-        label: "Programme image 1",
-        type: "image",
-        help: `${SHARED_NOTE} Shown when an event in the Events CMS has no image of its own, and on the Home page's Offsite Events block.`,
-        default: offsiteImg1,
-      },
-      { key: "offsite.programs.image2", label: "Programme image 2", type: "image", default: offsiteImg2 },
-      { key: "offsite.programs.image3", label: "Programme image 3", type: "image", default: offsiteImg3 },
-    ],
-  },
-  {
-    groupId: "offsite",
-    sectionId: "families",
-    fields: [
-      { key: "offsite.families.image1", label: "Card image 1", type: "image", default: familiesArtImg },
-      { key: "offsite.families.image2", label: "Card image 2", type: "image", default: familiesVisionImg },
-      { key: "offsite.families.image3", label: "Card image 3", type: "image", default: familiesHeritageImg },
     ],
   },
   {
